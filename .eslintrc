@@ -16,8 +16,9 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "linebreak-style": 0,
     "no-plusplus": "off",
-    "no-console": "warn",
+    "no-console": "off",
     "max-len": ["warn", { "code": 120 }],
     "indent": ["warn", 2, {
       "SwitchCase": 1
