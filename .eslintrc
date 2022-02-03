@@ -16,8 +16,10 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/lines-between-class-members": ["off"],
     "linebreak-style": 0,
     "no-plusplus": "off",
+    "no-debugger": "off",
     "no-console": "off",
     "max-len": ["warn", { "code": 120 }],
     "indent": ["warn", 2, {

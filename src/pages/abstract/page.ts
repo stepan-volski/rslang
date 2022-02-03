@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 class Page {
   name: string;
 
@@ -5,10 +7,8 @@ class Page {
     this.name = name;
   }
 
-  render(): void {
-    const pageName = this.name;
-    const appContainer = document.getElementById('app') as HTMLElement;
-    appContainer.innerHTML = `${pageName} page is opened`;
+  render(): void { // Question: how to correctly make sbstract class?
+    //
   }
 }
 

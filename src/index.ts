@@ -4,7 +4,7 @@ import Main from './pages/main';
 import Statistics from './pages/statistics';
 import TextBook from './pages/textBook';
 import Router from './router/router';
-import './style.scss';
+import './index.scss';
 
 const router = new Router({
   main: new Main(),
