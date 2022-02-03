@@ -22,7 +22,7 @@ class Router {
   constructor(routes: { main: Main; about: About; textBook: TextBook; statistics: Statistics; games: Games }) {
     this.routes = routes;
     this.currentPage = 'main';
-    this.routes.main.render();
+    this.routes.main.openPage();
   }
 
   init(): void {
@@ -35,7 +35,7 @@ class Router {
 
     if (selectedPage && selectedPage !== this.currentPage) {
       window.history.pushState('', '', `/${selectedPage}`);
-      this.routes[selectedPage].render();
+      this.routes[selectedPage].openPage();
       this.currentPage = selectedPage;
     }
   }
