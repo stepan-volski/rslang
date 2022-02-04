@@ -5,7 +5,7 @@ class Main extends Page {
     super('Main');
   }
 
-  render(): void {
+  openPage(): void {
     const pageName = this.name;
     const appContainer = document.getElementById('app') as HTMLElement;
     appContainer.innerHTML = `<div id="${pageName.toLowerCase()}Container">${pageName} container is here</div>`;

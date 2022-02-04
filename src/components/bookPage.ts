@@ -5,7 +5,7 @@ class BookPage {
   pageNumber: number;
   groupNumber: number;
 
-  constructor(pageNumber: number, groupNumber: number) {
+  constructor(groupNumber: number, pageNumber: number) {
     this.pageNumber = pageNumber;
     this.groupNumber = groupNumber;
   }
@@ -15,10 +15,10 @@ class BookPage {
   }
 
   async render(): Promise<void> {
-    const container = document.getElementById('textbookContainer') as HTMLDivElement;
+    const container = document.getElementById('content') as HTMLDivElement;
     const words = await this.getWords();
-    words.map((word) => BookPage.createWordCard(word))
-      .forEach((wordCard) => container.insertAdjacentHTML('beforeend', wordCard));
+    const wordsHtml = words.map((word) => BookPage.createWordCard(word)).join('');
+    container.innerHTML = wordsHtml;
   }
 
   static createWordCard(word: Word): string { // TODO - move to separate class?

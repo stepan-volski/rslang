@@ -2,12 +2,15 @@
 
 class Page {
   name: string;
+  appContainer: HTMLElement | null;
+  pageContainer: HTMLElement | null = null;
 
   constructor(name: string) {
     this.name = name;
+    this.appContainer = document.getElementById('app');
   }
 
-  render(): void { // Question: how to correctly make sbstract class?
+  openPage(): void { // Question: how to correctly make sbstract class?
     //
   }
 }
