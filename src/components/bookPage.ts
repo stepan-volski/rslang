@@ -21,12 +21,13 @@ class BookPage {
     container.innerHTML = wordsHtml;
   }
 
-  static createWordCard(word: Word): string { // TODO - move to separate class?
+  static createWordCard(word: Word): string { // TODO - move to wordCard class?
     return `
-      <div class="wordCard">
+      <div class="wordCard" data-wordId=${word.id}>
         <div>Word: ${word.word}</div>
         <div>Translation: ${word.wordTranslate}</div>
         <div>Transcription: ${word.transcription}</div>
+        <button class="difficultBtn">difficult</button>
       </div>
     `;
   }

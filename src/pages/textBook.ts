@@ -1,4 +1,5 @@
 import BookPage from '../components/bookPage';
+import { createWord } from '../service/api';
 import Page from './abstract/page';
 
 class TextBook extends Page {
@@ -49,6 +50,7 @@ class TextBook extends Page {
   initHandlers(): void {
     document.addEventListener('click', this.scrollPage.bind(this));
     document.getElementById('groupSelect')?.addEventListener('change', this.openSelectedGroup.bind(this));
+    document.addEventListener('click', TextBook.markWordAsHard.bind(this));
   }
 
   scrollPage(event: Event): void {
@@ -75,6 +77,16 @@ class TextBook extends Page {
   updatePageCounters(): void {
     (document.getElementById('currentPage') as HTMLDivElement).innerText = `Current page: ${this.currentPage}`;
     (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup}`;
+  }
+
+  static async markWordAsHard(event: Event): Promise<void> {
+    const element = event.target as HTMLElement;
+    const wordId = element.parentElement?.dataset.wordid;
+
+    if (element.className === 'difficultBtn' && wordId) {
+      await createWord('testUser', wordId);
+      // refresh page and mark words on ui
+    }
   }
 }
 
