@@ -1,9 +1,8 @@
-/* eslint-disable import/no-cycle */
-import authorizationLayout from './authorizationLayout';
 import LogIn from './logIn';
 import Registration from './registration';
+import authorizationLayout from './authorizationLayout';
 
-export class Authorization {
+class Authorization {
   formReg:Registration;
   formLog:LogIn;
   container:HTMLElement;
@@ -19,6 +18,9 @@ export class Authorization {
   renderAuthorizationContainer():HTMLElement {
     const container = document.createElement('div');
     container.innerHTML = this.layout;
+    container.id = 'authorization-container';
     return container;
   }
 }
+
+export default Authorization;

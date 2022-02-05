@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import { loginUser } from '../service/api';
 
 /* eslint-disable class-methods-use-this */
