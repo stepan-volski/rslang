@@ -10,9 +10,15 @@ type Word = {
   textMeaning: string;
   textExample: string;
   transcription: string;
+  userWord?: UserWord;
   textExampleTranslate: string;
   textMeaningTranslate: string;
   wordTranslate: string;
+};
+
+type UserWord = {
+  isDifficult: boolean;
+  isLearnt: boolean;
 };
 
 export default Word;

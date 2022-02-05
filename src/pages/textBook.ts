@@ -50,7 +50,7 @@ class TextBook extends Page {
   initHandlers(): void {
     document.addEventListener('click', this.scrollPage.bind(this));
     document.getElementById('groupSelect')?.addEventListener('change', this.openSelectedGroup.bind(this));
-    document.addEventListener('click', TextBook.markWordAsHard.bind(this));
+    document.addEventListener('click', TextBook.markWordAsDifficult.bind(this));
   }
 
   scrollPage(event: Event): void {
@@ -79,7 +79,7 @@ class TextBook extends Page {
     (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup}`;
   }
 
-  static async markWordAsHard(event: Event): Promise<void> {
+  static async markWordAsDifficult(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
     const wordId = element.parentElement?.dataset.wordid;
 

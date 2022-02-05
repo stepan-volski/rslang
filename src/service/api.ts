@@ -11,6 +11,13 @@ export async function getWords(groupNumber: number, pageNumber: number): Promise
   return response.json();
 }
 
+export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> { // realize this fn
+  const response = await fetch(`${words}?group=${groupNumber}&page=${pageNumber}`, {
+    method: 'GET',
+  });
+  return response.json();
+}
+
 // need to pass 'optional' object with 'difficult' and 'learned' flags
 export async function createWord(userId: string, wordId: string): Promise<void> {
   const response = await fetch(`${users}/${userId}/words/${wordId}`, {
