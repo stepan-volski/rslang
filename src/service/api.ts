@@ -23,7 +23,12 @@ export async function createWord(userId: string, wordId: string): Promise<void> 
   });
   return response.json();
 }
-
+export async function getWordbyId(id: string): Promise<Word[]> {
+  const response = await fetch(`${words}/${id}`, {
+    method: 'GET',
+  });
+  return response.json();
+}
 export async function createUser(body: IUser):Promise<void> {
   const user = await fetch(`${baseUrl}/users`, {
     method: 'POST',
@@ -46,7 +51,20 @@ export async function getUser(id:string, token:string):Promise<void> {
   });
   return word.json();
 }
+export async function updateUser(userId:string, body: IUser, token:string):Promise<void> {
+  const response = await fetch(`${users}/${userId}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${currentUser.token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const content = await response.json();
 
+  console.log(content);
+}
 export async function loginUser(user:IUser): Promise<void> {
   const response = await fetch(`${baseUrl}/signin`, {
     method: 'POST',
@@ -63,7 +81,6 @@ export async function loginUser(user:IUser): Promise<void> {
   currentUser.token = content.token;
   currentUser.userId = content.userId;
 }
-
 const authorization = new Authorization();
 
 async function createUserWord(userWord:ICreateUserWord) {
