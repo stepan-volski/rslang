@@ -1,6 +1,4 @@
-/* eslint-disable import/no-cycle */
-import { createUser } from '../service/api';
-/* eslint-disable class-methods-use-this */
+import { createUser } from "../service/api";
 
 class Registration {
   name:HTMLInputElement;
