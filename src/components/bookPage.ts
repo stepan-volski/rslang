@@ -1,6 +1,6 @@
-import Word from '../entity/word';
+import { Word } from '../service/interfaces';
 import { getWords, getAggregatedWords } from '../service/api';
-import { isUserLoggedIn } from '../utils/utils';
+import { isUserLoggedIn } from '../utils/loginUtils';
 
 class BookPage {
   pageNumber: number;
@@ -9,7 +9,6 @@ class BookPage {
   constructor(groupNumber: number, pageNumber: number) {
     this.pageNumber = pageNumber;
     this.groupNumber = groupNumber;
-    // this.isUserLoggedIn = isUserLoggedIn()??
   }
 
   async getWords(): Promise<Word[]> {
@@ -27,11 +26,11 @@ class BookPage {
 
   static createWordCard(word: Word): string {
     let isDifficult = '';
-    let isLearnt = '';
+    const isLearnt = '';
 
     if (word.userWord) {
-      isDifficult = (word.userWord.isDifficult) ? 'difficult' : '';
-      isLearnt = (word.userWord.isLearnt) ? 'learnt' : '';
+      isDifficult = word.userWord.difficulty;
+      // isLearnt = (word.userWord.isLearnt) ? 'learnt' : '';
     }
 
     const isHidden = (isUserLoggedIn()) ? '' : 'hidden';

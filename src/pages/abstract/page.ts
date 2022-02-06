@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-
-class Page {
+class Page {  // this page will be made into an interface
   name: string;
   appContainer: HTMLElement | null;
   pageContainer: HTMLElement | null = null;
@@ -10,7 +9,7 @@ class Page {
     this.appContainer = document.getElementById('app');
   }
 
-  openPage(): void { // Question: how to correctly make sbstract class?
+  openPage(): void { // Question: how to correctly make abstract class?
     //
   }
 }
