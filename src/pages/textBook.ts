@@ -1,5 +1,5 @@
 import BookPage from '../components/bookPage';
-import { createWord } from '../service/api';
+import { markWordAsDifficult } from '../service/api';
 import Page from './abstract/page';
 
 class TextBook extends Page {
@@ -39,7 +39,7 @@ class TextBook extends Page {
       <div id="content"></div>
     </div>
   `;
-    this.appContainer?.insertAdjacentHTML('afterbegin', pageHtml);
+    (this.appContainer as HTMLElement).innerHTML = pageHtml;
   }
 
   renderPageContent(): void {
@@ -50,7 +50,7 @@ class TextBook extends Page {
   initHandlers(): void {
     document.addEventListener('click', this.scrollPage.bind(this));
     document.getElementById('groupSelect')?.addEventListener('change', this.openSelectedGroup.bind(this));
-    document.addEventListener('click', TextBook.markWordAsHard.bind(this));
+    document.addEventListener('click', this.markWordAsDifficult.bind(this));
   }
 
   scrollPage(event: Event): void {
@@ -79,13 +79,13 @@ class TextBook extends Page {
     (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup}`;
   }
 
-  static async markWordAsHard(event: Event): Promise<void> {
+  async markWordAsDifficult(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
     const wordId = element.parentElement?.dataset.wordid;
 
     if (element.className === 'difficultBtn' && wordId) {
-      await createWord('testUser', wordId);
-      // refresh page and mark words on ui
+      await markWordAsDifficult(wordId);
+      this.renderPageContent();
     }
   }
 }

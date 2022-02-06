@@ -1,5 +1,6 @@
-import Word from '../entity/word';
-import { getWords } from '../service/api';
+import { Word } from '../service/interfaces';
+import { getWords, getAggregatedWords } from '../service/api';
+import { isUserLoggedIn } from '../utils/loginUtils';
 
 class BookPage {
   pageNumber: number;
@@ -11,7 +12,9 @@ class BookPage {
   }
 
   async getWords(): Promise<Word[]> {
-    return getWords(this.groupNumber, this.pageNumber);
+    return isUserLoggedIn()
+      ? getWords(this.groupNumber, this.pageNumber)
+      : getAggregatedWords(this.groupNumber, this.pageNumber);
   }
 
   async render(): Promise<void> {
@@ -21,13 +24,24 @@ class BookPage {
     container.innerHTML = wordsHtml;
   }
 
-  static createWordCard(word: Word): string { // TODO - move to wordCard class?
+  static createWordCard(word: Word): string {
+    let isDifficult = '';
+    const isLearnt = '';
+
+    if (word.userWord) {
+      isDifficult = word.userWord.difficulty;
+      // isLearnt = (word.userWord.isLearnt) ? 'learnt' : '';
+    }
+
+    const isHidden = (isUserLoggedIn()) ? '' : 'hidden';
+
     return `
-      <div class="wordCard" data-wordId=${word.id}>
+      <div class="wordCard ${isDifficult} ${isLearnt}" data-wordId=${word.id}>
         <div>Word: ${word.word}</div>
         <div>Translation: ${word.wordTranslate}</div>
         <div>Transcription: ${word.transcription}</div>
-        <button class="difficultBtn">difficult</button>
+        <button class="difficultBtn" ${isHidden}>difficult</button>
+        <button class="learntBtn" ${isHidden}>learnt</button>
       </div>
     `;
   }

@@ -1,4 +1,5 @@
 import About from '../pages/about';
+import Authorisation from '../pages/authorisation';
 import Games from '../pages/games';
 import Main from '../pages/main';
 import Statistics from '../pages/statistics';
@@ -10,16 +11,18 @@ type Routes = {
   textBook: TextBook;
   statistics: Statistics;
   games: Games;
+  authorisation: Authorisation;
 };
 
-type Pages = 'main' | 'textBook' | 'statistics' | 'about';
+type Pages = 'main' | 'textBook' | 'statistics' | 'about' | 'authorisation';
 
 class Router {
   routes: Routes;
 
   currentPage: Pages;
 
-  constructor(routes: { main: Main; about: About; textBook: TextBook; statistics: Statistics; games: Games }) {
+  constructor(routes: { main: Main; about: About; textBook: TextBook; statistics: Statistics;
+    games: Games; authorisation: Authorisation }) {
     this.routes = routes;
     this.currentPage = 'main';
     this.routes.main.openPage();
