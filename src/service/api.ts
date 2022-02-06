@@ -6,7 +6,7 @@ const baseUrl = 'https://rs-lang-application.herokuapp.com';
 const words = `${baseUrl}/words`;
 const users = `${baseUrl}/users`;
 
-function getCurrentUser(): ILoggedUser {  // move function to another place
+export function getCurrentUser(): ILoggedUser {  // move function to another place
   return JSON.parse(localStorage.getItem('user') || '');
 }
 
@@ -73,7 +73,7 @@ export async function loginUser(user: IUser): Promise<ILoggedUser> {
 }
 
 export async function createUserWord(userWord: ICreateUserWord): Promise<void> {
-  const response = await fetch(`${users}/${userWord.userId}/words/${userWord.wordId}`, {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/words/${userWord.wordId}`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${getCurrentUser().token}`,
@@ -86,7 +86,7 @@ export async function createUserWord(userWord: ICreateUserWord): Promise<void> {
 }
 
 export async function updateUserWord(userWord: ICreateUserWord): Promise<void> {
-  const response = await fetch(`${users}/${userWord.userId}/words/${userWord.wordId}`, {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/words/${userWord.wordId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${getCurrentUser().token}`,
@@ -97,39 +97,71 @@ export async function updateUserWord(userWord: ICreateUserWord): Promise<void> {
   });
   await response.json();
 }
-
-// must use create api for new words and update api for already created words
-export async function markWordAsDifficult(wordId: string): Promise<void> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}/words/${wordId}`, {
-    method: 'PUT',
+export async function getUsersWords(): Promise<ICreateUserWord[]> {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/words`, {
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${getCurrentUser().token}`,
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify('difficult'),    // 'difficult' = word is difficulte
   });
-  await response.json();
+  return response.json();
+}
+// must use create api for new words and update api for already created words
+export async function markWordAsDifficult(userWord: string): Promise<void> {
+  const userWords = await getUsersWords() as ICreateUserWord[];
+
+  const chosenWord = userWords.filter((word) => (word.wordId === userWord));
+
+  if (chosenWord.length > 0) {
+    updateUserWord({
+      wordId: userWord,
+      userWord: {
+        difficulty: 'difficult',
+        optional: {},
+      },
+    });
+  } else {
+    createUserWord({
+      wordId: userWord,
+      userWord: {
+        difficulty: 'difficult',
+        optional: {},
+      },
+    });
+  }
 }
 
 // must use update api for already created words
-export async function unmarkWordAsDifficult(wordId: string): Promise<void> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}/words/${wordId}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${getCurrentUser().token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(''), // '' = word is not difficult
-  });
-  await response.json();
+export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
+  const userWords = await getUsersWords() as ICreateUserWord[];
+
+  userWords.filter((word) => (word.wordId === userWord && word.userWord.difficulty === 'difficult'));
+
+  if (userWords.length > 0) {
+    updateUserWord({
+      wordId: userWord,
+      userWord: {
+        difficulty: 'undifficult',
+        optional: {},
+      },
+    });
+  }
 }
 
 // need to write this method
 export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> {
-  const response = await fetch(`${words}?group=${groupNumber}&page=${pageNumber}`, {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/aggregatedWords?group=${groupNumber}&page=${pageNumber}`, {
     method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   });
   return response.json();
 }
+
+console.log(getAggregatedWords(0, 0));
+console.log(getUsersWords());
