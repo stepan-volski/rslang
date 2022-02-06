@@ -13,8 +13,8 @@ class BookPage {
 
   async getWords(): Promise<Word[]> {
     return isUserLoggedIn()
-      ? getWords(this.groupNumber, this.pageNumber)
-      : getAggregatedWords(this.groupNumber, this.pageNumber);
+      ? getAggregatedWords(this.groupNumber, this.pageNumber)
+      : getWords(this.groupNumber, this.pageNumber);
   }
 
   async render(): Promise<void> {

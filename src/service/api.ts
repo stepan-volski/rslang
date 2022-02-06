@@ -97,6 +97,7 @@ export async function updateUserWord(userWord: ICreateUserWord): Promise<void> {
   });
   await response.json();
 }
+
 export async function getUsersWords(): Promise<ICreateUserWord[]> {
   const response = await fetch(`${users}/${getCurrentUser().userId}/words`, {
     method: 'GET',
@@ -108,7 +109,7 @@ export async function getUsersWords(): Promise<ICreateUserWord[]> {
   });
   return response.json();
 }
-// must use create api for new words and update api for already created words
+
 export async function markWordAsDifficult(userWord: string): Promise<void> {
   const userWords = await getUsersWords() as ICreateUserWord[];
 
@@ -133,7 +134,6 @@ export async function markWordAsDifficult(userWord: string): Promise<void> {
   }
 }
 
-// must use update api for already created words
 export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
   const userWords = await getUsersWords() as ICreateUserWord[];
 
@@ -143,16 +143,16 @@ export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
     updateUserWord({
       wordId: userWord,
       userWord: {
-        difficulty: 'undifficult',
+        difficulty: '',
         optional: {},
       },
     });
   }
 }
 
-// need to write this method
 export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}/aggregatedWords?group=${groupNumber}&page=${pageNumber}`, {
+  const response = await fetch(`${users}/${getCurrentUser().userId}
+  /aggregatedWords?group=${groupNumber}&page=${pageNumber}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${getCurrentUser().token}`,
@@ -163,5 +163,5 @@ export async function getAggregatedWords(groupNumber: number, pageNumber: number
   return response.json();
 }
 
-console.log(getAggregatedWords(0, 0));
-console.log(getUsersWords());
+// console.log(getAggregatedWords(0, 0));
+// console.log(getUsersWords());
