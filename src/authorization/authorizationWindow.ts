@@ -3,15 +3,15 @@ import RegistrationForm from './registrationForm';
 import authorizationLayout from './authorizationLayout';
 
 class AuthorizationWindow {
-  formReg: RegistrationForm;
-  formLog: LoginForm;
+  formReg: RegistrationForm | null;
+  formLog: LoginForm | null;
   container: HTMLElement;
   layout: string;
   constructor() {
     this.layout = authorizationLayout;
     this.container = this.renderAuthorizationContainer();
-    this.formReg = new RegistrationForm();
-    this.formLog = new LoginForm();
+    this.formReg = null;
+    this.formLog = null;
   }
 
   renderAuthorizationContainer(): HTMLElement {

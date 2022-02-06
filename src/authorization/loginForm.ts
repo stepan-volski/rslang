@@ -1,4 +1,4 @@
-import { loginUser } from '../service/api';
+import { logInUser } from '../utils/loginUtils';
 
 class LoginForm {
   passwordField: HTMLInputElement;
@@ -14,9 +14,12 @@ class LoginForm {
       const target = event.target as HTMLElement;
       if (target.id === 'login-btn') {
         event.preventDefault();
-        loginUser({ password: this.passwordField.value, email: this.emailField.value });
+        this.loginUser();
       }
     });
+  }
+  loginUser():void {
+    logInUser({ password: this.passwordField.value, email: this.emailField.value });
   }
 }
 export default LoginForm;

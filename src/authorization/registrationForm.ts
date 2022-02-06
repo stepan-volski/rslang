@@ -1,4 +1,5 @@
 import { createUser } from '../service/api';
+import { logInUser } from '../utils/loginUtils';
 
 class RegistrationForm {
   nameField: HTMLInputElement;
@@ -17,13 +18,18 @@ class RegistrationForm {
       const target = event.target as HTMLElement;
       if (target.id === 'signup-btn') {
         event.preventDefault();
-        createUser({
-          name: this.nameField.value,
-          email: this.emailField.value,
-          password: this.passwordField.value,
-        });
+        this.registerUser();
       }
     });
+  }
+
+  async registerUser(): Promise<void> {
+    await createUser({
+      name: this.nameField.value,
+      email: this.emailField.value,
+      password: this.passwordField.value,
+    });
+    logInUser({ password: this.passwordField.value, email: this.emailField.value });
   }
 }
 
