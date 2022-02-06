@@ -23,7 +23,6 @@ export interface IUser{
 }
 
 export interface ICreateUserWord{
-  userId: string,
   wordId: string,
   userWord: IUserWord
 }
