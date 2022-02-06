@@ -151,8 +151,7 @@ export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
 }
 
 export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}
-  /aggregatedWords?group=${groupNumber}&page=${pageNumber}`, {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/aggregatedWords?group=${groupNumber}&page=${pageNumber}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${getCurrentUser().token}`,
@@ -160,7 +159,9 @@ export async function getAggregatedWords(groupNumber: number, pageNumber: number
       'Content-Type': 'application/json',
     },
   });
-  return response.json();
+
+  const arr = await response.json();
+  return arr[0].paginatedResults;
 }
 
 // console.log(getAggregatedWords(0, 0));

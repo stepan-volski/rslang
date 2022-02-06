@@ -1,5 +1,6 @@
 export type Word = {
   id: string;
+  _id?: string;
   group: string;
   page: string;
   word: string;
