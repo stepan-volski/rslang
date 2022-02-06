@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
 import { getWords, getAggregatedWords } from '../service/api';
 import { isUserLoggedIn } from '../utils/loginUtils';
@@ -34,9 +35,8 @@ class BookPage {
     }
 
     const isHidden = (isUserLoggedIn()) ? '' : 'hidden';
-
     return `
-      <div class="wordCard ${isDifficult} ${isLearnt}" data-wordId=${word.id}>
+      <div class="wordCard ${isDifficult} ${isLearnt}" data-wordId=${word._id || word.id}>
         <div>Word: ${word.word}</div>
         <div>Translation: ${word.wordTranslate}</div>
         <div>Transcription: ${word.transcription}</div>
