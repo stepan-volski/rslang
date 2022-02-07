@@ -1,4 +1,4 @@
-import { logInUser } from '../utils/loginUtils';
+import { logInUser, logOutUser } from '../utils/loginUtils';
 
 class LoginForm {
   passwordField: HTMLInputElement;
@@ -12,9 +12,14 @@ class LoginForm {
   initHandlers():void {   // move to separate method, use login utils
     document.addEventListener('click', (event:Event) => {
       const target = event.target as HTMLElement;
+
       if (target.id === 'login-btn') {
         event.preventDefault();
         this.loginUser();
+      }
+
+      if (target.id === 'log-out-btn') {
+        logOutUser();
       }
     });
   }
