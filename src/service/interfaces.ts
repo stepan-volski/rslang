@@ -29,8 +29,11 @@ export interface ICreateUserWord{
 }
 
 export interface IUserWord{
+  wordId?:string,
   difficulty: string,
-  optional: Record<string, unknown>
+  optional: {
+    [key:string]:string
+  }
 }
 
 export interface ILoggedUser{
@@ -39,4 +42,12 @@ export interface ILoggedUser{
   refreshToken: string,
   userId: string,
   name: string
+}
+export interface IResponse {
+  wordId:string,
+  difficulty:string,
+  id:string,
+  optional?:{
+    [key:string]:string
+  }
 }

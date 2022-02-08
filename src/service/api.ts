@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  ICreateUserWord, ILoggedUser, IUser, Word,
+  ICreateUserWord, ILoggedUser, IResponse, IUser, IUserWord, Word,
 } from './interfaces';
 
 const baseUrl = 'https://rs-lang-application.herokuapp.com';
@@ -73,7 +73,7 @@ export async function loginUser(user: IUser): Promise<ILoggedUser> {
   return response.json();
 }
 
-export async function createUserWord(userWord: ICreateUserWord): Promise<void> {
+export async function createUserWord(userWord: IUserWord): Promise<void> {
   const response = await fetch(`${users}/${getCurrentUser().userId}/words/${userWord.wordId}`, {
     method: 'POST',
     headers: {
@@ -81,12 +81,15 @@ export async function createUserWord(userWord: ICreateUserWord): Promise<void> {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(userWord.userWord),
+    body: JSON.stringify({
+      difficulty: userWord.difficulty,
+      optional: userWord.optional,
+    }),
   });
   await response.json();
 }
 
-export async function updateUserWord(userWord: ICreateUserWord): Promise<void> {
+export async function updateUserWord(userWord: IUserWord): Promise<void> {
   const response = await fetch(`${users}/${getCurrentUser().userId}/words/${userWord.wordId}`, {
     method: 'PUT',
     headers: {
@@ -94,12 +97,15 @@ export async function updateUserWord(userWord: ICreateUserWord): Promise<void> {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(userWord.userWord),
+    body: JSON.stringify({
+      difficulty: userWord.difficulty,
+      optional: userWord.optional,
+    }),
   });
   await response.json();
 }
 
-export async function getUsersWords(): Promise<ICreateUserWord[]> {
+export async function getUsersWords(): Promise<IUserWord[]> {
   const response = await fetch(`${users}/${getCurrentUser().userId}/words`, {
     method: 'GET',
     headers: {
@@ -108,35 +114,64 @@ export async function getUsersWords(): Promise<ICreateUserWord[]> {
       'Content-Type': 'application/json',
     },
   });
-  return response.json();
+
+  const userWords:IUserWord[] = [];
+
+  const res = await response.json() as IResponse[];
+  res.forEach((e:IResponse) => {
+    const userWord = {
+      wordId: e.wordId,
+      difficulty: e.difficulty,
+      optional: e.optional ?? {},
+    };
+    userWords.push(userWord);
+  });
+
+  return userWords;
+}
+
+export async function getUserWordById(userWordId:string): Promise<IUserWord> {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/words/${userWordId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+  const res = await response.json() as IResponse;
+  return {
+    wordId: res.wordId,
+    difficulty: res.difficulty,
+    optional: {},
+  };
 }
 
 export async function markWordAsDifficult(userWord: string): Promise<void> {
-  const userWords = await getUsersWords() as ICreateUserWord[];
+  const userWords = await getUsersWords() as IUserWord[];
   const chosenWord = userWords.filter((word) => (word.wordId === userWord));
-  const params = {
+
+  const params: IUserWord = {
     wordId: userWord,
-    userWord: {
-      difficulty: 'difficult',
-      optional: {},
-    },
+    difficulty: 'difficult',
+    optional: {},
   };
 
   if (chosenWord.length > 0) {
-    await updateUserWord(params);
+    const word = await getUserWordById(userWord);
+    word.difficulty = 'difficult';
+    await updateUserWord(word);
   } else {
+    console.log(params);
     await createUserWord(params);
   }
 }
 
 export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
-  await updateUserWord({
-    wordId: userWord,
-    userWord: {
-      difficulty: 'notDifficult',
-      optional: {},
-    },
-  });
+  const word = await getUserWordById(userWord);
+
+  word.difficulty = 'unDifficult';
+  await updateUserWord(word);
 }
 
 export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> {
@@ -167,3 +202,31 @@ export async function getDifficultWords(): Promise<Word[]> {
   const arr = await response.json();
   return arr[0].paginatedResults;
 }
+export async function markWordAsLearned(userWord: string): Promise<void> {
+  const userWords = await getUsersWords() as IUserWord[];
+  const chosenWord = userWords.filter((word) => (word.wordId === userWord));
+
+  const params: IUserWord = {
+    wordId: userWord,
+    difficulty: '',
+    optional: {
+      learned: 'learned',
+    },
+  };
+
+  if (chosenWord.length > 0) {
+    const word = await getUserWordById(userWord);
+    word.optional.learned = 'learned';
+    await updateUserWord(word);
+  } else {
+    console.log(params);
+    await createUserWord(params);
+  }
+}
+export async function unmarkWordAsLearned(userWord: string): Promise<void> {
+  const word = await getUserWordById(userWord);
+
+  word.optional.learned = 'unLearned';
+  await updateUserWord(word);
+}
+
