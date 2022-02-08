@@ -201,6 +201,7 @@ export async function getDifficultWords(): Promise<Word[]> {
   const arr = await response.json();
   return arr[0].paginatedResults;
 }
+
 export async function markWordAsLearned(userWord: string): Promise<void> {
   const userWords = await getUsersWords() as IUserWord[];
   const chosenWord = userWords.filter((word) => (word.wordId === userWord));
@@ -229,4 +230,55 @@ export async function unmarkWordAsLearned(userWord: string): Promise<void> {
   await updateUserWord(word);
 }
 
-console.log(getUsersWords());
+export async function incrementCorrectAnswerCounter(userWord: string): Promise<void> {
+  const userWords = await getUsersWords() as IUserWord[];
+  const chosenWord = userWords.filter((word) => (word.wordId === userWord));
+
+  const params: IUserWord = {
+    wordId: userWord,
+    difficulty: '',
+    optional: {
+      correctAnswerCounter: 1,
+    },
+  };
+
+  if (chosenWord.length > 0) {
+    const word = await getUserWordById(userWord);
+
+    if (word.optional.correctAnswerCounter) {
+      word.optional.correctAnswerCounter += 1;
+    } else {
+      word.optional.correctAnswerCounter = 1;
+    }
+
+    await updateUserWord(word);
+  } else {
+    await createUserWord(params);
+  }
+}
+export async function incrementIncorrectAnswerCounter(userWord: string): Promise<void> {
+  const userWords = await getUsersWords() as IUserWord[];
+  const chosenWord = userWords.filter((word) => (word.wordId === userWord));
+
+  const params: IUserWord = {
+    wordId: userWord,
+    difficulty: '',
+    optional: {
+      incorrectAnswerCounter: 1,
+    },
+  };
+
+  if (chosenWord.length > 0) {
+    const word = await getUserWordById(userWord);
+
+    if (word.optional.incorrectAnswerCounter) {
+      word.optional.incorrectAnswerCounter += 1;
+    } else {
+      word.optional.incorrectAnswerCounter = 1;
+    }
+
+    await updateUserWord(word);
+  } else {
+    await createUserWord(params);
+  }
+}

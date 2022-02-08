@@ -32,7 +32,9 @@ export interface IUserWord{
   wordId?:string,
   difficulty: string,
   optional: {
-    [key:string]:string
+    learned?:string,
+    correctAnswerCounter?:number
+    incorrectAnswerCounter?:number
   }
 }
 
@@ -48,6 +50,8 @@ export interface IResponse {
   difficulty:string,
   id:string,
   optional?:{
-    [key:string]:string
+    learned?:string,
+    correctAnswerCounter?:number
+    incorrectAnswerCounter?:number
   }
 }
