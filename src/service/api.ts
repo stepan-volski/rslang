@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  ICreateUserWord, ILoggedUser, IResponse, IUser, IUserWord, Word,
+  ICreateUserWord, ILoggedUser, IResponse, IStatistic, IUser, IUserWord, Word,
 } from './interfaces';
 
 const baseUrl = 'https://rs-lang-application.herokuapp.com';
@@ -282,3 +282,66 @@ export async function incrementIncorrectAnswerCounter(userWord: string): Promise
     await createUserWord(params);
   }
 }
+
+// STAT
+// should call updateStatistic(startStat) init Statistic with 0 all property
+const initStat:IStatistic = {
+  learnedWords: 0,
+  optional: {
+    day: {
+      audioChallenge: {
+        countNewWords: 0,
+        trueAnswersSeriesLength: 0,
+        trueAnswersCount: 0,
+        wrongAnswersCount: 0,
+      },
+      sprint: {
+        countNewWords: 0,
+        trueAnswersSeriesLength: 0,
+        trueAnswersCount: 0,
+        wrongAnswersCount: 0,
+      },
+      words: {
+        countNewWords: 0,
+        countLearnedWords: 0,
+      },
+    },
+  },
+};
+
+export async function updateStatistic(body:IStatistic): Promise<void> {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  await response.json();
+}
+
+export async function getStatistic(): Promise<IStatistic> {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.json();
+}
+// example method
+// for audioChallenge
+export async function increaseCorrectAnswersCount(): Promise<void> {
+  const stat = await getStatistic();
+
+  stat.optional.day.audioChallenge.trueAnswersCount += 1;
+  updateStatistic(stat);
+}
+/* updateStatistic(initStat);
+(async () => {
+  console.log(await getStatistic());
+})(); */
