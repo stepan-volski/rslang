@@ -143,7 +143,7 @@ export async function getUserWordById(userWordId:string): Promise<IUserWord> {
   return {
     wordId: res.wordId,
     difficulty: res.difficulty,
-    optional: {},
+    optional: res.optional ?? {},
   };
 }
 
@@ -169,7 +169,6 @@ export async function markWordAsDifficult(userWord: string): Promise<void> {
 
 export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
   const word = await getUserWordById(userWord);
-
   word.difficulty = 'unDifficult';
   await updateUserWord(word);
 }
@@ -230,3 +229,4 @@ export async function unmarkWordAsLearned(userWord: string): Promise<void> {
   await updateUserWord(word);
 }
 
+console.log(getUsersWords());
