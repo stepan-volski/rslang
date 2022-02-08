@@ -1,15 +1,18 @@
 import BookPage from '../components/bookPage';
-import { markWordAsDifficult } from '../service/api';
+import { markWordAsDifficult, unmarkWordAsDifficult } from '../service/api';
+import { isUserLoggedIn } from '../utils/loginUtils';
 import Page from './abstract/page';
 
 class TextBook extends Page {
   currentPage: number;
   currentGroup: number;
+  isDifficultSectionOpened: boolean;
 
   constructor() {
     super('Textbook');
     this.currentPage = 0;
     this.currentGroup = 0;
+    this.isDifficultSectionOpened = false;
   }
 
   openPage(): void {
@@ -19,6 +22,7 @@ class TextBook extends Page {
   }
 
   renderPageElements(): void {
+    const isHidden = (isUserLoggedIn) ? '' : 'hidden';
     const pageHtml = `
     <div id="textbookContainer">
       <div id="controls">
@@ -36,6 +40,7 @@ class TextBook extends Page {
           <option value="5">5</option>
         </select>
       </div>
+      <button id="difficultWords" ${isHidden}>Open difficult words section</button>
       <div id="content"></div>
     </div>
   `;
@@ -43,14 +48,19 @@ class TextBook extends Page {
   }
 
   renderPageContent(): void {
-    new BookPage(this.currentGroup, this.currentPage).render();
-    this.updatePageCounters();
+    if (this.isDifficultSectionOpened) {
+      new BookPage(0, 0).render(true);
+    } else {
+      new BookPage(this.currentGroup, this.currentPage).render();
+      this.updatePageCounters();
+    }
   }
 
   initHandlers(): void {
     document.addEventListener('click', this.scrollPage.bind(this));
     document.getElementById('groupSelect')?.addEventListener('change', this.openSelectedGroup.bind(this));
-    document.addEventListener('click', this.markWordAsDifficult.bind(this));
+    document.addEventListener('click', this.changeWordDifficulty.bind(this));
+    document.getElementById('difficultWords')?.addEventListener('click', this.toggleDifficultWordsSection.bind(this));
   }
 
   scrollPage(event: Event): void {
@@ -79,13 +89,31 @@ class TextBook extends Page {
     (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup}`;
   }
 
-  async markWordAsDifficult(event: Event): Promise<void> {
+  async changeWordDifficulty(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
     const wordId = element.parentElement?.dataset.wordid;
 
     if (element.className === 'difficultBtn' && wordId) {
-      await markWordAsDifficult(wordId);
+      if (element.parentElement.classList.contains('difficult')) {
+        await unmarkWordAsDifficult(wordId);
+      } else {
+        await markWordAsDifficult(wordId);
+      }
       this.renderPageContent();
+    }
+  }
+
+  toggleDifficultWordsSection(): void {
+    if (this.isDifficultSectionOpened) {
+      this.isDifficultSectionOpened = false;
+      (document.getElementById('controls') as HTMLElement).hidden = false;
+      (document.getElementById('difficultWords') as HTMLElement).innerText = 'Open Difficult Words section';
+      this.renderPageContent();
+    } else {
+      this.isDifficultSectionOpened = true;
+      (document.getElementById('controls') as HTMLElement).hidden = true;
+      (document.getElementById('difficultWords') as HTMLElement).innerText = 'Close Difficult Words section';
+      new BookPage(0, 0).render(true);
     }
   }
 }

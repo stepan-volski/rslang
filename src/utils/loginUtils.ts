@@ -12,7 +12,7 @@ function renderLoggedUser(user:IUser) {
   userContainer.id = 'logged-user-container';
 
   const userImage = new Image(50, 50);
-  userImage.src = './149071.png';
+  userImage.src = '../assets/userLogo.png';
 
   const logOutBtn = document.createElement('button');
   logOutBtn.innerHTML = 'logOut';
@@ -32,11 +32,9 @@ export async function logInUser(user: IUser): Promise<void> {
   const loggedUser = await loginUser(user);
   localStorage.setItem('user', JSON.stringify(loggedUser));
   renderLoggedUser(user);
-  // + change ui?
 }
 
 export function logOutUser(): void {
   localStorage.removeItem('user');
   (<HTMLElement>document.getElementById('logged-user-container')).remove();
-  // + change ui?
 }

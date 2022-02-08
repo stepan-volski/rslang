@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   ICreateUserWord, ILoggedUser, IUser, Word,
 } from './interfaces';
@@ -112,46 +113,34 @@ export async function getUsersWords(): Promise<ICreateUserWord[]> {
 
 export async function markWordAsDifficult(userWord: string): Promise<void> {
   const userWords = await getUsersWords() as ICreateUserWord[];
-
   const chosenWord = userWords.filter((word) => (word.wordId === userWord));
+  const params = {
+    wordId: userWord,
+    userWord: {
+      difficulty: 'difficult',
+      optional: {},
+    },
+  };
 
   if (chosenWord.length > 0) {
-    updateUserWord({
-      wordId: userWord,
-      userWord: {
-        difficulty: 'difficult',
-        optional: {},
-      },
-    });
+    await updateUserWord(params);
   } else {
-    createUserWord({
-      wordId: userWord,
-      userWord: {
-        difficulty: 'difficult',
-        optional: {},
-      },
-    });
+    await createUserWord(params);
   }
 }
 
 export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
-  const userWords = await getUsersWords() as ICreateUserWord[];
-
-  userWords.filter((word) => (word.wordId === userWord && word.userWord.difficulty === 'difficult'));
-
-  if (userWords.length > 0) {
-    updateUserWord({
-      wordId: userWord,
-      userWord: {
-        difficulty: '',
-        optional: {},
-      },
-    });
-  }
+  await updateUserWord({
+    wordId: userWord,
+    userWord: {
+      difficulty: 'notDifficult',
+      optional: {},
+    },
+  });
 }
 
 export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}/aggregatedWords?group=${groupNumber}&page=${pageNumber}`, {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/aggregatedWords?group=${groupNumber}&page=${pageNumber}&wordsPerPage=20`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${getCurrentUser().token}`,
@@ -164,5 +153,17 @@ export async function getAggregatedWords(groupNumber: number, pageNumber: number
   return arr[0].paginatedResults;
 }
 
-// console.log(getAggregatedWords(0, 0));
-// console.log(getUsersWords());
+export async function getDifficultWords(): Promise<Word[]> {
+  const filter = JSON.stringify({ $or: [{ 'userWord.difficulty': 'difficult' }] });
+  const response = await fetch(`${users}/${getCurrentUser().userId}/aggregatedWords?wordsPerPage=100&filter=${filter}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const arr = await response.json();
+  return arr[0].paginatedResults;
+}
