@@ -1,3 +1,7 @@
+/* eslint-disable class-methods-use-this */   // TODO REMOVE!!!
+
+import AudioChallenge from '../games/audioChallenge';
+import { getWords } from '../service/api';
 import Page from './abstract/page';
 
 class Games extends Page {
@@ -6,9 +10,38 @@ class Games extends Page {
   }
 
   openPage(): void {
-    const pageName = this.name;
+    this.renderPageElements();
+    this.initHandlers();
+  }
+
+  renderPageElements(): void {
     const appContainer = document.getElementById('app') as HTMLElement;
-    appContainer.innerHTML = `<div id="${pageName.toLowerCase()}Container">${pageName} container is here</div>`;
+    const pageHtml = `
+    <div id="GamesContainer">
+      <button id="audioChallengeBtn" data-game="challenge">Audio Challenge</button>
+      <button id="sprintBtn" data-game="sprint">Sprint</button>
+    </div>
+  `;
+    (appContainer as HTMLElement).innerHTML = pageHtml;
+  }
+
+  initHandlers(): void {
+    document.addEventListener('click', this.launchGame.bind(this));
+  }
+
+  async launchGame(event: Event): Promise<void> {
+    const element = event.target as HTMLElement;
+    const gameName = element.dataset.game;
+
+    if (gameName === 'challenge') {
+      const game = new AudioChallenge();
+      const words = await getWords(1, 1);
+      game.startGame(words);
+    }
+
+    if (gameName === 'sprint') {
+      console.log('sprint game is launched');
+    }
   }
 }
 
