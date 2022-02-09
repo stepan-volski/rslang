@@ -57,24 +57,26 @@ export interface IResponse {
 }
 
 export interface IStatistic{
-  learnedWords:number
+  learnedWords?:number
   optional:{
     day:{
       audioChallenge:{
         countNewWords:number
-        trueAnswersSeriesLength:number
-        trueAnswersCount:number
-        wrongAnswersCount:number
+        correctAnswersSeriesLength:number
+        correctAnswersCount:number
+        incorrectAnswersCount:number
       }
       sprint:{
         countNewWords:number
-        trueAnswersSeriesLength:number
-        trueAnswersCount:number
-        wrongAnswersCount:number
+        correctAnswersSeriesLength:number
+        correctAnswersCount:number
+        incorrectAnswersCount:number
       }
       words:{
         countNewWords:number
         countLearnedWords:number
+        correctAnswersCount:number
+        incorrectAnswersCount:number
       }
     }
     all?:IStatistic[]

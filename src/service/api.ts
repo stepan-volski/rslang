@@ -291,25 +291,27 @@ const initStat:IStatistic = {
     day: {
       audioChallenge: {
         countNewWords: 0,
-        trueAnswersSeriesLength: 0,
-        trueAnswersCount: 0,
-        wrongAnswersCount: 0,
+        correctAnswersSeriesLength: 0,
+        correctAnswersCount: 0,
+        incorrectAnswersCount: 0,
       },
       sprint: {
         countNewWords: 0,
-        trueAnswersSeriesLength: 0,
-        trueAnswersCount: 0,
-        wrongAnswersCount: 0,
+        correctAnswersSeriesLength: 0,
+        correctAnswersCount: 0,
+        incorrectAnswersCount: 0,
       },
       words: {
         countNewWords: 0,
         countLearnedWords: 0,
+        correctAnswersCount: 0,
+        incorrectAnswersCount: 0,
       },
     },
   },
 };
 
-export async function updateStatistic(body:IStatistic): Promise<void> {
+export async function updateStatistic(body:IStatistic): Promise<IStatistic> {
   const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
     method: 'PUT',
     headers: {
@@ -319,7 +321,7 @@ export async function updateStatistic(body:IStatistic): Promise<void> {
     },
     body: JSON.stringify(body),
   });
-  await response.json();
+  return response.json();
 }
 
 export async function getStatistic(): Promise<IStatistic> {
@@ -331,17 +333,36 @@ export async function getStatistic(): Promise<IStatistic> {
       'Content-Type': 'application/json',
     },
   });
-  return response.json();
+  const res = await response.json();
+  return {
+    learnedWords: res.learnedWords,
+    optional: res.optional,
+  };
 }
 // example method
 // for audioChallenge
-export async function increaseCorrectAnswersCount(): Promise<void> {
+export async function increaseAnswersCount(statName:string, correctness:string): Promise<void> {
   const stat = await getStatistic();
 
-  stat.optional.day.audioChallenge.trueAnswersCount += 1;
+  switch (`${statName} ${correctness}`) {
+    case 'Audio Challenge correct': stat.optional.day.audioChallenge.correctAnswersCount += 1; break;
+    case 'Audio Challenge incorrect': stat.optional.day.audioChallenge.incorrectAnswersCount += 1; break;
+    case 'Sprint correct': stat.optional.day.sprint.correctAnswersCount += 1; break;
+    case 'Sprint incorrect': stat.optional.day.sprint.incorrectAnswersCount += 1; break;
+    case 'Words correct': stat.optional.day.words.correctAnswersCount += 1; break;
+    case 'Words incorrect': stat.optional.day.words.incorrectAnswersCount += 1; break;
+    default: break;
+  }
+
   updateStatistic(stat);
 }
-/* updateStatistic(initStat);
-(async () => {
+// test
+/* (async () => {
+  await increaseAnswersCount('Audio Challenge', 'correct');
+  await increaseAnswersCount('Audio Challenge', 'incorrect');
+  await increaseAnswersCount('Sprint', 'correct');
+  await increaseAnswersCount('Sprint', 'incorrect');
+  await increaseAnswersCount('Words', 'correct');
+  await increaseAnswersCount('Words', 'incorrect');
   console.log(await getStatistic());
 })(); */
