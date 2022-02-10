@@ -341,6 +341,7 @@ export async function getStatistic(): Promise<IStatistic> {
 }
 // example method
 // for audioChallenge
+
 export async function increaseAnswersCount(statName:string, correctness:string): Promise<void> {
   const stat = await getStatistic();
 
@@ -356,6 +357,45 @@ export async function increaseAnswersCount(statName:string, correctness:string):
 
   updateStatistic(stat);
 }
+
+export async function increaseСorrectAnswersSeries(statName:string, correctStreak: number): Promise<void> {
+  const stat = await getStatistic();
+
+  switch (`${statName}`) {
+    case 'Audio Challenge':
+      if (correctStreak > stat.optional.day.audioChallenge.correctAnswersSeriesLength) {
+        stat.optional.day.audioChallenge.correctAnswersSeriesLength = correctStreak;
+      }
+      break;
+    case 'Sprint':
+      if (correctStreak > stat.optional.day.sprint.correctAnswersSeriesLength) {
+        stat.optional.day.audioChallenge.correctAnswersSeriesLength = correctStreak;
+      }
+      break;
+    default: break;
+  }
+
+  updateStatistic(stat);
+}
+export async function increaseСountNewWords(statName:string): Promise<void> {
+  const stat = await getStatistic();
+
+  switch (`${statName}`) {
+    case 'Audio Challenge': stat.optional.day.audioChallenge.countNewWords += 1; break;
+    case 'Sprint': stat.optional.day.sprint.countNewWords += 1; break;
+    case 'Words': stat.optional.day.words.countNewWords += 1; break;
+    default: break;
+  }
+
+  updateStatistic(stat);
+}
+export async function increaseCountLearnedWords(): Promise<void> {
+  const stat = await getStatistic();
+
+  stat.optional.day.words.countLearnedWords += 1;
+
+  updateStatistic(stat);
+}
 // test
 /* (async () => {
   await increaseAnswersCount('Audio Challenge', 'correct');
@@ -364,5 +404,13 @@ export async function increaseAnswersCount(statName:string, correctness:string):
   await increaseAnswersCount('Sprint', 'incorrect');
   await increaseAnswersCount('Words', 'correct');
   await increaseAnswersCount('Words', 'incorrect');
+
+  await increaseСountNewWords('Audio Challenge');
+  await increaseСountNewWords('Sprint');
+  await increaseСountNewWords('Words');
+
+  await increaseСorrectAnswersSeries('Audio Challenge', 1);
+  await increaseСorrectAnswersSeries('Sprint', 1);
+  await increaseCountLearnedWords();
   console.log(await getStatistic());
 })(); */
