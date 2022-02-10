@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
-import { getWords, getAggregatedWords, getDifficultWords } from '../service/api';
+import { getAggregatedWords, getDifficultWords } from '../service/usersWordsApi';
+import { getWords } from '../service/wordsApi';
 import { isUserLoggedIn } from '../utils/loginUtils';
 
 class BookPage {
@@ -23,7 +24,7 @@ class BookPage {
   async render(isOnlyDifficultWords = false): Promise<void> {
     const container = document.getElementById('content') as HTMLDivElement;
     const words = isOnlyDifficultWords ? await getDifficultWords() : await this.getWords();
-    const wordsHtml = words.map((word) => this.createWordCard(word)).join('');
+    const wordsHtml = words.map((word: Word) => this.createWordCard(word)).join('');
     container.innerHTML = wordsHtml;
   }
 

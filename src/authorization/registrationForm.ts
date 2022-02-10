@@ -1,4 +1,4 @@
-import { createUser } from '../service/api';
+import { createUser } from '../service/userApi';
 import { logInUser } from '../utils/loginUtils';
 
 class RegistrationForm {

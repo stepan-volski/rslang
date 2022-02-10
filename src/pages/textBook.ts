@@ -1,5 +1,5 @@
 import BookPage from '../components/bookPage';
-import { markWordAsDifficult, unmarkWordAsDifficult } from '../service/api';
+import { markWordAsDifficult, unmarkWordAsDifficult } from '../service/usersWordsApi';
 import { isUserLoggedIn } from '../utils/loginUtils';
 import Page from './abstract/page';
 
