@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  ICreateUserWord, ILoggedUser, IResponse, IUser, IUserWord, Word,
+  ICreateUserWord, ILoggedUser, IResponse, IStatistic, IUser, IUserWord, Word,
 } from './interfaces';
 
 const baseUrl = 'https://rs-lang-application.herokuapp.com';
@@ -282,3 +282,87 @@ export async function incrementIncorrectAnswerCounter(userWord: string): Promise
     await createUserWord(params);
   }
 }
+
+// STAT
+// should call updateStatistic(startStat) init Statistic with 0 all property
+const initStat:IStatistic = {
+  learnedWords: 0,
+  optional: {
+    day: {
+      audioChallenge: {
+        countNewWords: 0,
+        correctAnswersSeriesLength: 0,
+        correctAnswersCount: 0,
+        incorrectAnswersCount: 0,
+      },
+      sprint: {
+        countNewWords: 0,
+        correctAnswersSeriesLength: 0,
+        correctAnswersCount: 0,
+        incorrectAnswersCount: 0,
+      },
+      words: {
+        countNewWords: 0,
+        countLearnedWords: 0,
+        correctAnswersCount: 0,
+        incorrectAnswersCount: 0,
+      },
+    },
+  },
+};
+
+export async function updateStatistic(body:IStatistic): Promise<IStatistic> {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  return response.json();
+}
+
+export async function getStatistic(): Promise<IStatistic> {
+  const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getCurrentUser().token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+  const res = await response.json();
+  return {
+    learnedWords: res.learnedWords,
+    optional: res.optional,
+  };
+}
+// example method
+// for audioChallenge
+export async function increaseAnswersCount(statName:string, correctness:string): Promise<void> {
+  const stat = await getStatistic();
+
+  switch (`${statName} ${correctness}`) {
+    case 'Audio Challenge correct': stat.optional.day.audioChallenge.correctAnswersCount += 1; break;
+    case 'Audio Challenge incorrect': stat.optional.day.audioChallenge.incorrectAnswersCount += 1; break;
+    case 'Sprint correct': stat.optional.day.sprint.correctAnswersCount += 1; break;
+    case 'Sprint incorrect': stat.optional.day.sprint.incorrectAnswersCount += 1; break;
+    case 'Words correct': stat.optional.day.words.correctAnswersCount += 1; break;
+    case 'Words incorrect': stat.optional.day.words.incorrectAnswersCount += 1; break;
+    default: break;
+  }
+
+  updateStatistic(stat);
+}
+// test
+/* (async () => {
+  await increaseAnswersCount('Audio Challenge', 'correct');
+  await increaseAnswersCount('Audio Challenge', 'incorrect');
+  await increaseAnswersCount('Sprint', 'correct');
+  await increaseAnswersCount('Sprint', 'incorrect');
+  await increaseAnswersCount('Words', 'correct');
+  await increaseAnswersCount('Words', 'incorrect');
+  console.log(await getStatistic());
+})(); */

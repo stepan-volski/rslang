@@ -55,3 +55,30 @@ export interface IResponse {
     incorrectAnswerCounter?:number
   }
 }
+
+export interface IStatistic{
+  learnedWords?:number
+  optional:{
+    day:{
+      audioChallenge:{
+        countNewWords:number
+        correctAnswersSeriesLength:number
+        correctAnswersCount:number
+        incorrectAnswersCount:number
+      }
+      sprint:{
+        countNewWords:number
+        correctAnswersSeriesLength:number
+        correctAnswersCount:number
+        incorrectAnswersCount:number
+      }
+      words:{
+        countNewWords:number
+        countLearnedWords:number
+        correctAnswersCount:number
+        incorrectAnswersCount:number
+      }
+    }
+    all?:IStatistic[]
+  }
+}

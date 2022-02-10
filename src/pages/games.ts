@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */   // TODO REMOVE!!!
 
 import AudioChallenge from '../games/audioChallenge';
+import Sprint from '../games/sprint';
 import { getWords } from '../service/api';
 import Page from './abstract/page';
 
@@ -41,6 +42,9 @@ class Games extends Page {
 
     if (gameName === 'sprint') {
       console.log('sprint game is launched');
+      const game = new Sprint();
+      const words = await getWords(1, 1);
+      game.startGame(words);
     }
   }
 }
