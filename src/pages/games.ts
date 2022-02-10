@@ -35,9 +35,9 @@ class Games extends Page {
     const gameName = element.dataset.game;
 
     if (gameName === 'challenge') {
-      const game = new AudioChallenge();
       const words = await getWords(1, 1);
-      game.startGame(words);
+      const game = new AudioChallenge(words);
+      game.startGame();
     }
 
     if (gameName === 'sprint') {
