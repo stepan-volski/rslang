@@ -24,7 +24,10 @@ const initStat: IStatistic = {
       },
       currentDay: 1,
     },
-    all: {},
+    all: {
+      newWordsPerDay: [0],
+      totalLearnedWordsPerDay: [0],
+    },
   },
 };
 
