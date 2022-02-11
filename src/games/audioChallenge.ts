@@ -70,12 +70,12 @@ class AudioChallenge extends Game {
     counter.innerText = `Current question is ${this.currentQuestionNumber}/20`;
   }
 
-  answer(event: Event): void {
+  async answer(event: Event): Promise<void> {
     const button = event.target as HTMLElement;
     if (button.innerText === this.currentQuestion.questionWord?.wordTranslate) {
-      this.registerCorrectAnswer();
+      await this.registerCorrectAnswer();
     } else {
-      this.registerIncorrectAnswer();
+      await this.registerIncorrectAnswer();
     }
     this.currentQuestionNumber++;
     this.showQuestion();
@@ -103,47 +103,47 @@ class AudioChallenge extends Game {
     (appContainer as HTMLElement).innerHTML = resultsHtml;
   }
 
-  registerCorrectAnswer(): void {
+  async registerCorrectAnswer(): Promise<void> {
     // todo - move out
     const counter = document.getElementById('correctCounter') as HTMLElement;
     counter.innerText = `Correct Answers: ${this.correctAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
-    const wordId = word._id as string;
+    const wordId = (word._id || word.id) as string;
     this.correctAnswers++;
     this.longestWinningStreak++;
 
     // send statistics
-    increaseAnswersCount('Audio Challenge', 'correct');
-    incrementCorrectAnswerCounter(wordId);
+    await increaseAnswersCount('Audio Challenge', 'correct');
+    await incrementCorrectAnswerCounter(wordId);
     if (isWordNew(word)) {
-      increaseСountNewWords('Audio Challenge');
+      await increaseСountNewWords('Audio Challenge');
     }
     if (!word.userWord?.optional.learned) {
-      increaseWordLearnProgress(wordId);
+      await increaseWordLearnProgress(wordId);
     }
   }
 
-  registerIncorrectAnswer(): void {
+  async registerIncorrectAnswer(): Promise<void> {
     // todo - move out
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
     counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
-    const wordId = word._id as string;
+    const wordId = (word._id || word.id) as string;
     this.incorrectAnswers++;
     this.longestWinningStreak = 0;
 
     // send statistics
-    increaseAnswersCount('Audio Challenge', 'incorrect');
-    incrementIncorrectAnswerCounter(wordId);
-    resetWordLearnProgress(wordId);
+    await increaseAnswersCount('Audio Challenge', 'incorrect');
+    await incrementIncorrectAnswerCounter(wordId);
+    await resetWordLearnProgress(wordId);
 
     if (isWordNew(word)) {
-      increaseСountNewWords('Audio Challenge');
+      await increaseСountNewWords('Audio Challenge');
     }
     if (word.userWord?.optional.learned) {
-      unmarkWordAsLearned(wordId);
+      await unmarkWordAsLearned(wordId);
     }
   }
 
@@ -157,3 +157,4 @@ class AudioChallenge extends Game {
 export default AudioChallenge;
 
 // check if current question is reset correctly
+// see which api requests can be made w/o await
