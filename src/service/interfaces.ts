@@ -54,7 +54,7 @@ export interface IResponse {
 }
 
 export interface IStatistic{
-  learnedWords?:number
+  learnedWords:number
   optional:{
     day:{
       audioChallenge:{
@@ -77,6 +77,9 @@ export interface IStatistic{
       }
       currentDay: number
     }
-    all:{ [key:string]:IStatistic }
+    all:{
+      newWordsPerDay: number[]
+      totalLearnedWordsPerDay: number[]
+    }
   }
 }
