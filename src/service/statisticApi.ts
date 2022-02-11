@@ -81,3 +81,11 @@ export async function increaseCountLearnedWords(): Promise<void> {
 
   updateStatistic(stat);
 }
+
+export async function decreaseCountLearnedWords(): Promise<void> {
+  const stat = await getStatistic();
+
+  stat.optional.day.words.countLearnedWords -= 1;
+
+  updateStatistic(stat);
+}
