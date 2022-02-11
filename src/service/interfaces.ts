@@ -23,18 +23,14 @@ export interface IUser{
   password: string
 }
 
-export interface ICreateUserWord{
-  wordId: string,
-  userWord: IUserWord
-}
-
 export interface IUserWord{
-  wordId?:string,
-  difficulty: string,
+  wordId?:string
+  difficulty: string
   optional: {
-    learned?:string,
-    correctAnswerCounter?:number
-    incorrectAnswerCounter?:number
+    learned:boolean
+    learningProgress: number
+    correctAnswerCounter:number
+    incorrectAnswerCounter:number
   }
 }
 
@@ -49,10 +45,11 @@ export interface IResponse {
   wordId:string,
   difficulty:string,
   id:string,
-  optional?:{
-    learned?:string,
-    correctAnswerCounter?:number
-    incorrectAnswerCounter?:number
+  optional:{
+    learned: boolean,
+    learningProgress: number
+    correctAnswerCounter: number
+    incorrectAnswerCounter: number
   }
 }
 
@@ -78,7 +75,8 @@ export interface IStatistic{
         correctAnswersCount:number
         incorrectAnswersCount:number
       }
+      currentDay: number
     }
-    all?:IStatistic[]
+    all:{ [key:string]:IStatistic }
   }
 }

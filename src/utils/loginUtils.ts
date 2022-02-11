@@ -1,5 +1,5 @@
-import { loginUser } from '../service/api';
 import { ILoggedUser, IUser } from '../service/interfaces';
+import { loginUser } from '../service/userApi';
 
 export function getCurrentUser(): ILoggedUser {
   return JSON.parse(localStorage.getItem('user') || '');

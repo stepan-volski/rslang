@@ -2,7 +2,7 @@
 
 import AudioChallenge from '../games/audioChallenge';
 import Sprint from '../games/sprint';
-import { getWords } from '../service/api';
+import { getWords } from '../service/wordsApi';
 import Page from './abstract/page';
 
 class Games extends Page {
