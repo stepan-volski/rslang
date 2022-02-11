@@ -60,12 +60,12 @@ export async function getUsersWords(): Promise<IUserWord[]> {
   res.forEach((e:IResponse) => {
     const userWord = {
       wordId: e.wordId,
-      difficulty: e.difficulty,
+      difficulty: e.difficulty || 'notDifficult',
       optional: {
-        learned: e.optional.learned,
-        learningProgress: e.optional.learningProgress,
-        correctAnswerCounter: e.optional.correctAnswerCounter,
-        incorrectAnswerCounter: e.optional.incorrectAnswerCounter,
+        learned: e.optional?.learned || false,
+        learningProgress: e.optional?.learningProgress || 0,
+        correctAnswerCounter: e.optional?.correctAnswerCounter || 0,
+        incorrectAnswerCounter: e.optional?.incorrectAnswerCounter || 0,
       },
     };
     userWords.push(userWord);
@@ -85,12 +85,12 @@ export async function getUserWordById(userWordId:string): Promise<IUserWord> {
   const res = await response.json() as IResponse;
   return {
     wordId: res.wordId,
-    difficulty: res.difficulty,
+    difficulty: res.difficulty || 'notDifficult',
     optional: {
-      learned: res.optional.learned,
-      learningProgress: res.optional.learningProgress,
-      correctAnswerCounter: res.optional.correctAnswerCounter,
-      incorrectAnswerCounter: res.optional.incorrectAnswerCounter,
+      learned: res.optional?.learned || false,
+      learningProgress: res.optional?.learningProgress || 0,
+      correctAnswerCounter: res.optional?.correctAnswerCounter || 0,
+      incorrectAnswerCounter: res.optional?.incorrectAnswerCounter || 0,
     },
   };
 }
@@ -203,7 +203,6 @@ export async function incrementCorrectAnswerCounter(userWord: string): Promise<v
       incorrectAnswerCounter: 0,
     },
   };
-
   if (chosenWord.length > 0) {
     const word = await getUserWordById(userWord);
     word.optional.correctAnswerCounter += 1;

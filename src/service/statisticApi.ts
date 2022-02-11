@@ -1,12 +1,14 @@
 import { getCurrentUser } from '../utils/loginUtils';
 import { users } from './api';
+import initStat from './initStat';
 import { IStatistic } from './interfaces';
 
 export async function updateStatistic(body:IStatistic): Promise<IStatistic> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
+  const user = getCurrentUser();
+  const response = await fetch(`${users}/${user.userId}/statistics`, {
     method: 'PUT',
     headers: {
-      Authorization: `Bearer ${getCurrentUser().token}`,
+      Authorization: `Bearer ${user.token}`,
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
@@ -15,15 +17,21 @@ export async function updateStatistic(body:IStatistic): Promise<IStatistic> {
   return response.json();
 }
 export async function getStatistic(): Promise<IStatistic> {
-  const response = await fetch(`${users}/${getCurrentUser().userId}/statistics`, {
+  const user = getCurrentUser();
+  const response = await fetch(`${users}/${user.userId}/statistics`, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${getCurrentUser().token}`,
+      Authorization: `Bearer ${user.token}`,
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   });
+
+  if (response.status === 404) {
+    return initStat;
+  }
   const res = await response.json();
+
   return {
     learnedWords: res.learnedWords,
     optional: res.optional,
@@ -41,8 +49,9 @@ export async function increaseAnswersCount(statName:string, correctness:string):
     case 'Words incorrect': stat.optional.day.words.incorrectAnswersCount += 1; break;
     default: break;
   }
-  updateStatistic(stat);
+  await updateStatistic(stat);
 }
+
 export async function increaseСorrectAnswersSeries(statName:string, correctStreak: number): Promise<void> {
   const stat = await getStatistic();
 
@@ -60,7 +69,7 @@ export async function increaseСorrectAnswersSeries(statName:string, correctStre
     default: break;
   }
 
-  updateStatistic(stat);
+  await updateStatistic(stat);
 }
 export async function increaseСountNewWords(statName:string): Promise<void> {
   const stat = await getStatistic();
