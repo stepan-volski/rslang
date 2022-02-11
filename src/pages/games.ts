@@ -30,6 +30,7 @@ class Games extends Page {
     document.addEventListener('click', this.launchGame.bind(this));
   }
 
+  // move to gameUtils?
   async launchGame(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
     const gameName = element.dataset.game;

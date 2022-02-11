@@ -30,15 +30,21 @@ class BookPage {
 
   createWordCard(word: Word): string {
     let isDifficult = '';
-    let btnText = 'mark difficult';
-    const isLearnt = '';
+    let diffBtnText = 'mark difficult';
+    let isLearnt = '';
+    let learnBtnText = 'mark learned';
+    let wordGameScore = '-';
 
     if (word.userWord) {
       if (word.userWord.difficulty === 'difficult') {
         isDifficult = 'difficult';
-        btnText = 'unmark difficult';
+        diffBtnText = 'unmark difficult';
       }
-      // isLearnt = (word.userWord.isLearnt) ? 'learnt' : '';
+      if (word.userWord.optional.learned) {
+        isLearnt = 'learnt';
+        learnBtnText = 'unmark learnt';
+      }
+      wordGameScore = `${word.userWord.optional.correctAnswerCounter}/${word.userWord.optional.incorrectAnswerCounter}`;
     }
 
     const isHidden = (this.isUserLoggedIn) ? '' : 'hidden';
@@ -47,8 +53,9 @@ class BookPage {
         <div>Word: ${word.word}</div>
         <div>Translation: ${word.wordTranslate}</div>
         <div>Transcription: ${word.transcription}</div>
-        <button class="difficultBtn" ${isHidden}>${btnText}</button>
-        <button class="learntBtn" ${isHidden}>learnt</button>
+        <button class="difficultBtn" ${isHidden}>${diffBtnText}</button>
+        <button class="learntBtn" ${isHidden}>${learnBtnText}</button>
+        <div ${isHidden}>Word Game Score: ${wordGameScore}</div>
       </div>
     `;
   }

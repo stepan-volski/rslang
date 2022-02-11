@@ -85,16 +85,24 @@ export async function increaseСountNewWords(statName:string): Promise<void> {
 }
 export async function increaseCountLearnedWords(): Promise<void> {
   const stat = await getStatistic();
-
   stat.optional.day.words.countLearnedWords += 1;
-
   updateStatistic(stat);
 }
 
 export async function decreaseCountLearnedWords(): Promise<void> {
   const stat = await getStatistic();
-
   stat.optional.day.words.countLearnedWords -= 1;
+  updateStatistic(stat);
+}
+
+export async function setWinningStreak(gameName: string, streak: number): Promise<void> {
+  const stat = await getStatistic();
+
+  switch (`${gameName}`) {
+    case 'Audio Challenge': stat.optional.day.audioChallenge.correctAnswersSeriesLength = streak; break;
+    case 'Sprint': stat.optional.day.sprint.correctAnswersSeriesLength = streak; break;
+    default: break;
+  }
 
   updateStatistic(stat);
 }

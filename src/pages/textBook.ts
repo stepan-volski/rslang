@@ -1,5 +1,8 @@
 import BookPage from '../components/bookPage';
-import { markWordAsDifficult, unmarkWordAsDifficult } from '../service/usersWordsApi';
+import {
+  markWordAsDifficult, markWordAsLearned, unmarkWordAsDifficult, unmarkWordAsLearned,
+} from '../service/usersWordsApi';
+import { launchGameFromBook } from '../utils/challengeUtils';
 import { isUserLoggedIn } from '../utils/loginUtils';
 import Page from './abstract/page';
 
@@ -26,6 +29,8 @@ class TextBook extends Page {
     const pageHtml = `
     <div id="textbookContainer">
       <div id="controls">
+      <button data-game="sprint" ${isHidden}>Launch Sprint Game</button>
+      <button data-game="challenge" ${isHidden}>Launch Audio Challenge Game</button>
         <div id="currentPage">Current page: ${this.currentPage}</div>
         <div id="currentGroup">Current group: ${this.currentGroup}</div>
         <button data-pageNav="prev">prev</button>
@@ -59,8 +64,10 @@ class TextBook extends Page {
   initHandlers(): void {
     document.addEventListener('click', this.scrollPage.bind(this));
     document.getElementById('groupSelect')?.addEventListener('change', this.openSelectedGroup.bind(this));
-    document.addEventListener('click', this.changeWordDifficulty.bind(this));
+    document.addEventListener('click', this.markUnmarkWordAsDifficult.bind(this));
+    document.addEventListener('click', this.markUnmarkWordAsLearnt.bind(this));
     document.getElementById('difficultWords')?.addEventListener('click', this.toggleDifficultWordsSection.bind(this));
+    document.addEventListener('click', this.launchGame.bind(this));
   }
 
   scrollPage(event: Event): void {
@@ -89,7 +96,7 @@ class TextBook extends Page {
     (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup}`;
   }
 
-  async changeWordDifficulty(event: Event): Promise<void> {
+  async markUnmarkWordAsDifficult(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
     const wordId = element.parentElement?.dataset.wordid;
 
@@ -98,6 +105,20 @@ class TextBook extends Page {
         await unmarkWordAsDifficult(wordId);
       } else {
         await markWordAsDifficult(wordId);
+      }
+      this.renderPageContent();
+    }
+  }
+
+  async markUnmarkWordAsLearnt(event: Event): Promise<void> {
+    const element = event.target as HTMLElement;
+    const wordId = element.parentElement?.dataset.wordid;
+
+    if (element.className === 'learntBtn' && wordId) {
+      if (element.parentElement.classList.contains('learnt')) {
+        await unmarkWordAsLearned(wordId);
+      } else {
+        await markWordAsLearned(wordId);
       }
       this.renderPageContent();
     }
@@ -114,6 +135,17 @@ class TextBook extends Page {
       (document.getElementById('controls') as HTMLElement).hidden = true;
       (document.getElementById('difficultWords') as HTMLElement).innerText = 'Close Difficult Words section';
       new BookPage(0, 0).render(true);
+    }
+  }
+
+  async launchGame(event: Event): Promise<void> {
+    const element = event.target as HTMLElement;
+    const gameType = element.dataset.game;
+    if (gameType === 'sprint') {
+      launchGameFromBook(this.currentGroup, this.currentPage, gameType);
+    }
+    if (gameType === 'challenge') {
+      launchGameFromBook(this.currentGroup, this.currentPage, gameType);
     }
   }
 }
