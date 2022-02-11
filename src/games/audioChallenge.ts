@@ -1,10 +1,17 @@
+/* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
+import { increaseAnswersCount, increaseСountNewWords } from '../service/statisticApi';
 import { generateQuestions } from '../utils/challengeUtils';
 import ChallengeQuestion from './abstract/challengeQuestion';
 import Game from './abstract/game';
+import {
+  increaseWordLearnProgress, incrementCorrectAnswerCounter, incrementIncorrectAnswerCounter,
+  isWordNew, resetWordLearnProgress, unmarkWordAsLearned,
+} from '../service/usersWordsApi';
 
 class AudioChallenge extends Game {
-  currentQuestion: number;
+  currentQuestionNumber: number;
+  currentQuestion: ChallengeQuestion;
   correctAnswers: number;
   incorrectAnswers: number;
   longestWinningStreak: number;
@@ -12,11 +19,12 @@ class AudioChallenge extends Game {
 
   constructor(gameData: Word[]) {
     super('Audio Challenge');
-    this.currentQuestion = 0;
+    this.currentQuestionNumber = 0;
     this.correctAnswers = 0;
     this.incorrectAnswers = 0;
     this.longestWinningStreak = 0;
     this.questions = generateQuestions(gameData);
+    this.currentQuestion = this.questions[this.currentQuestionNumber];
   }
 
   startGame(): void {
@@ -48,31 +56,31 @@ class AudioChallenge extends Game {
   }
 
   showQuestion(): void {
+    this.currentQuestion = this.questions[this.currentQuestionNumber];
     this.playCurrentQuestionAudio();
-    const question = this.questions[this.currentQuestion];
     const buttonContainer = document.getElementById('answerButtons');
     const buttons = Array.from((buttonContainer as HTMLElement).children) as HTMLElement[];
 
     for (let i = 0; i < 4; i++) {
-      buttons[i].innerText = question.answers[i];
+      buttons[i].innerText = this.currentQuestion.answers[i];
     }
 
-    // move out
+    // todo - move out
     const counter = document.getElementById('questionNumber') as HTMLElement;
-    counter.innerText = `Current question is ${this.currentQuestion}/20`;
+    counter.innerText = `Current question is ${this.currentQuestionNumber}/20`;
   }
 
   answer(event: Event): void {
     const button = event.target as HTMLElement;
-    if (button.innerText === this.questions[this.currentQuestion].questionWord?.wordTranslate) {
+    if (button.innerText === this.currentQuestion.questionWord?.wordTranslate) {
       this.registerCorrectAnswer();
     } else {
       this.registerIncorrectAnswer();
     }
-    this.currentQuestion++;
+    this.currentQuestionNumber++;
     this.showQuestion();
 
-    if (this.currentQuestion >= 19) {
+    if (this.currentQuestionNumber >= 19) {
       this.showResults();
     }
   }
@@ -96,24 +104,56 @@ class AudioChallenge extends Game {
   }
 
   registerCorrectAnswer(): void {
+    // todo - move out
     const counter = document.getElementById('correctCounter') as HTMLElement;
-    this.correctAnswers++;
     counter.innerText = `Correct Answers: ${this.correctAnswers}`;
-    // + send statistics
+
+    const word = this.currentQuestion.questionWord as Word;
+    const wordId = word._id as string;
+    this.correctAnswers++;
+    this.longestWinningStreak++;
+
+    // send statistics
+    increaseAnswersCount('Audio Challenge', 'correct');
+    incrementCorrectAnswerCounter(wordId);
+    if (isWordNew(word)) {
+      increaseСountNewWords('Audio Challenge');
+    }
+    if (!word.userWord?.optional.learned) {
+      increaseWordLearnProgress(wordId);
+    }
   }
 
   registerIncorrectAnswer(): void {
+    // todo - move out
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
-    this.incorrectAnswers++;
     counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
-    // + send statistics
+
+    const word = this.currentQuestion.questionWord as Word;
+    const wordId = word._id as string;
+    this.incorrectAnswers++;
+    this.longestWinningStreak = 0;
+
+    // send statistics
+    increaseAnswersCount('Audio Challenge', 'incorrect');
+    incrementIncorrectAnswerCounter(wordId);
+    resetWordLearnProgress(wordId);
+
+    if (isWordNew(word)) {
+      increaseСountNewWords('Audio Challenge');
+    }
+    if (word.userWord?.optional.learned) {
+      unmarkWordAsLearned(wordId);
+    }
   }
 
   playCurrentQuestionAudio(): void {
     const baseUrl = 'https://rs-lang-application.herokuapp.com/';
-    const src = this.questions[this.currentQuestion].questionWord?.audio;
+    const src = this.currentQuestion.questionWord?.audio;
     new Audio(baseUrl + src).play();
   }
 }
 
 export default AudioChallenge;
+
+// check if current question is reset correctly

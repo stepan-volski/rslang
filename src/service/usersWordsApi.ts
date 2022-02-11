@@ -1,6 +1,8 @@
+/* eslint-disable max-len */
 import { getCurrentUser } from '../utils/loginUtils';
 import { users } from './api';
 import { IResponse, IUserWord, Word } from './interfaces';
+import { decreaseCountLearnedWords, increaseCountLearnedWords } from './statisticApi';
 
 export async function createUserWord(userWord: IUserWord): Promise<void> {
   const response = await fetch(`${users}/${getCurrentUser().userId}/words/${userWord.wordId}`, {
@@ -117,7 +119,12 @@ export async function markWordAsDifficult(userWord: string): Promise<void> {
 }
 export async function unmarkWordAsDifficult(userWord: string): Promise<void> {
   const word = await getUserWordById(userWord);
-  word.difficulty = 'unDifficult';
+  word.difficulty = 'notDifficult';
+  if (word.optional.learningProgress >= 3) {
+    word.optional.learned = true;
+    word.optional.learningProgress = 0;
+    increaseCountLearnedWords();
+  }
   await updateUserWord(word);
 }
 export async function getAggregatedWords(groupNumber: number, pageNumber: number): Promise<Word[]> {
@@ -153,7 +160,7 @@ export async function markWordAsLearned(userWord: string): Promise<void> {
 
   const params: IUserWord = {
     wordId: userWord,
-    difficulty: '',
+    difficulty: 'notDifficult',
     optional: {
       learned: true,
       learningProgress: 0,
@@ -165,24 +172,30 @@ export async function markWordAsLearned(userWord: string): Promise<void> {
   if (chosenWord.length > 0) {
     const word = await getUserWordById(userWord);
     word.optional.learned = true;
+    word.optional.learningProgress = 0;
+    word.difficulty = 'notDifficult';
     await updateUserWord(word);
   } else {
     await createUserWord(params);
   }
+  await increaseCountLearnedWords();
 }
+
 export async function unmarkWordAsLearned(userWord: string): Promise<void> {
   const word = await getUserWordById(userWord);
-
   word.optional.learned = false;
+  word.optional.learningProgress = 0;
   await updateUserWord(word);
+  await decreaseCountLearnedWords();
 }
+
 export async function incrementCorrectAnswerCounter(userWord: string): Promise<void> {
   const userWords = await getUsersWords() as IUserWord[];
   const chosenWord = userWords.filter((word) => (word.wordId === userWord));
 
   const params: IUserWord = {
     wordId: userWord,
-    difficulty: '',
+    difficulty: 'notDifficult',
     optional: {
       learned: false,
       learningProgress: 0,
@@ -205,7 +218,7 @@ export async function incrementIncorrectAnswerCounter(userWord: string): Promise
 
   const params: IUserWord = {
     wordId: userWord,
-    difficulty: '',
+    difficulty: 'notDifficult',
     optional: {
       learned: false,
       learningProgress: 0,
@@ -225,5 +238,26 @@ export async function incrementIncorrectAnswerCounter(userWord: string): Promise
 export async function increaseWordLearnProgress(wordId: string): Promise<void> {
   const word = await getUserWordById(wordId);
   word.optional.learningProgress += 1;
+
+  if ((word.difficulty === 'difficult' && word.optional.learningProgress === 5)   //  TODO - need to check what happens if word doesn't have difficulty at all
+    || ((word.difficulty === 'notDifficult') && word.optional.learningProgress === 3)
+  ) {
+    word.optional.learned = true;
+    word.optional.learningProgress = 0;
+    word.difficulty = 'notDifficult';
+    increaseCountLearnedWords();
+  }
+  updateUserWord(word);
+}
+
+export function isWordNew(word: Word): boolean {
+  const wordHasCorrectAnswers = !!word.userWord?.optional.correctAnswerCounter;
+  const wordHasIncorrectAnswers = !!word.userWord?.optional.incorrectAnswerCounter;
+  return !(wordHasCorrectAnswers && wordHasIncorrectAnswers);
+}
+
+export async function resetWordLearnProgress(wordId: string): Promise<void> {
+  const word = await getUserWordById(wordId);
+  word.optional.learningProgress = 0;
   updateUserWord(word);
 }
