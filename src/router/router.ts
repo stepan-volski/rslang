@@ -4,6 +4,7 @@ import Games from '../pages/games';
 import Main from '../pages/main';
 import Statistics from '../pages/statistics';
 import TextBook from '../pages/textBook';
+import { loadUser } from '../utils/loginUtils';
 
 type Routes = {
   main: Main;
@@ -30,6 +31,7 @@ class Router {
 
   init(): void {
     document.addEventListener('click', this.openPage.bind(this));
+    loadUser();
   }
 
   openPage(event: Event): void {

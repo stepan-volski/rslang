@@ -40,6 +40,7 @@ export interface ILoggedUser{
   refreshToken: string,
   userId: string,
   name: string
+  email?: string
 }
 export interface IResponse {
   wordId:string,

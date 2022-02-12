@@ -46,5 +46,7 @@ export async function loginUser(user: IUser): Promise<ILoggedUser> {
     },
     body: JSON.stringify(user),
   });
-  return response.json();
+  const res = await response.json();
+  res.email = user.email;
+  return res;
 }
