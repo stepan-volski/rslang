@@ -238,7 +238,7 @@ export async function increaseWordLearnProgress(wordId: string): Promise<void> {
   const word = await getUserWordById(wordId);
   word.optional.learningProgress += 1;
 
-  if ((word.difficulty === 'difficult' && word.optional.learningProgress === 5)   //  TODO - need to check what happens if word doesn't have difficulty at all
+  if ((word.difficulty === 'difficult' && word.optional.learningProgress === 5)
     || ((word.difficulty === 'notDifficult') && word.optional.learningProgress === 3)
   ) {
     word.optional.learned = true;

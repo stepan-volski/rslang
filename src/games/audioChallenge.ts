@@ -1,6 +1,9 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
-import { increaseAnswersCount, increaseСountNewWords } from '../service/statisticApi';
+import {
+  getStatistic, increaseAnswersCount, increaseСountNewWords, setWinningStreak,
+} from '../service/statisticApi';
 import { generateQuestions } from '../utils/challengeUtils';
 import ChallengeQuestion from './abstract/challengeQuestion';
 import Game from './abstract/game';
@@ -67,10 +70,11 @@ class AudioChallenge extends Game {
 
     // todo - move out
     const counter = document.getElementById('questionNumber') as HTMLElement;
-    counter.innerText = `Current question is ${this.currentQuestionNumber}/20`;
+    counter.innerText = `Current question is ${this.currentQuestionNumber + 1}/20`;
   }
 
   async answer(event: Event): Promise<void> {
+    const questionsAmount = this.questions.length;
     const button = event.target as HTMLElement;
     if (button.innerText === this.currentQuestion.questionWord?.wordTranslate) {
       await this.registerCorrectAnswer();
@@ -78,11 +82,12 @@ class AudioChallenge extends Game {
       await this.registerIncorrectAnswer();
     }
     this.currentQuestionNumber++;
-    this.showQuestion();
 
-    if (this.currentQuestionNumber >= 19) {
+    if (this.currentQuestionNumber >= questionsAmount) {
       this.showResults();
     }
+
+    this.showQuestion();
   }
 
   initHandlers(): void {
@@ -101,23 +106,24 @@ class AudioChallenge extends Game {
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = resultsHtml;
+    this.updateWinningStreak();
   }
 
   async registerCorrectAnswer(): Promise<void> {
     // todo - move out
+    this.correctAnswers++;
     const counter = document.getElementById('correctCounter') as HTMLElement;
     counter.innerText = `Correct Answers: ${this.correctAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
     const wordId = (word._id || word.id) as string;
-    this.correctAnswers++;
     this.longestWinningStreak++;
 
     // send statistics
-    await increaseAnswersCount('Audio Challenge', 'correct');
+    await increaseAnswersCount(this.name, 'correct');
     await incrementCorrectAnswerCounter(wordId);
     if (isWordNew(word)) {
-      await increaseСountNewWords('Audio Challenge');
+      await increaseСountNewWords(this.name);
     }
     if (!word.userWord?.optional.learned) {
       await increaseWordLearnProgress(wordId);
@@ -126,21 +132,21 @@ class AudioChallenge extends Game {
 
   async registerIncorrectAnswer(): Promise<void> {
     // todo - move out
+    this.incorrectAnswers++;
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
     counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
     const wordId = (word._id || word.id) as string;
-    this.incorrectAnswers++;
     this.longestWinningStreak = 0;
 
     // send statistics
-    await increaseAnswersCount('Audio Challenge', 'incorrect');
+    await increaseAnswersCount(this.name, 'incorrect');
     await incrementIncorrectAnswerCounter(wordId);
     await resetWordLearnProgress(wordId);
 
     if (isWordNew(word)) {
-      await increaseСountNewWords('Audio Challenge');
+      await increaseСountNewWords(this.name);
     }
     if (word.userWord?.optional.learned) {
       await unmarkWordAsLearned(wordId);
@@ -151,6 +157,14 @@ class AudioChallenge extends Game {
     const baseUrl = 'https://rs-lang-application.herokuapp.com/';
     const src = this.currentQuestion.questionWord?.audio;
     new Audio(baseUrl + src).play();
+  }
+
+  async updateWinningStreak(): Promise<void> {
+    const stat = await getStatistic();
+    const savedStreak = stat.optional.day.audioChallenge.correctAnswersSeriesLength;
+    if (this.longestWinningStreak > savedStreak) {
+      await setWinningStreak(this.name, this.longestWinningStreak);
+    }
   }
 }
 

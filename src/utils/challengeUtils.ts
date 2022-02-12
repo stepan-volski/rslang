@@ -1,5 +1,8 @@
+/* eslint-disable import/no-cycle */
 import ChallengeQuestion from '../games/abstract/challengeQuestion';
+import AudioChallenge from '../games/audioChallenge';
 import { Word } from '../service/interfaces';
+import { getAggregatedWords } from '../service/usersWordsApi';
 
 function shuffleArray(arr: unknown[]): unknown[] {
   const array = arr;
@@ -38,4 +41,35 @@ export function generateQuestions(gameData: Word[]): ChallengeQuestion[] {
   });
 
   return questions;
+}
+
+async function collectWordsForGame(group: number, page: number): Promise<Word[]> {
+  const gameData: Word[] = [];
+  let currentPage = page;
+
+  while (gameData.length < 20 && currentPage > -1) {
+    // eslint-disable-next-line no-await-in-loop
+    const words = await getAggregatedWords(group, currentPage);
+    const notLearntWords = words.filter((word) => !word.userWord?.optional.learned);
+
+    notLearntWords.forEach((word) => {
+      if (gameData.length < 20) {
+        gameData.push(word);
+      }
+    });
+    currentPage--;
+  }
+  return gameData;
+}
+
+export async function launchGameFromBook(currentGroup: number, currentPage: number, gameType: string): Promise<void> {
+  if (gameType === 'sprint') {
+    console.log('sprint started');
+  }
+
+  if (gameType === 'challenge') {
+    const words = await collectWordsForGame(currentGroup, currentPage);
+    const game = new AudioChallenge(words);
+    game.startGame();
+  }
 }
