@@ -1,16 +1,14 @@
 import AuthorizationWindow from '../authorization/authorizationWindow';
 import LoginForm from '../authorization/loginForm';
 import RegistrationForm from '../authorization/registrationForm';
-import Page from './abstract/page';
 
-class Authorisation extends Page {
+class Authorisation {
   auth: AuthorizationWindow;
   constructor() {
-    super('Authorisation');
-    this.init();
+    this.initHandlers();
     this.auth = new AuthorizationWindow();
   }
-  init(): void {
+  initHandlers(): void {
     document.addEventListener('click', (event: Event) => {
       const target = event.target as HTMLElement;
       event.preventDefault();
@@ -38,7 +36,6 @@ class Authorisation extends Page {
   }
 
   openPage(): void {
-    const pageName = this.name;
     document.body.appendChild(this.auth.container);
   }
 }

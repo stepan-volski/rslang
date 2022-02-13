@@ -33,6 +33,7 @@ class LoginForm {
       password: (<HTMLInputElement> this.passwordField).value,
       email: (<HTMLInputElement> this.emailField).value,
     });
+    document.getElementById('authorization-btn')?.remove();
   }
   renderContainer(): HTMLElement {
     const container = document.createElement('div');
