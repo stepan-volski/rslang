@@ -1,8 +1,5 @@
 /* eslint-disable class-methods-use-this */   // TODO REMOVE!!!
-
-import AudioChallenge from '../games/audioChallenge';
-import Sprint from '../games/sprint';
-import { getWords } from '../service/wordsApi';
+import { launchGameFromGames } from '../utils/challengeUtils';
 import Page from './abstract/page';
 
 class Games extends Page {
@@ -21,6 +18,14 @@ class Games extends Page {
     <div id="GamesContainer">
       <button id="audioChallengeBtn" data-game="challenge">Audio Challenge</button>
       <button id="sprintBtn" data-game="sprint">Sprint</button>
+      <select id="groupSelect">
+      <option value="0">1</option>
+      <option value="1">2</option>
+      <option value="2">3</option>
+      <option value="3">4</option>
+      <option value="4">5</option>
+      <option value="5">6</option>
+    </select>
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = pageHtml;
@@ -30,22 +35,17 @@ class Games extends Page {
     document.addEventListener('click', this.launchGame.bind(this));
   }
 
-  // move to gameUtils?
   async launchGame(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
     const gameName = element.dataset.game;
+    const group = Number((document.getElementById('groupSelect') as HTMLSelectElement).value);
 
     if (gameName === 'challenge') {
-      const words = await getWords(1, 1);
-      const game = new AudioChallenge(words);
-      game.startGame();
+      launchGameFromGames(group, 'challenge');
     }
 
     if (gameName === 'sprint') {
-      console.log('sprint game is launched');
-      const game = new Sprint();
-      const words = await getWords(1, 1);
-      game.startGame(words);
+      launchGameFromGames(group, 'sprint');
     }
   }
 }

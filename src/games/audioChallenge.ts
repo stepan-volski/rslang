@@ -30,13 +30,13 @@ class AudioChallenge extends Game {
     this.currentQuestion = this.questions[this.currentQuestionNumber];
   }
 
-  startGame(): void {
+  public startGame(): void {
     this.render();
     this.initHandlers();
     this.showQuestion();
   }
 
-  render(): void {
+  private render(): void {
     const appContainer = document.getElementById('app');
     const gameHtml = `
     <div id="gameContainer">
@@ -58,7 +58,7 @@ class AudioChallenge extends Game {
     (appContainer as HTMLElement).innerHTML = gameHtml;
   }
 
-  showQuestion(): void {
+  private showQuestion(): void {
     this.currentQuestion = this.questions[this.currentQuestionNumber];
     this.playCurrentQuestionAudio();
     const buttonContainer = document.getElementById('answerButtons');
@@ -68,12 +68,11 @@ class AudioChallenge extends Game {
       buttons[i].innerText = this.currentQuestion.answers[i];
     }
 
-    // todo - move out
     const counter = document.getElementById('questionNumber') as HTMLElement;
-    counter.innerText = `Current question is ${this.currentQuestionNumber + 1}/20`;
+    counter.innerText = `Current question is ${this.currentQuestionNumber + 1}/${this.questions.length}`;
   }
 
-  async answer(event: Event): Promise<void> {
+  private async answer(event: Event): Promise<void> {
     const questionsAmount = this.questions.length;
     const button = event.target as HTMLElement;
     if (button.innerText === this.currentQuestion.questionWord?.wordTranslate) {
@@ -85,18 +84,19 @@ class AudioChallenge extends Game {
 
     if (this.currentQuestionNumber >= questionsAmount) {
       this.showResults();
+    } else {
+      this.showQuestion();
     }
-
-    this.showQuestion();
   }
 
-  initHandlers(): void {
+  private initHandlers(): void {
     const btnContainer = document.getElementById('answerButtons') as HTMLElement;
     Array.from((btnContainer.children)).forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
     document.getElementById('audioQuestion')?.addEventListener('click', this.playCurrentQuestionAudio.bind(this));
   }
 
-  showResults(): void {
+  private showResults(): void {
+    new Audio('../assets/sound/end-of-round.mp3').play();
     const appContainer = document.getElementById('app');
     const resultsHtml = `
     <div id="resultsContainer">
@@ -109,8 +109,8 @@ class AudioChallenge extends Game {
     this.updateWinningStreak();
   }
 
-  async registerCorrectAnswer(): Promise<void> {
-    // todo - move out
+  private async registerCorrectAnswer(): Promise<void> {
+    new Audio('../assets/sound/correct.mp3').play();
     this.correctAnswers++;
     const counter = document.getElementById('correctCounter') as HTMLElement;
     counter.innerText = `Correct Answers: ${this.correctAnswers}`;
@@ -119,7 +119,6 @@ class AudioChallenge extends Game {
     const wordId = (word._id || word.id) as string;
     this.longestWinningStreak++;
 
-    // send statistics
     await increaseAnswersCount(this.name, 'correct');
     await incrementCorrectAnswerCounter(wordId);
     if (isWordNew(word)) {
@@ -130,8 +129,8 @@ class AudioChallenge extends Game {
     }
   }
 
-  async registerIncorrectAnswer(): Promise<void> {
-    // todo - move out
+  private async registerIncorrectAnswer(): Promise<void> {
+    new Audio('../assets/sound/wrong.mp3').play();
     this.incorrectAnswers++;
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
     counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
@@ -140,7 +139,6 @@ class AudioChallenge extends Game {
     const wordId = (word._id || word.id) as string;
     this.longestWinningStreak = 0;
 
-    // send statistics
     await increaseAnswersCount(this.name, 'incorrect');
     await incrementIncorrectAnswerCounter(wordId);
     await resetWordLearnProgress(wordId);
@@ -153,13 +151,13 @@ class AudioChallenge extends Game {
     }
   }
 
-  playCurrentQuestionAudio(): void {
+  private playCurrentQuestionAudio(): void {
     const baseUrl = 'https://rs-lang-application.herokuapp.com/';
     const src = this.currentQuestion.questionWord?.audio;
     new Audio(baseUrl + src).play();
   }
 
-  async updateWinningStreak(): Promise<void> {
+  private async updateWinningStreak(): Promise<void> {
     const stat = await getStatistic();
     const savedStreak = stat.optional.day.audioChallenge.correctAnswersSeriesLength;
     if (this.longestWinningStreak > savedStreak) {
@@ -169,6 +167,3 @@ class AudioChallenge extends Game {
 }
 
 export default AudioChallenge;
-
-// check if current question is reset correctly
-// see which api requests can be made w/o await
