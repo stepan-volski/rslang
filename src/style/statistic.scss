@@ -1,0 +1,29 @@
+.stat-schedule{
+    display: flex;
+    align-items: flex-end;
+}
+.all-time-stat-column{
+    width: 20px;
+    background: rgb(28, 194, 245);
+    border: 1px solid blue;
+    align-items: baseline;
+}
+
+#shedules-container{
+    display: flex;
+    column-gap: 50px;
+}
+#schedule-titles{
+    display: flex;
+    column-gap: 50px;
+}
+#game-stat-container, #schedule-stat-container{
+    display: flex;
+    justify-content: space-between;
+    
+}
+#new-words-per-day, #total-learned-words-per-day{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

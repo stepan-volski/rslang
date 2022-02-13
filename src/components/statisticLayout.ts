@@ -1,0 +1,33 @@
+const statisticLayout = `
+<h2>Statistic</h2>
+<div id="total-learn-words-container">
+    <h3>Learned words:<span id="total-learn-words"></span></h3>
+</div>
+<h2>Game statistic</h2>
+<div id="game-stat-container">
+<div id="audio-challenge-stat-container">
+    <h3>audio-challenge<img src="" alt="audio-challenge" id="audio-challenge-img"></h3>
+    <p>new words:<span id="audio-challenge-new-words"></span></p>
+    <p>correct answers:<span id="audio-challenge-correct-answers"></span></p>
+    <p>incorrect answers:<span id="audio-challenge-incorrect-answers"></span></p>
+    <p>correct answers streak:<span id="audio-challenge-streak"></span></p>
+</div>
+<div id="sprint-stat-container">
+<h3>Sprint<img src="" alt="sprint" id="sprint-img"></h3>
+    <p>new words:<span id="sprint-new-words"></span></p>
+    <p>correct answers:<span id="sprint-correct-answers"></span></p>
+    <p>incorrect answers:<span id="sprint-incorrect-answers"></span></p>
+    <p>correct answers streak:<span id="sprint-streak"></span></p>
+</div>
+</div>
+<h2>Statistic for all time</h2>
+<div id="schedule-stat-container">
+<div id="new-words-per-day">
+    <h3>new words per day</h3>
+</div>
+<div id="total-learned-words-per-day">
+    <h3>total learned words per day</h3>
+</div>
+</div>
+`;
+export default statisticLayout;
