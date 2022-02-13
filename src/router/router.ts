@@ -4,6 +4,7 @@ import Games from '../pages/games';
 import Main from '../pages/main';
 import Statistics from '../pages/statistics';
 import TextBook from '../pages/textBook';
+import { loadUser } from '../utils/loginUtils';
 
 type Routes = {
   main: Main;
@@ -11,25 +12,26 @@ type Routes = {
   textBook: TextBook;
   statistics: Statistics;
   games: Games;
-  authorisation: Authorisation;
 };
 
-type Pages = 'main' | 'textBook' | 'statistics' | 'about' | 'authorisation';
+type Pages = 'main' | 'textBook' | 'statistics' | 'about';
 
 class Router {
   routes: Routes;
 
   currentPage: Pages;
-
+  authorization: Authorisation;
   constructor(routes: { main: Main; about: About; textBook: TextBook; statistics: Statistics;
-    games: Games; authorisation: Authorisation }) {
+    games: Games; }) {
     this.routes = routes;
     this.currentPage = 'main';
     this.routes.main.openPage();
+    this.authorization = new Authorisation();
   }
 
   init(): void {
     document.addEventListener('click', this.openPage.bind(this));
+    loadUser();
   }
 
   openPage(event: Event): void {

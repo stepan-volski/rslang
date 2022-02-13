@@ -1,18 +1,42 @@
 import AuthorizationWindow from '../authorization/authorizationWindow';
-import Page from './abstract/page';
+import LoginForm from '../authorization/loginForm';
+import RegistrationForm from '../authorization/registrationForm';
 
-class Authorisation extends Page {
+class Authorisation {
+  auth: AuthorizationWindow;
   constructor() {
-    super('Authorisation');
+    this.initHandlers();
+    this.auth = new AuthorizationWindow();
+  }
+  initHandlers(): void {
+    document.addEventListener('click', (event: Event) => {
+      const target = event.target as HTMLElement;
+      event.preventDefault();
+
+      if (target.id === 'authorization-btn') {
+        this.openPage();
+        this.auth.formLog.initElems();
+        this.auth.formReg.initElems();
+      }
+
+      if (target.id === 'close-modal') {
+        document.getElementById('authorization-container')?.remove();
+      }
+
+      if (target.id === 'login-form-btn') {
+        (<RegistrationForm> this.auth.formReg).formContainer.style.display = 'none';
+        (<LoginForm> this.auth.formLog).formContainer.style.display = 'flex';
+      }
+
+      if (target.id === 'registration-form-btn') {
+        (<RegistrationForm> this.auth.formReg).formContainer.style.display = 'flex';
+        (<LoginForm> this.auth.formLog).formContainer.style.display = 'none';
+      }
+    });
   }
 
   openPage(): void {
-    const pageName = this.name;
-    const appContainer = document.getElementById('app') as HTMLElement;
-    const auth = new AuthorizationWindow();
-    appContainer.innerHTML = '';
-    appContainer.appendChild(auth.container);
-    auth.initLoginAndRegForms();
+    document.body.appendChild(this.auth.container);
   }
 }
 

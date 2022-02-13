@@ -5,7 +5,6 @@ import Statistics from './pages/statistics';
 import TextBook from './pages/textBook';
 import Router from './router/router';
 import './index.scss';
-import Authorisation from './pages/authorisation';
 
 const router = new Router({
   main: new Main(),
@@ -13,7 +12,6 @@ const router = new Router({
   textBook: new TextBook(),
   statistics: new Statistics(),
   games: new Games(),
-  authorisation: new Authorisation(),
 });
 
 router.init();

@@ -1,11 +1,16 @@
 import { logInUser, logOutUser } from '../utils/loginUtils';
+import { loginLayout } from './authorizationLayout';
 
 class LoginForm {
-  passwordField: HTMLInputElement;
-  emailField: HTMLInputElement;
+  passwordField: HTMLInputElement | null;
+  emailField: HTMLInputElement | null;
+  layout:string;
+  formContainer:HTMLElement;
   constructor() {
-    this.emailField = document.getElementById('login-email') as HTMLInputElement;
-    this.passwordField = document.getElementById('login-password') as HTMLInputElement;
+    this.layout = loginLayout;
+    this.formContainer = this.renderContainer() as HTMLElement;
+    this.emailField = null;
+    this.passwordField = null;
     this.initHandlers();
   }
 
@@ -24,7 +29,21 @@ class LoginForm {
     });
   }
   loginUser():void {
-    logInUser({ password: this.passwordField.value, email: this.emailField.value });
+    logInUser({
+      password: (<HTMLInputElement> this.passwordField).value,
+      email: (<HTMLInputElement> this.emailField).value,
+    });
+    document.getElementById('authorization-btn')?.remove();
+  }
+  renderContainer(): HTMLElement {
+    const container = document.createElement('div');
+    container.innerHTML = this.layout;
+    container.id = 'login-form-container';
+    return container;
+  }
+  initElems(): void {
+    this.emailField = document.getElementById('login-email') as HTMLInputElement;
+    this.passwordField = document.getElementById('login-password') as HTMLInputElement;
   }
 }
 export default LoginForm;
