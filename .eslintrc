@@ -22,7 +22,7 @@
     "no-debugger": "off",
     "no-console": "off",
     "no-multi-spaces": "off",
-    "max-len": ["warn", { "code": 120 }],
+    "max-len": ["warn", { "code": 125 }],
     "indent": ["warn", 2, {
       "SwitchCase": 1
     }],

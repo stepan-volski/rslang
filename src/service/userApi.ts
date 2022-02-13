@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { baseUrl, users } from './api';
 import { ILoggedUser, IUser } from './interfaces';
 

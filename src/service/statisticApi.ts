@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { getCurrentUser } from '../utils/loginUtils';
 import { users } from './api';
 import initStat from './initStat';

@@ -1,5 +1,4 @@
 import statisticLayout from '../components/statisticLayout';
-import { IStatistic } from '../service/interfaces';
 import { getStatistic } from '../service/statisticApi';
 import Page from './abstract/page';
 
@@ -11,7 +10,6 @@ class Statistics extends Page {
   }
 
   openPage(): void {
-    const pageName = this.name;
     const appContainer = document.getElementById('app') as HTMLElement;
     appContainer.append(this.renderLayout());
     Statistics.updateStatistic();

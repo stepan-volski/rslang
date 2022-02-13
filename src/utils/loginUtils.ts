@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { ILoggedUser, IUser } from '../service/interfaces';
 import { loginUser } from '../service/userApi';
 

@@ -1,4 +1,4 @@
-import { savingStatOnChangingDay, getStatistic } from './statisticApi';
+// import { savingStatOnChangingDay, getStatistic } from './statisticApi';
 
 export const baseUrl = 'https://rs-lang-application.herokuapp.com';
 export const words = `${baseUrl}/words`;
