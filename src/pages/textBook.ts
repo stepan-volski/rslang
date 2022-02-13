@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import BookPage from '../components/bookPage';
 import {
   markWordAsDifficult, markWordAsLearned, unmarkWordAsDifficult, unmarkWordAsLearned,
@@ -10,12 +11,14 @@ class TextBook extends Page {
   currentPage: number;
   currentGroup: number;
   isDifficultSectionOpened: boolean;
+  isPageCompleted: boolean;
 
   constructor() {
     super('Textbook');
     this.currentPage = 0;
     this.currentGroup = 0;
     this.isDifficultSectionOpened = false;
+    this.isPageCompleted = false;
   }
 
   openPage(): void {
@@ -31,18 +34,18 @@ class TextBook extends Page {
       <div id="controls">
       <button data-game="sprint" ${isHidden}>Launch Sprint Game</button>
       <button data-game="challenge" ${isHidden}>Launch Audio Challenge Game</button>
-        <div id="currentPage">Current page: ${this.currentPage}</div>
-        <div id="currentGroup">Current group: ${this.currentGroup}</div>
+        <div id="currentPage">Current page: ${this.currentPage + 1}</div>
+        <div id="currentGroup">Current group: ${this.currentGroup + 1} </div>
         <button data-pageNav="prev">prev</button>
         <button data-pageNav="next">next</button>
         <div>Select group</div>
         <select id="groupSelect">
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
+          <option value="0">1</option>
+          <option value="1">2</option>
+          <option value="2">3</option>
+          <option value="3">4</option>
+          <option value="4">5</option>
+          <option value="5">6</option>
         </select>
       </div>
       <button id="difficultWords" ${isHidden}>Open difficult words section</button>
@@ -52,11 +55,12 @@ class TextBook extends Page {
     (this.appContainer as HTMLElement).innerHTML = pageHtml;
   }
 
-  renderPageContent(): void {
+  async renderPageContent(): Promise<void> {
     if (this.isDifficultSectionOpened) {
       new BookPage(0, 0).render(true);
     } else {
-      new BookPage(this.currentGroup, this.currentPage).render();
+      await new BookPage(this.currentGroup, this.currentPage).render();
+      this.checkIfPageIsCompleted();
       this.updatePageCounters();
     }
   }
@@ -92,8 +96,8 @@ class TextBook extends Page {
   }
 
   updatePageCounters(): void {
-    (document.getElementById('currentPage') as HTMLDivElement).innerText = `Current page: ${this.currentPage}`;
-    (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup}`;
+    (document.getElementById('currentPage') as HTMLDivElement).innerText = `Current page: ${this.currentPage + 1}`;
+    (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup + 1}`;
   }
 
   async markUnmarkWordAsDifficult(event: Event): Promise<void> {
@@ -146,6 +150,20 @@ class TextBook extends Page {
     }
     if (gameType === 'challenge') {
       launchGameFromBook(this.currentGroup, this.currentPage, gameType);
+    }
+  }
+
+  checkIfPageIsCompleted(): void {
+    const wordCards = Array.from(document.getElementsByClassName('wordCard'));
+    const cards = wordCards.filter((card) => (card.classList.contains('difficult') || card.classList.contains('learnt')));
+    if (cards.length === 20 && !this.isDifficultSectionOpened) {
+      document.getElementById('content')?.classList.add('completed');
+      const buttons = Array.from(document.querySelectorAll('button[data-game]')) as HTMLButtonElement[];
+      buttons.forEach((button) => button.disabled = true);
+    } else {
+      document.getElementById('content')?.classList.remove('completed');
+      const buttons = Array.from(document.querySelectorAll('button[data-game]')) as HTMLButtonElement[];
+      buttons.forEach((button) => button.disabled = false);
     }
   }
 }

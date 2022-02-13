@@ -1,8 +1,11 @@
 /* eslint-disable import/no-cycle */
 import ChallengeQuestion from '../games/abstract/challengeQuestion';
 import AudioChallenge from '../games/audioChallenge';
+import Sprint from '../games/sprint';
 import { Word } from '../service/interfaces';
 import { getAggregatedWords } from '../service/usersWordsApi';
+import { getWords } from '../service/wordsApi';
+import { isUserLoggedIn } from './loginUtils';
 
 function shuffleArray(arr: unknown[]): unknown[] {
   const array = arr;
@@ -46,10 +49,11 @@ export function generateQuestions(gameData: Word[]): ChallengeQuestion[] {
 async function collectWordsForGame(group: number, page: number): Promise<Word[]> {
   const gameData: Word[] = [];
   let currentPage = page;
+  const isUserLogged = isUserLoggedIn();
 
   while (gameData.length < 20 && currentPage > -1) {
     // eslint-disable-next-line no-await-in-loop
-    const words = await getAggregatedWords(group, currentPage);
+    const words = (isUserLogged) ? await getAggregatedWords(group, currentPage) : await getWords(group, currentPage);
     const notLearntWords = words.filter((word) => !word.userWord?.optional.learned);
 
     notLearntWords.forEach((word) => {
@@ -62,6 +66,7 @@ async function collectWordsForGame(group: number, page: number): Promise<Word[]>
   return gameData;
 }
 
+// todo - unite into single method?
 export async function launchGameFromBook(currentGroup: number, currentPage: number, gameType: string): Promise<void> {
   if (gameType === 'sprint') {
     console.log('sprint started');
@@ -71,5 +76,23 @@ export async function launchGameFromBook(currentGroup: number, currentPage: numb
     const words = await collectWordsForGame(currentGroup, currentPage);
     const game = new AudioChallenge(words);
     game.startGame();
+  }
+}
+
+// todo - unite into single method?
+export async function launchGameFromGames(group: number, gameType: string): Promise<void> {
+  const page = getRandomNumber(0, 29);
+  const isUserLogged = isUserLoggedIn();
+
+  if (gameType === 'challenge') {
+    const words = (isUserLogged) ? await getAggregatedWords(group, page) : await getWords(group, page);
+    const game = new AudioChallenge(words);
+    game.startGame();
+  }
+
+  if (gameType === 'sprint') {
+    const game = new Sprint();
+    const words = (isUserLogged) ? await getAggregatedWords(group, page) : await getWords(group, page);
+    game.startGame(words);
   }
 }
