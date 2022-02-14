@@ -30,30 +30,46 @@ class TextBook extends Page {
   renderPageElements(): void {
     const isHidden = (isUserLoggedIn()) ? '' : 'hidden';
     const pageHtml = `
-    <div id="textbookContainer">
-      <div id="controls">
-      <button data-game="sprint">Launch Sprint Game</button>
-      <button data-game="challenge">Launch Audio Challenge Game</button>
-        <div id="currentPage">Current page: ${this.currentPage + 1}</div>
-        <div id="currentGroup">Current group: ${this.currentGroup + 1} </div>
-        <button data-pageNav="prev">prev</button>
-        <button data-pageNav="next">next</button>
-        <div>Select group</div>
-        <select id="groupSelect">
-          <option value="0">1</option>
-          <option value="1">2</option>
-          <option value="2">3</option>
-          <option value="3">4</option>
-          <option value="4">5</option>
-          <option value="5">6</option>
-        </select>
+    <div class="textbookContainer">
+
+      <div class="gamesContainer">
+        <div class="gameBtn" data-game="sprint">
+          <img class="gameLogo" src="../assets/game_sprint.png"></img>
+          <div>Sprint</div>
+        </div>
+        <div class="gameBtn" data-game="challenge">
+          <img class="gameLogo" src="../assets/game_challenge.png"></img>
+          <div>Audio Challenge</div>
+        </div>
       </div>
-      <button id="difficultWords" ${isHidden}>Open difficult words section</button>
-      <div id="content"></div>
+
+      <div class="pageSelector">
+        <div data-pageNav="prev"><</div>
+        <div id="currentPage">${this.currentPage + 1}</div>
+        <div data-pageNav="next">></div>
+      </div>
+
+      <div class="contentContainer">
+        <div id="content"></div>
+
+        <div class="groupSelector">
+          <div class="groupCircle" data-group="0">1</div>
+          <div class="groupCircle" data-group="1">2</div>
+          <div class="groupCircle" data-group="2">3</div>
+          <div class="groupCircle" data-group="3">4</div>
+          <div class="groupCircle" data-group="4">5</div>
+          <div class="groupCircle" data-group="5">6</div>
+        </div>
+      </div>
+
     </div>
   `;
     (this.appContainer as HTMLElement).innerHTML = pageHtml;
   }
+
+  // <div id="controls">
+  // <button id="difficultWords" ${isHidden}>Open difficult words section</button>
+  // </div>
 
   async renderPageContent(): Promise<void> {
     if (this.isDifficultSectionOpened) {
@@ -67,7 +83,7 @@ class TextBook extends Page {
 
   initHandlers(): void {
     document.addEventListener('click', this.scrollPage.bind(this));
-    document.getElementById('groupSelect')?.addEventListener('change', this.openSelectedGroup.bind(this));
+    document.addEventListener('click', this.openSelectedGroup.bind(this));
     document.addEventListener('click', this.markUnmarkWordAsDifficult.bind(this));
     document.addEventListener('click', this.markUnmarkWordAsLearnt.bind(this));
     document.getElementById('difficultWords')?.addEventListener('click', this.toggleDifficultWordsSection.bind(this));
@@ -89,15 +105,19 @@ class TextBook extends Page {
     }
   }
 
-  openSelectedGroup(): void {
-    this.currentGroup = Number((document.getElementById('groupSelect') as HTMLSelectElement).value);
-    this.currentPage = 0;
-    this.renderPageContent();
+  openSelectedGroup(event: Event): void {
+    const element = event.target as HTMLElement;
+    const groupId = element.dataset.group;
+
+    if (groupId) {
+      this.currentGroup = Number(groupId);
+      this.currentPage = 0;
+      this.renderPageContent();
+    }
   }
 
   updatePageCounters(): void {
-    (document.getElementById('currentPage') as HTMLDivElement).innerText = `Current page: ${this.currentPage + 1}`;
-    (document.getElementById('currentGroup') as HTMLDivElement).innerText = `Current group: ${this.currentGroup + 1}`;
+    (document.getElementById('currentPage') as HTMLDivElement).innerText = `${this.currentPage + 1}`;
   }
 
   async markUnmarkWordAsDifficult(event: Event): Promise<void> {
@@ -131,7 +151,7 @@ class TextBook extends Page {
   toggleDifficultWordsSection(): void {
     if (this.isDifficultSectionOpened) {
       this.isDifficultSectionOpened = false;
-      (document.getElementById('controls') as HTMLElement).hidden = false;
+      (document.getElementById('controls') as HTMLElement).hidden = false;    // TODO - change locator
       (document.getElementById('difficultWords') as HTMLElement).innerText = 'Open Difficult Words section';
       this.renderPageContent();
     } else {
