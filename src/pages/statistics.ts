@@ -23,6 +23,16 @@ class Statistics extends Page {
     const stat = await getStatistic();
     (<HTMLElement>document.getElementById('total-learn-words'))
       .innerHTML = `${stat.learnedWords}`;
+
+    (<HTMLElement>document.getElementById('day-new-words'))
+      .innerHTML = `${stat.optional.day.audioChallenge.countNewWords + stat.optional.day.sprint.countNewWords} `;
+    (<HTMLElement>document.getElementById('day-correct-answers'))
+      .innerHTML = `${stat.optional.day.audioChallenge.correctAnswersCount + stat.optional.day.sprint.correctAnswersCount}`;
+    (<HTMLElement>document.getElementById('day-incorrect-answers'))
+      .innerHTML = `
+      ${stat.optional.day.audioChallenge.incorrectAnswersCount + stat.optional.day.sprint.incorrectAnswersCount}
+      `;
+
     (<HTMLElement>document.getElementById('audio-challenge-new-words'))
       .innerHTML = `${stat.optional.day.audioChallenge.countNewWords}`;
     (<HTMLElement>document.getElementById('audio-challenge-correct-answers'))
@@ -53,19 +63,6 @@ class Statistics extends Page {
       container.append(Statistics.createScheduleColumn(e));
     });
     return container;
-  }
-
-  static renderStatisticDescription(): HTMLElement {
-    const statDescription = document.createElement('div');
-    statDescription.innerHTML = `
-    <h2>statistics for all time</h2>
-    <div id="schedule-titles">
-      <p>newWordsPerDay</p>
-      <p>totalLearnedWordsPerDay</p>
-    </div>
-    `;
-    statDescription.id = 'stat-description';
-    return statDescription;
   }
 
   static createScheduleColumn(e: number): HTMLElement {
