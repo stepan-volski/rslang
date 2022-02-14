@@ -1,0 +1,53 @@
+.wordCard{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 30px;
+
+  width: 40vw;
+  height: 25vh;
+  border-radius: 10px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 0px 10px;
+  padding: 20px;
+  background-color: rgb(250, 252, 254);
+}
+
+.cardImage{
+  border-radius: 10px;
+  width: 35%;
+  height: 90%;
+  margin-right: 20px;
+}
+
+.cardContent{
+  color: black;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cardHeader{
+  .subHeader span:nth-child(1) {
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  div:nth-child(2) {
+    text-transform: capitalize;
+    color: rgb(138, 131, 131)
+  }
+}
+
+.cardBody{
+  margin: 10px 0 10px 0;
+}
+
+.subSentence{
+  color: rgb(138, 131, 131)
+}
+
+.cardAudioIcon{
+  height: 15px;
+  width: 15px;
+}
