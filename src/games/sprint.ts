@@ -1,4 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
+import { increaseAnswersCount, increaseСountNewWords } from '../service/statisticApi';
+import { increaseWordLearnProgress, incrementCorrectAnswerCounter, incrementIncorrectAnswerCounter, isWordNew, resetWordLearnProgress, unmarkWordAsLearned } from '../service/usersWordsApi';
 import { getRandom } from '../utils/sprintUtils';
 import Game from './abstract/game';
 
@@ -11,6 +14,7 @@ class Sprint extends Game {
   totalScore: number;
   correctStreak: number;
   gameTime: number;
+  currentWord: Word;
 
   constructor() {
     super('Sprint');
@@ -22,6 +26,23 @@ class Sprint extends Game {
     this.totalScore = 0;
     this.correctStreak = 0;
     this.gameTime = 60;
+    this.currentWord = {
+      id: '',
+      _id: '',
+      group: '',
+      page: '',
+      word: '',
+      image: '',
+      audio: '',
+      audioMeaning: '',
+      audioExample: '',
+      textMeaning: '',
+      textExample: '',
+      transcription: '',
+      textExampleTranslate: '',
+      textMeaningTranslate: '',
+      wordTranslate: '',
+    };
   }
 
   startGame(gameData: Word[]): void {
@@ -41,7 +62,7 @@ class Sprint extends Game {
         <div id="sprint-timer">0</div>
         <div>score:<span id="total-score">${this.totalScore}</span></div>
         <div id="correct-answers-series"><span>length correct answers:</span>1</div>
-        <div id="score-increase">0</div>
+        <div id="score-increase"> +10 points per answer</div>
         <div id="questionNumber">0</div>
         <div id="correctCounter">Correct Answers: 0</div>
         <div id="incorrectCounter">Incorrect Answers: 0</div>
@@ -62,9 +83,10 @@ class Sprint extends Game {
     const translateQuestion = document.getElementById('sprint-question-translate') as HTMLDivElement;
 
     question.innerText = this.gameData[this.currentQuestion].word;
+    this.currentWord = this.gameData[this.currentQuestion];
 
     if (getRandom(100) > 50) {
-      translateQuestion.innerText = this.gameData[getRandom(20)].wordTranslate;
+      translateQuestion.innerText = this.gameData[getRandom(100)].wordTranslate;
       this.correctness = false;
     } else {
       translateQuestion.innerText = this.gameData[this.currentQuestion].wordTranslate;
@@ -77,6 +99,7 @@ class Sprint extends Game {
 
   answer(event: Event): void {
     const element = event.target as HTMLElement;
+
     if ((element.id === 'correct-answer-sprint-btn' && this.correctness === true)
     || (element.id === 'incorrect-answer-sprint-btn' && this.correctness === false)) {
       if (this.correctStreak < 3) this.correctStreak += 1;
@@ -84,6 +107,7 @@ class Sprint extends Game {
       this.updateScore(this.correctStreak);
     } else {
       this.correctStreak = 0;
+      this.updateScore(this.correctStreak);
       this.registerIncorrectAnswer();
     }
     this.currentQuestion++;
@@ -107,18 +131,38 @@ class Sprint extends Game {
     (appContainer as HTMLElement).innerHTML = resultsHtml;
   }
 
-  registerCorrectAnswer(): void {
+  async registerCorrectAnswer(): Promise<void> {
+    new Audio('../assets/sound/correct.mp3').play();
     const counter = document.getElementById('correctCounter') as HTMLElement;
     this.correctAnswers++;
     counter.innerText = `Correct Answers: ${this.correctAnswers}`;
     // + send statistics
+    await increaseAnswersCount(this.name, 'correct');
+    await incrementCorrectAnswerCounter(this.currentWord._id as string);
+    if (isWordNew(this.currentWord)) {
+      await increaseСountNewWords(this.name);
+    }
+    if (this.currentWord.userWord?.optional.learned) {
+      await increaseWordLearnProgress(this.currentWord._id as string);
+    }
   }
 
-  registerIncorrectAnswer(): void {
+  async registerIncorrectAnswer(): Promise<void> {
+    new Audio('../assets/sound/wrong.mp3').play();
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
     this.incorrectAnswers++;
     counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
     // + send statistics
+    await increaseAnswersCount(this.name, 'incorrect');
+    await incrementIncorrectAnswerCounter(this.currentWord._id as string);
+    await resetWordLearnProgress(this.currentWord._id as string);
+
+    if (isWordNew(this.currentWord)) {
+      await increaseСountNewWords(this.name);
+    }
+    if (this.currentWord.userWord?.optional.learned) {
+      await unmarkWordAsLearned(this.currentWord._id as string);
+    }
   }
   runTimer(): void {
     const sprintTimer = document.getElementById('sprint-timer') as HTMLElement;
@@ -129,7 +173,7 @@ class Sprint extends Game {
     setTimeout(() => {
       clearInterval(timer);
       this.showResults();
-    }, 60000);
+    }, this.gameTime * 1000);
   }
   updateScore(streak: number): void {
     const score = document.getElementById('total-score') as HTMLElement;
