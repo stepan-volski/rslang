@@ -28,12 +28,12 @@ class TextBook extends Page {
   }
 
   renderPageElements(): void {
-    const isHidden = (isUserLoggedIn) ? '' : 'hidden';
+    const isHidden = (isUserLoggedIn()) ? '' : 'hidden';
     const pageHtml = `
     <div id="textbookContainer">
       <div id="controls">
-      <button data-game="sprint" ${isHidden}>Launch Sprint Game</button>
-      <button data-game="challenge" ${isHidden}>Launch Audio Challenge Game</button>
+      <button data-game="sprint">Launch Sprint Game</button>
+      <button data-game="challenge">Launch Audio Challenge Game</button>
         <div id="currentPage">Current page: ${this.currentPage + 1}</div>
         <div id="currentGroup">Current group: ${this.currentGroup + 1} </div>
         <button data-pageNav="prev">prev</button>

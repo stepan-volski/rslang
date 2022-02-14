@@ -11,6 +11,7 @@ import {
   increaseWordLearnProgress, incrementCorrectAnswerCounter, incrementIncorrectAnswerCounter,
   isWordNew, resetWordLearnProgress, unmarkWordAsLearned,
 } from '../service/usersWordsApi';
+import { isUserLoggedIn } from '../utils/loginUtils';
 
 class AudioChallenge extends Game {
   currentQuestionNumber: number;
@@ -19,6 +20,7 @@ class AudioChallenge extends Game {
   incorrectAnswers: number;
   longestWinningStreak: number;
   questions: ChallengeQuestion[];
+  isUserLoggedIn: boolean;
 
   constructor(gameData: Word[]) {
     super('Audio Challenge');
@@ -28,6 +30,7 @@ class AudioChallenge extends Game {
     this.longestWinningStreak = 0;
     this.questions = generateQuestions(gameData);
     this.currentQuestion = this.questions[this.currentQuestionNumber];
+    this.isUserLoggedIn = isUserLoggedIn();
   }
 
   public startGame(): void {
@@ -117,15 +120,17 @@ class AudioChallenge extends Game {
 
     const word = this.currentQuestion.questionWord as Word;
     const wordId = (word._id || word.id) as string;
-    this.longestWinningStreak++;
 
-    await increaseAnswersCount(this.name, 'correct');
-    await incrementCorrectAnswerCounter(wordId);
-    if (isWordNew(word)) {
-      await increaseСountNewWords(this.name);
-    }
-    if (!word.userWord?.optional.learned) {
-      await increaseWordLearnProgress(wordId);
+    if (this.isUserLoggedIn) {
+      this.longestWinningStreak++;
+      await increaseAnswersCount(this.name, 'correct');
+      await incrementCorrectAnswerCounter(wordId);
+      if (isWordNew(word)) {
+        await increaseСountNewWords(this.name);
+      }
+      if (!word.userWord?.optional.learned) {
+        await increaseWordLearnProgress(wordId);
+      }
     }
   }
 
@@ -137,17 +142,19 @@ class AudioChallenge extends Game {
 
     const word = this.currentQuestion.questionWord as Word;
     const wordId = (word._id || word.id) as string;
-    this.longestWinningStreak = 0;
 
-    await increaseAnswersCount(this.name, 'incorrect');
-    await incrementIncorrectAnswerCounter(wordId);
-    await resetWordLearnProgress(wordId);
+    if (this.isUserLoggedIn) {
+      this.longestWinningStreak = 0;
+      await increaseAnswersCount(this.name, 'incorrect');
+      await incrementIncorrectAnswerCounter(wordId);
+      await resetWordLearnProgress(wordId);
 
-    if (isWordNew(word)) {
-      await increaseСountNewWords(this.name);
-    }
-    if (word.userWord?.optional.learned) {
-      await unmarkWordAsLearned(wordId);
+      if (isWordNew(word)) {
+        await increaseСountNewWords(this.name);
+      }
+      if (word.userWord?.optional.learned) {
+        await unmarkWordAsLearned(wordId);
+      }
     }
   }
 
