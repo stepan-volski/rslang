@@ -1,7 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
-import { increaseAnswersCount, increaseСountNewWords } from '../service/statisticApi';
-import { increaseWordLearnProgress, incrementCorrectAnswerCounter, incrementIncorrectAnswerCounter, isWordNew, resetWordLearnProgress, unmarkWordAsLearned } from '../service/usersWordsApi';
+import { getStatistic, increaseAnswersCount, increaseСountNewWords, setWinningStreak } from '../service/statisticApi';
+import {
+  increaseWordLearnProgress, incrementCorrectAnswerCounter, incrementIncorrectAnswerCounter, isWordNew, resetWordLearnProgress, unmarkWordAsLearned,
+} from '../service/usersWordsApi';
 import { getRandom } from '../utils/sprintUtils';
 import Game from './abstract/game';
 
@@ -15,6 +17,8 @@ class Sprint extends Game {
   correctStreak: number;
   gameTime: number;
   currentWord: Word;
+  longestWinningStreak: number;
+  temporaryWinningStreak: number;
 
   constructor() {
     super('Sprint');
@@ -25,6 +29,8 @@ class Sprint extends Game {
     this.correctness = false;
     this.totalScore = 0;
     this.correctStreak = 0;
+    this.longestWinningStreak = 0;
+    this.temporaryWinningStreak = 0;
     this.gameTime = 60;
     this.currentWord = {
       id: '',
@@ -103,9 +109,15 @@ class Sprint extends Game {
     if ((element.id === 'correct-answer-sprint-btn' && this.correctness === true)
     || (element.id === 'incorrect-answer-sprint-btn' && this.correctness === false)) {
       if (this.correctStreak < 3) this.correctStreak += 1;
+      this.temporaryWinningStreak += 1;
+      if (this.temporaryWinningStreak > this.longestWinningStreak) {
+        this.longestWinningStreak += 1;
+        setWinningStreak(this.name, this.longestWinningStreak);
+      }
       this.registerCorrectAnswer();
       this.updateScore(this.correctStreak);
     } else {
+      this.temporaryWinningStreak = 0;
       this.correctStreak = 0;
       this.updateScore(this.correctStreak);
       this.registerIncorrectAnswer();

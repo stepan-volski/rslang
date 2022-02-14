@@ -7,23 +7,21 @@ const statisticLayout = `
 <h3>Words statistic</h3>
 <div id="day-stat-container">
     <p>new words:<span id="day-new-words"></span></p>
-    <p>correct answers:<span id="day-correct-answers"></span></p>
-    <p>incorrect answers:<span id="day-incorrect-answers"></span></p>
+    <p>correct answers:<span id="day-correct-answers"></span> %</p>
+    <p>learned words:<span id="day-learned-words"></span></p>
 </div>
 <h3>Game statistic</h3>
 <div id="game-stat-container">
 <div id="audio-challenge-stat-container">
     <h3>audio-challenge<img src="" alt="audio-challenge" id="audio-challenge-img"></h3>
     <p>new words:<span id="audio-challenge-new-words"></span></p>
-    <p>correct answers:<span id="audio-challenge-correct-answers"></span></p>
-    <p>incorrect answers:<span id="audio-challenge-incorrect-answers"></span></p>
+    <p>correct answers:<span id="audio-challenge-correct-answers">0</span> %</p>
     <p>correct answers streak:<span id="audio-challenge-streak"></span></p>
 </div>
 <div id="sprint-stat-container">
 <h3>Sprint<img src="" alt="sprint" id="sprint-img"></h3>
     <p>new words:<span id="sprint-new-words"></span></p>
-    <p>correct answers:<span id="sprint-correct-answers"></span></p>
-    <p>incorrect answers:<span id="sprint-incorrect-answers"></span></p>
+    <p>correct answers:<span id="sprint-correct-answers"></span> %</p>
     <p>correct answers streak:<span id="sprint-streak"></span></p>
 </div>
 </div>
