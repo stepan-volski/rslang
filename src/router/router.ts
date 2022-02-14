@@ -4,6 +4,7 @@ import Games from '../pages/games';
 import Main from '../pages/main';
 import Statistics from '../pages/statistics';
 import TextBook from '../pages/textBook';
+import { savingStatOnChangingDay } from '../service/statisticApi';
 import { loadUser } from '../utils/loginUtils';
 
 type Routes = {
@@ -32,6 +33,9 @@ class Router {
   init(): void {
     document.addEventListener('click', this.openPage.bind(this));
     loadUser();
+    setInterval(() => {
+      savingStatOnChangingDay();
+    }, 60000);
   }
 
   openPage(event: Event): void {

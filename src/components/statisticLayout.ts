@@ -1,9 +1,16 @@
 const statisticLayout = `
 <h2>Statistic</h2>
 <div id="total-learn-words-container">
-    <h3>Learned words:<span id="total-learn-words"></span></h3>
+    <p>Total learned words:<span id="total-learn-words"></span></p>
 </div>
-<h2>Game statistic</h2>
+<h2>Statistic for this day</h2>
+<h3>Words statistic</h3>
+<div id="day-stat-container">
+    <p>new words:<span id="day-new-words"></span></p>
+    <p>correct answers:<span id="day-correct-answers"></span></p>
+    <p>incorrect answers:<span id="day-incorrect-answers"></span></p>
+</div>
+<h3>Game statistic</h3>
 <div id="game-stat-container">
 <div id="audio-challenge-stat-container">
     <h3>audio-challenge<img src="" alt="audio-challenge" id="audio-challenge-img"></h3>

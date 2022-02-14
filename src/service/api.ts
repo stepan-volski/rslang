@@ -9,9 +9,3 @@ export function getCurrentDay(): number {
   const currentDay = date.getDay();
   return currentDay;
 }
-
-// example
-/* setInterval(() => {
-  savingStatOnChangingDay();
-  console.log(getStatistic());
-}, 10000); */
