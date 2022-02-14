@@ -21,35 +21,34 @@ class Statistics extends Page {
   }
   static async updateStatistic(): Promise<void> {
     const stat = await getStatistic();
-    (<HTMLElement>document.getElementById('total-learn-words'))
-      .innerHTML = `${stat.learnedWords}`;
+    const { audioChallenge } = stat.optional.day;
+    const { sprint } = stat.optional.day;
+
+    (<HTMLElement>document.getElementById('total-learn-words')).innerHTML = `${stat.learnedWords}`;
 
     (<HTMLElement>document.getElementById('day-new-words'))
-      .innerHTML = `${stat.optional.day.audioChallenge.countNewWords + stat.optional.day.sprint.countNewWords} `;
+      .innerHTML = `${audioChallenge.countNewWords + sprint.countNewWords} `;
     (<HTMLElement>document.getElementById('day-correct-answers'))
-      .innerHTML = `${stat.optional.day.audioChallenge.correctAnswersCount + stat.optional.day.sprint.correctAnswersCount}`;
-    (<HTMLElement>document.getElementById('day-incorrect-answers'))
-      .innerHTML = `
-      ${stat.optional.day.audioChallenge.incorrectAnswersCount + stat.optional.day.sprint.incorrectAnswersCount}
-      `;
+      .innerHTML = `${
+        (((audioChallenge.correctAnswersCount + sprint.correctAnswersCount)
+        / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
+        + audioChallenge.correctAnswersCount + sprint.correctAnswersCount))
+        * 100).toFixed(1)
+      }`;
+    (<HTMLElement>document.getElementById('day-learned-words'))
+      .innerHTML = `${stat.optional.day.words.countLearnedWords}`;
 
-    (<HTMLElement>document.getElementById('audio-challenge-new-words'))
-      .innerHTML = `${stat.optional.day.audioChallenge.countNewWords}`;
-    (<HTMLElement>document.getElementById('audio-challenge-correct-answers'))
-      .innerHTML = `${stat.optional.day.audioChallenge.correctAnswersCount}`;
-    (<HTMLElement>document.getElementById('audio-challenge-incorrect-answers'))
-      .innerHTML = `${stat.optional.day.audioChallenge.incorrectAnswersCount}`;
+    (<HTMLElement>document.getElementById('audio-challenge-new-words')).innerHTML = `${audioChallenge.countNewWords}`;
+    (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = `
+      ${((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
+      + audioChallenge.correctAnswersCount)) * 100).toFixed(1)}`;
     (<HTMLElement>document.getElementById('audio-challenge-streak'))
-      .innerHTML = `${stat.optional.day.audioChallenge.correctAnswersSeriesLength}`;
+      .innerHTML = `${audioChallenge.correctAnswersSeriesLength}`;
 
-    (<HTMLElement>document.getElementById('sprint-new-words'))
-      .innerHTML = `${stat.optional.day.sprint.countNewWords}`;
-    (<HTMLElement>document.getElementById('sprint-correct-answers'))
-      .innerHTML = `${stat.optional.day.sprint.correctAnswersCount}`;
-    (<HTMLElement>document.getElementById('sprint-incorrect-answers'))
-      .innerHTML = `${stat.optional.day.sprint.incorrectAnswersCount}`;
-    (<HTMLElement>document.getElementById('sprint-streak'))
-      .innerHTML = `${stat.optional.day.sprint.correctAnswersSeriesLength}`;
+    (<HTMLElement>document.getElementById('sprint-new-words')).innerHTML = `${sprint.countNewWords}`;
+    (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = `${((sprint.correctAnswersCount
+      / (sprint.incorrectAnswersCount + sprint.correctAnswersCount)) * 100).toFixed(1)}`;
+    (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}`;
 
     (<HTMLElement>document.getElementById('new-words-per-day'))
       .append(this.renderStatSchedule(stat.optional.all.newWordsPerDay));

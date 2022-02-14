@@ -110,7 +110,7 @@ export async function setWinningStreak(gameName: string, streak: number): Promis
 export async function savingStatOnChangingDay(): Promise<void> {
   let stat = await getStatistic();
   const previousDay = stat.optional.day.currentDay;
-  const currentDay = new Date().getMinutes(); // will be getDay(), minutes for example, save stat every min
+  const currentDay = new Date().getDay(); // will be getDay(), minutes for example, save stat every min
 
   if (previousDay !== currentDay) {
     const arr = stat.optional.all.totalLearnedWordsPerDay;
