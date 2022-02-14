@@ -52,9 +52,9 @@ class Statistics extends Page {
       .innerHTML = `${stat.optional.day.sprint.correctAnswersSeriesLength}`;
 
     (<HTMLElement>document.getElementById('new-words-per-day'))
-      .append(this.renderStatSchedule([1, 6, 4, 6, 7, 2, 11, 3, 9])); // stat.optional.all.newWordsPerDay
+      .append(this.renderStatSchedule(stat.optional.all.newWordsPerDay));
     (<HTMLElement>document.getElementById('total-learned-words-per-day'))
-      .append(this.renderStatSchedule([1, 2, 4, 6, 7, 8, 11, 14, 16])); // stat.optional.all.totalLearnedWordsPerDay
+      .append(this.renderStatSchedule(stat.optional.all.totalLearnedWordsPerDay));
   }
   static renderStatSchedule(arrStat: number[]): HTMLElement {
     const container = document.createElement('div');

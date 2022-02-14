@@ -78,6 +78,33 @@ export async function launchGameFromBook(currentGroup: number, currentPage: numb
     game.startGame();
   }
 }
+async function getWordsForSprint(page: number, group: number, isUserLogged: boolean) {
+  const arr:Promise<Word[]>[] = [];
+
+  switch (isUserLogged) {
+    case true:
+      for (let i = 0; i < 5; i++) {
+        if ((page + i) < 29) {
+          arr.push(getAggregatedWords(group, (page + i)));
+        } else {
+          arr.push(getAggregatedWords(group, (page - i)));
+        }
+      }
+      break;
+
+    default:
+      for (let i = 0; i < 5; i++) {
+        if ((page + i) < 29) {
+          arr.push(getWords(group, (page + i)));
+        } else {
+          arr.push(getWords(group, (page - i)));
+        }
+      }
+  }
+
+  const words = (await Promise.all(arr)).flat();
+  return words;
+}
 
 // todo - unite into single method?
 export async function launchGameFromGames(group: number, gameType: string): Promise<void> {
@@ -92,7 +119,7 @@ export async function launchGameFromGames(group: number, gameType: string): Prom
 
   if (gameType === 'sprint') {
     const game = new Sprint();
-    const words = (isUserLogged) ? await getAggregatedWords(group, page) : await getWords(group, page);
+    const words = await getWordsForSprint(page, group, isUserLogged);
     game.startGame(words);
   }
 }
