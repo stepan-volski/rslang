@@ -5,20 +5,45 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <title>RSLang</title>
 </head>
 
 <body>
-  <header>Header will be here</header>
-  <nav>
-    <button data-page="main">Main</button>
-    <button data-page="statistics">Statistics</button>
-    <button data-page="textBook">Textbook</button>
-    <button data-page="games">Games</button>
-    <button data-page="about">About</button>
-  </nav>
-  <div id="app">App content will be here</div>
-  <footer>Footer will be here</footer>
+  <div class="container">
+    <nav id="main-navigation" class="navigation-hide">
+      <div class="nav-item-wrapper" >
+      <button id="control-btn-nav">&#9776;</button>
+      <div class="nav-item-text"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="main"></button>
+        <div class="nav-item-text"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="statistics"></button>
+        <div class="nav-item-text"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="textBook"></button>
+        <div class="nav-item-text"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="games"></button>
+        <div class="nav-item-text"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="about"></button>
+        <div class="nav-item-text"></div>
+      </div>
+    </nav>
+
+    <div class="content-container">
+      <header>Header will be here</header>
+      <div id="app">App content will be here</div>
+      <footer>Footer will be here</footer>
+    </div>
+  </div>
 </body>
 
 </html>
