@@ -1,3 +1,4 @@
+import navigationFunc from '../components/navigation';
 import About from '../pages/about';
 import Authorisation from '../pages/authorisation';
 import Games from '../pages/games';
@@ -36,6 +37,7 @@ class Router {
     setInterval(() => {
       savingStatOnChangingDay();
     }, 60000);
+    navigationFunc();
   }
 
   openPage(event: Event): void {

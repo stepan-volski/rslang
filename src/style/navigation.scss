@@ -1,0 +1,59 @@
+.container{
+    display: flex;
+    width: 100%;
+    #main-navigation{
+        transition: 1s;
+        display: flex;
+        flex-direction: column;
+        background: rgb(250, 250, 250);
+        border-right: 2px solid blue;
+        .nav-item-wrapper{
+            display: flex;
+        }
+        .nav-item-text{
+            width: 100%;
+            text-align: center;
+            &:hover{
+                background-color: #a5fcfc;
+            }
+        }
+        button{
+            border: none;
+            background-size: contain;
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            /* background: url('..assets/userLogo.png'); */
+            &[data-page="main"]{
+                background: red;
+            }
+            &[data-page="statistics"]{
+                background: rgb(81, 15, 87);
+            }
+            &[data-page="textBook"]{
+                background: rgb(0, 255, 115);
+            }
+            &[data-page="games"]{
+                background: rgb(251, 255, 0);
+            }
+            &[data-page="about"]{
+                background: rgb(119, 0, 255);
+            }
+            &:hover{
+                border: 1px solid rgb(181, 244, 248);
+                border-radius: 10px;
+            }
+        }
+
+    }
+    .navigation-hide{
+        flex: 0 0 50px;
+    }
+    .navigation-show{
+        flex: 0 0 250px;
+    }
+    
+    .content-container{
+        flex: 1 1 auto;
+    }
+}
