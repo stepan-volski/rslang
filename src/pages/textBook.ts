@@ -1,5 +1,6 @@
 /* eslint-disable no-return-assign */
 import BookPage from '../components/bookPage';
+import { baseUrl } from '../service/api';
 import {
   markWordAsDifficult, markWordAsLearned, unmarkWordAsDifficult, unmarkWordAsLearned,
 } from '../service/usersWordsApi';
@@ -78,6 +79,7 @@ class TextBook extends Page {
       await new BookPage(this.currentGroup, this.currentPage).render();
       this.checkIfPageIsCompleted();
       this.updatePageCounters();
+      this.setPageBackground();
     }
   }
 
@@ -88,6 +90,7 @@ class TextBook extends Page {
     document.addEventListener('click', this.markUnmarkWordAsLearnt.bind(this));
     document.getElementById('difficultWords')?.addEventListener('click', this.toggleDifficultWordsSection.bind(this));
     document.addEventListener('click', this.launchGame.bind(this));
+    document.addEventListener('click', TextBook.playCardSound);
   }
 
   scrollPage(event: Event): void {
@@ -122,10 +125,11 @@ class TextBook extends Page {
 
   async markUnmarkWordAsDifficult(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
-    const wordId = element.parentElement?.dataset.wordid;
+    const wordCard = element.parentElement?.parentElement?.parentElement;
+    const wordId = wordCard?.dataset.wordid;
 
-    if (element.className === 'difficultBtn' && wordId) {
-      if (element.parentElement.classList.contains('difficult')) {
+    if (element.className.includes('difficultIcon') && wordId) {
+      if (wordCard.classList.contains('difficult')) {
         await unmarkWordAsDifficult(wordId);
       } else {
         await markWordAsDifficult(wordId);
@@ -136,10 +140,11 @@ class TextBook extends Page {
 
   async markUnmarkWordAsLearnt(event: Event): Promise<void> {
     const element = event.target as HTMLElement;
-    const wordId = element.parentElement?.dataset.wordid;
+    const wordCard = element.parentElement?.parentElement?.parentElement;
+    const wordId = wordCard?.dataset.wordid;
 
-    if (element.className === 'learntBtn' && wordId) {
-      if (element.parentElement.classList.contains('learnt')) {
+    if (element.className.includes('learntIcon') && wordId) {
+      if (wordCard.classList.contains('learnt')) {
         await unmarkWordAsLearned(wordId);
       } else {
         await markWordAsLearned(wordId);
@@ -184,6 +189,28 @@ class TextBook extends Page {
       document.getElementById('content')?.classList.remove('completed');
       const buttons = Array.from(document.querySelectorAll('button[data-game]')) as HTMLButtonElement[];
       buttons.forEach((button) => button.disabled = false);
+    }
+  }
+
+  static playCardSound(event: Event): void {
+    const element = event.target as HTMLElement;
+    const audio = element.dataset.sound;
+
+    if (audio) {
+      new Audio(`${baseUrl}/${audio}`).play();
+    }
+  }
+
+  setPageBackground(): void {
+    const container = document.querySelector('.textbookContainer') as HTMLElement;
+    switch (this.currentGroup) {
+      case 0: container.style.backgroundColor = '#77afaf'; break;
+      case 1: container.style.backgroundColor = '#301be9'; break;
+      case 2: container.style.backgroundColor = '#f5aa48'; break;
+      case 3: container.style.backgroundColor = '#5d54a8'; break;
+      case 4: container.style.backgroundColor = '#61e08b'; break;
+      case 5: container.style.backgroundColor = '#a3ac54'; break;
+      default: break;
     }
   }
 }

@@ -31,23 +31,18 @@ class BookPage {
 
   createWordCard(word: Word): string {
     let isDifficult = '';
-    let diffBtnText = 'mark difficult';
     let isLearnt = '';
-    let learnBtnText = 'mark learned';
-    let wordGameScore = '-';
+    let wordGameScore = '0/0';
 
     if (word.userWord) {
       if (word.userWord.difficulty === 'difficult') {
         isDifficult = 'difficult';
-        diffBtnText = 'unmark difficult';
       }
       if (word.userWord.optional.learned) {
         isLearnt = 'learnt';
-        learnBtnText = 'unmark learnt';
       }
       wordGameScore = `${word.userWord.optional.correctAnswerCounter}/${word.userWord.optional.incorrectAnswerCounter}`;
     }
-
     const isHidden = (this.isUserLoggedIn) ? '' : 'hidden';
     return `
       <div class="wordCard ${isDifficult} ${isLearnt}" data-wordId=${word._id || word.id}>
@@ -57,7 +52,7 @@ class BookPage {
             <div class="subHeader">
               <span>${word.word}</span>
               <span>${word.transcription}</span>
-              <span><img class="cardAudioIcon" src="../assets/audio_icon.png"></img></span>
+              <span data-sound="${word.audio}" class="material-icons">volume_down</span>
             </div>
             <div>${word.wordTranslate}</div>
           </div>
@@ -71,9 +66,12 @@ class BookPage {
             <div class="subSentence">${word.textMeaningTranslate}</div>
           </div>
 
-          <button class="difficultBtn" ${isHidden}>${diffBtnText}</button>
-          <button class="learntBtn" ${isHidden}>${learnBtnText}</button>
-          <div ${isHidden}>Word Game Score: ${wordGameScore}</div>
+          <div class="cardIndicators" ${isHidden}>
+            <span>${wordGameScore}</span>
+            <span class="material-icons learntIcon">done</span>
+            <span class="material-icons difficultIcon">feedback</span>
+          </div>
+
         </div>
       </div>
     `;
