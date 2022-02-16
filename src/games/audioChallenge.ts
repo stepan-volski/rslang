@@ -12,6 +12,7 @@ import {
   isWordNew, resetWordLearnProgress, unmarkWordAsLearned,
 } from '../service/usersWordsApi';
 import { isUserLoggedIn } from '../utils/loginUtils';
+import Games from '../pages/games';
 
 class AudioChallenge extends Game {
   currentQuestionNumber: number;
@@ -21,6 +22,8 @@ class AudioChallenge extends Game {
   longestWinningStreak: number;
   questions: ChallengeQuestion[];
   isUserLoggedIn: boolean;
+  correctAnsweredWords: Word[];
+  incorrectAnsweredWords: Word[];
 
   constructor(gameData: Word[]) {
     super('Audio Challenge');
@@ -31,6 +34,8 @@ class AudioChallenge extends Game {
     this.questions = generateQuestions(gameData);
     this.currentQuestion = this.questions[this.currentQuestionNumber];
     this.isUserLoggedIn = isUserLoggedIn();
+    this.correctAnsweredWords = [];
+    this.incorrectAnsweredWords = [];
   }
 
   public startGame(): void {
@@ -41,14 +46,14 @@ class AudioChallenge extends Game {
 
   private render(): void {
     const appContainer = document.getElementById('app');
-    const asd = this.name;  // remove
     const gameHtml = `
     <div id="gameContainer" class="gameContainer">
+        <span class="material-icons" id="closeIcon">close</span>
         <div id="questionNumber">1</div>
         <div class="score">
-          <span id="correctCounter">0</span>
+          <span id="correctCounter">${this.correctAnswers}</span>
           <span>/</span>
-          <span id="incorrectCounter">0</span>
+          <span id="incorrectCounter">${this.incorrectAnswers}</span>
         </div>
 
         <img id="audioQuestion" src="../assets/audio_q.png" class="audioQuestion"></img>
@@ -97,19 +102,38 @@ class AudioChallenge extends Game {
     Array.from(document.getElementsByClassName('answerBtn'))
       .forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
     document.getElementById('audioQuestion')?.addEventListener('click', this.playCurrentQuestionAudio.bind(this));
+    document.getElementById('closeIcon')?.addEventListener('click', AudioChallenge.goToGames.bind(this));
   }
 
   private showResults(): void {
     new Audio('../assets/sound/end-of-round.mp3').play();
     const appContainer = document.getElementById('app');
     const resultsHtml = `
-    <div id="resultsContainer">
-      <div>Results page for ${this.name} game</div>
-      <div>Correct Answers: ${this.correctAnswers}</div>
-      <div>Incorrect Answers: ${this.incorrectAnswers}</div>
+    <div id="resultsContainer" class="gameContainer">
+      <h3>Your score is ${this.correctAnswers}/${this.questions.length}</h3>
+      <div class="resultsTable">
+        <div class="resultsRow">
+          <div>
+            <span class="material-icons" style="color:green;">check</span>
+            <span><b>Correct Answers:</b></span>
+          </div>
+          <div>${this.correctAnsweredWords.map((word) => AudioChallenge.generateResults(word)).join('')}</div>
+        </div>
+
+        <div>
+          <div>
+            <span class="material-icons" style="color:red;">error</span>
+            <span><b>Inorrect Answers:</b></span>
+          </div>
+          <div>${this.incorrectAnsweredWords.map((word) => AudioChallenge.generateResults(word)).join('')}</div>
+        </div>
+
+      </div>
+      <div class="gameBackBtn" id="backBtn">Back to Games</div>
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = resultsHtml;
+    document.getElementById('backBtn')?.addEventListener('click', AudioChallenge.goToGames.bind(this));
     this.updateWinningStreak();
   }
 
@@ -120,6 +144,7 @@ class AudioChallenge extends Game {
     counter.innerText = `${this.correctAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
+    this.correctAnsweredWords.push(word);
     const wordId = (word._id || word.id) as string;
 
     if (this.isUserLoggedIn) {
@@ -142,6 +167,7 @@ class AudioChallenge extends Game {
     counter.innerText = `${this.incorrectAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
+    this.incorrectAnsweredWords.push(word);
     const wordId = (word._id || word.id) as string;
 
     if (this.isUserLoggedIn) {
@@ -171,6 +197,19 @@ class AudioChallenge extends Game {
     if (this.longestWinningStreak > savedStreak) {
       await setWinningStreak(this.name, this.longestWinningStreak);
     }
+  }
+
+  private static generateResults(word: Word): string {
+    return `
+    <div>
+      <span>${word.word}</span>
+      <span> - </span>
+      <span>${word.wordTranslate}</span>
+    </div>`;
+  }
+
+  private static goToGames(): void {
+    new Games().openPage(); // todo - use router??
   }
 }
 

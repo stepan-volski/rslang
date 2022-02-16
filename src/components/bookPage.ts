@@ -69,7 +69,7 @@ class BookPage {
           <div class="cardIndicators" ${isHidden}>
             <span>${wordGameScore}</span>
             <span class="material-icons learntIcon">done</span>
-            <span class="material-icons difficultIcon">feedback</span>
+            <span class="material-icons difficultIcon">psychology</span>
           </div>
 
         </div>

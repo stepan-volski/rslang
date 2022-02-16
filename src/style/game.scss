@@ -76,13 +76,41 @@
 }
 
 .score{
-  width: 60px;
-  // height: 50px;
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
+  width: 80px;
   position: absolute;
-  right: 70px;
+  right: 80px;
   top: 50px;
   font-size: 24px;
+}
+
+.resultsTable{
+  display: flex;
+
+  .resultsRow{
+    margin: 0 30px 0 30px;
+  }
+}
+
+.gameBackBtn{
+  width: 140px;
+  height: 35px;
+  margin-top: 30px;
+  background-color: coral;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all .1s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+#closeIcon{
+  position: absolute;
+  right: 20px;
+  top: 20px;
 }
