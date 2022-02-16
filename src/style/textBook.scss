@@ -6,13 +6,9 @@
   padding-top: 40px;
 }
 
-
 .contentContainer{
   display: flex;
-}
-
-.completed {
-  border: 1px solid green;
+  position: relative;
 }
 
 .gameLogo {
@@ -27,6 +23,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  position: relative;
 }
 
 .gameBtn{
@@ -88,6 +85,34 @@
 
 .selectedGroup{
   border: 2px solid rgb(240, 199, 67)
+}
+
+.disabled{
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.completedIcon{
+  position: absolute;
+  top: 0px;
+  right: -120px;
+  height: 65px;
+  width: 65px;
+  display: none;
+}
+
+.onlyDifficultToggle{
+  position: absolute;
+  top: -80px;
+  left: 150px;
+
+  span{
+    font-size: 48px;
+  }
+
+  &:hover {
+    color: red;
+  }
 }
 
 

@@ -32,7 +32,6 @@ class TextBook extends Page {
     const isHidden = (isUserLoggedIn()) ? '' : 'hidden';
     const pageHtml = `
     <div class="textbookContainer">
-
       <div class="gamesContainer">
         <div class="gameBtn" data-game="sprint">
           <img class="gameLogo" src="../assets/game_sprint.png"></img>
@@ -42,6 +41,7 @@ class TextBook extends Page {
           <img class="gameLogo" src="../assets/game_challenge.png" data-game="challenge"></img>
           <div data-game="challenge">Audio Challenge</div>
         </div>
+        <img src="../assets/completed.png" class="completedIcon"></img>
       </div>
 
       <div class="pageSelector">
@@ -61,16 +61,16 @@ class TextBook extends Page {
           <div class="groupCircle" data-group="4">5</div>
           <div class="groupCircle" data-group="5">6</div>
         </div>
+
+        <div class="onlyDifficultToggle" ${isHidden}>
+          <span class="material-icons" id="difficultWords">psychology</span>
+        </div>
       </div>
 
     </div>
   `;
     (this.appContainer as HTMLElement).innerHTML = pageHtml;
   }
-
-  // <div id="controls">
-  // <button id="difficultWords" ${isHidden}>Open difficult words section</button>
-  // </div>
 
   async renderPageContent(): Promise<void> {
     if (this.isDifficultSectionOpened) {
@@ -156,13 +156,17 @@ class TextBook extends Page {
   toggleDifficultWordsSection(): void {
     if (this.isDifficultSectionOpened) {
       this.isDifficultSectionOpened = false;
-      (document.getElementById('controls') as HTMLElement).hidden = false;    // TODO - change locator
-      (document.getElementById('difficultWords') as HTMLElement).innerText = 'Open Difficult Words section';
+      (document.querySelector('.groupSelector') as HTMLElement).classList.remove('disabled');
+      (document.querySelector('.pageSelector') as HTMLElement).classList.remove('disabled');
+      (document.querySelector('.gamesContainer') as HTMLElement).classList.remove('disabled');
+      (document.getElementById('difficultWords') as HTMLElement).style.color = 'black';
       this.renderPageContent();
     } else {
       this.isDifficultSectionOpened = true;
-      (document.getElementById('controls') as HTMLElement).hidden = true;
-      (document.getElementById('difficultWords') as HTMLElement).innerText = 'Close Difficult Words section';
+      (document.querySelector('.groupSelector') as HTMLElement).classList.add('disabled');
+      (document.querySelector('.pageSelector') as HTMLElement).classList.add('disabled');
+      (document.querySelector('.gamesContainer') as HTMLElement).classList.add('disabled');
+      (document.getElementById('difficultWords') as HTMLElement).style.color = 'red';
       new BookPage(0, 0).render(true);
     }
   }
@@ -182,13 +186,11 @@ class TextBook extends Page {
     const wordCards = Array.from(document.getElementsByClassName('wordCard'));
     const cards = wordCards.filter((card) => (card.classList.contains('difficult') || card.classList.contains('learnt')));
     if (cards.length === 20 && !this.isDifficultSectionOpened) {
-      document.getElementById('content')?.classList.add('completed');
-      const buttons = Array.from(document.querySelectorAll('button[data-game]')) as HTMLButtonElement[];
-      buttons.forEach((button) => button.disabled = true);
+      document.querySelectorAll('.gameBtn').forEach((btn) => btn.classList.add('disabled'));
+      (document.querySelector('.completedIcon') as HTMLElement).style.display = 'block';
     } else {
-      document.getElementById('content')?.classList.remove('completed');
-      const buttons = Array.from(document.querySelectorAll('button[data-game]')) as HTMLButtonElement[];
-      buttons.forEach((button) => button.disabled = false);
+      document.querySelectorAll('.gameBtn').forEach((btn) => btn.classList.remove('disabled'));
+      (document.querySelector('.completedIcon') as HTMLElement).style.display = 'none';
     }
   }
 
