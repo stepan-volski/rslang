@@ -23,11 +23,15 @@ function navigationFunc(): void {
           }
           isHide = false;
         }, 500);
+        controlNavBtn.classList.add('open-menu');
+        controlNavBtn.classList.remove('close-menu');
       } else {
         for (let i = 0; i < navItemsText.length; i++) {
           (<HTMLElement>navItemsText[i]).innerHTML = '';
         }
         isHide = true;
+        controlNavBtn.classList.remove('open-menu');
+        controlNavBtn.classList.add('close-menu');
       }
     }
   });
