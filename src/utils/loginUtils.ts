@@ -31,7 +31,7 @@ function renderLoggedUser(user:{ name: string, email: string }) {
 export function renderAuthorizationBtn(): void {
   const loginBtn = document.createElement('button');
   loginBtn.id = 'authorization-btn';
-  loginBtn.innerHTML = 'login &#128274;';
+  loginBtn.innerHTML = 'login';
   (<HTMLElement>document.querySelector('header')).innerHTML = '';
   (<HTMLElement>document.querySelector('header')).append(loginBtn);
 }
