@@ -41,21 +41,23 @@ class AudioChallenge extends Game {
 
   private render(): void {
     const appContainer = document.getElementById('app');
+    const asd = this.name;  // remove
     const gameHtml = `
-    <div id="gameContainer">
-      <div id="game">
-        <div>Welcome to ${this.name} game!</div>
+    <div id="gameContainer" class="gameContainer">
         <div id="questionNumber">1</div>
-        <div id="correctCounter">Correct Answers: 0</div>
-        <div id="incorrectCounter">Incorrect Answers: 0</div>
-        <div id="audioQuestion">Click for audio</div>
-        <div id="answerButtons">
-          <button></button>
-          <button></button>
-          <button></button>
-          <button></button>
+        <div class="score">
+          <span id="correctCounter">0</span>
+          <span>/</span>
+          <span id="incorrectCounter">0</span>
         </div>
-      </div>
+
+        <img id="audioQuestion" src="../assets/audio_q.png" class="audioQuestion"></img>
+        <div class="answerButtons">
+          <div class="answerBtn"></div>
+          <div class="answerBtn"></div>
+          <div class="answerBtn"></div>
+          <div class="answerBtn"></div>
+        </div>
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = gameHtml;
@@ -64,15 +66,14 @@ class AudioChallenge extends Game {
   private showQuestion(): void {
     this.currentQuestion = this.questions[this.currentQuestionNumber];
     this.playCurrentQuestionAudio();
-    const buttonContainer = document.getElementById('answerButtons');
-    const buttons = Array.from((buttonContainer as HTMLElement).children) as HTMLElement[];
+    const buttons = Array.from(document.getElementsByClassName('answerBtn')) as HTMLElement[];
 
     for (let i = 0; i < 4; i++) {
       buttons[i].innerText = this.currentQuestion.answers[i];
     }
 
     const counter = document.getElementById('questionNumber') as HTMLElement;
-    counter.innerText = `Current question is ${this.currentQuestionNumber + 1}/${this.questions.length}`;
+    counter.innerText = `${this.currentQuestionNumber + 1}/${this.questions.length}`;
   }
 
   private async answer(event: Event): Promise<void> {
@@ -93,8 +94,8 @@ class AudioChallenge extends Game {
   }
 
   private initHandlers(): void {
-    const btnContainer = document.getElementById('answerButtons') as HTMLElement;
-    Array.from((btnContainer.children)).forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
+    Array.from(document.getElementsByClassName('answerBtn'))
+      .forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
     document.getElementById('audioQuestion')?.addEventListener('click', this.playCurrentQuestionAudio.bind(this));
   }
 
@@ -116,7 +117,7 @@ class AudioChallenge extends Game {
     new Audio('../assets/sound/correct.mp3').play();
     this.correctAnswers++;
     const counter = document.getElementById('correctCounter') as HTMLElement;
-    counter.innerText = `Correct Answers: ${this.correctAnswers}`;
+    counter.innerText = `${this.correctAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
     const wordId = (word._id || word.id) as string;
@@ -138,7 +139,7 @@ class AudioChallenge extends Game {
     new Audio('../assets/sound/wrong.mp3').play();
     this.incorrectAnswers++;
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
-    counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
+    counter.innerText = `${this.incorrectAnswers}`;
 
     const word = this.currentQuestion.questionWord as Word;
     const wordId = (word._id || word.id) as string;
