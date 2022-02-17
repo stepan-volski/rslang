@@ -32,7 +32,7 @@
         padding: 0 10px;
         margin: 0;
         font-family: "Material Icons";
-        font-size: 52px;
+        font-size: 36px;    //52
         background: none;
         cursor:pointer;
         &[data-page="main"] {
@@ -77,7 +77,7 @@
         &:after{
             content: '\e5cd';
             font-family: "Material Icons";
-            font-size: 42px;
+            font-size: 36px;    //42
         }
     }
 }
@@ -86,7 +86,7 @@
         &:after{
             content: '\e5d2';
             font-family: "Material Icons";
-            font-size: 42px;
+            font-size: 36px;    //42
         }
     }
 }
