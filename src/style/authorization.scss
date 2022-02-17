@@ -1,11 +1,16 @@
 #authorization-container{
+    transition: 1s;
     display: flex;
     position: absolute;
     align-items: center;
     width: 100%;
-    height: 100%;
-
+    height: 500px;
+    border: 2px white solid;
+    top: -1000px;
+    background: rgba(0, 0, 0, 0.651);
+    border: none;
 }
+
 #logged-user-container{
     margin: 10px;
     padding: 5px;
@@ -20,18 +25,17 @@
         text-transform: uppercase;
         line-height: 30px;
         width: 100px;
-        
         text-align: left;
         &:after{
             position: absolute;
-            content: '\e9ba';  
+            content: '\e853';
             font-family: "Material Icons";
             font-size: 32px;
         }
     }
 }
 #login-form-container, #registration-form-container{
-    width: 300px;
+    width: 50%;
     margin: 0 auto;
     display: none;
     flex-direction: column;
@@ -41,6 +45,7 @@
     align-items: center;
     #close-modal{
         margin-left: auto;
+        cursor:pointer;
     }
     form{
         display: flex;
@@ -48,15 +53,22 @@
         width: 300px;
         align-items: center;
         button{
-            border-radius: 10px;
-            background: blue;
-            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            background-color: white;
+            color: #77afaf;
+            border: 2px solid #77afaf;
+            cursor:pointer;
+            &:hover{
+                border: 2px solid white;
+                background: #77afaf;
+                color: white;
+            }
         }
         #signup-btn, #login-btn{
             margin: 10px 0;
-            width: 200px;
-            height: 30px;
-            
+            width: 250px;
+            height: 40px;
         }
     }
     input{
@@ -67,21 +79,36 @@
 }
 #registration-form-container{
     display: flex;
-    
 }
 #authorization-btn{
-        background: white;
-        border: 3px solid rgb(70, 70, 70);
-        border-radius: 10px;
-        text-transform: uppercase;
-        line-height: 30px;
-        width: 100px;
-        
-        text-align: left;
-        &:after{
-            position: absolute;
-            content: '\ea77';  
-            font-family: "Material Icons";
-            font-size: 32px;
-        }
+    background: white;
+    border: 3px solid rgb(70, 70, 70);
+    border-radius: 10px;
+    text-transform: uppercase;
+    line-height: 30px;
+    width: 100px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.authorization-show{
+    animation: form-show 1s forwards;
+            @keyframes form-show {
+                from {top: -1000}
+                to {top: 0}
+             }
+}
+.authorization-show{
+    animation: form-show 1s forwards;
+            @keyframes form-hide {
+                from {top: 0}
+                to {top: -1000}
+             }
+}
+input:required:invalid {
+    position: relative;
+    border: 3px solid red;
+}
+input:required:valid {
+    border: 3px solid green;
 }

@@ -1,9 +1,11 @@
 header{
     display: flex;
-    justify-content: right;
+    height: 80px;
+    position: relative;
     box-shadow: 0 6px 4px -4px rgba(0, 0, 0, .2);
     #logged-user-container{
         display: flex;
+        position: absolute;
         border: none;
         right: 0;
     }
@@ -12,7 +14,7 @@ header{
         font-size: 32px;
         text-transform: uppercase;
         line-height: 80px;
-        color: black;
+        color: white;
         margin-left: 20px;
     }
     #log-out-btn{

@@ -4,6 +4,7 @@ import { baseUrl } from '../service/api';
 import {
   markWordAsDifficult, markWordAsLearned, unmarkWordAsDifficult, unmarkWordAsLearned,
 } from '../service/usersWordsApi';
+import { addPageTitle } from '../utils/addPageTitle';
 import { launchGameFromBook } from '../utils/challengeUtils';
 import { isUserLoggedIn } from '../utils/loginUtils';
 import Page from './abstract/page';
@@ -26,6 +27,7 @@ class TextBook extends Page {
     this.renderPageElements();
     this.renderPageContent();
     this.initHandlers();
+    addPageTitle(this.name);
   }
 
   renderPageElements(): void {

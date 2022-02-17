@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable import/no-cycle */    // TODO REMOVE!!!
 /* eslint-disable class-methods-use-this */   // TODO REMOVE!!!
+import { addPageTitle } from '../utils/addPageTitle';
 import { launchGameFromGames } from '../utils/challengeUtils';
 import Page from './abstract/page';
 
@@ -15,6 +16,7 @@ class Games extends Page {
   openPage(): void {
     this.renderPageElements();
     this.initHandlers();
+    addPageTitle(this.name);
   }
 
   renderPageElements(): void {
