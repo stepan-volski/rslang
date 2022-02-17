@@ -1,7 +1,20 @@
 /* eslint-disable import/no-cycle */
 import { ILoggedUser, IUser } from '../service/interfaces';
+import { getStatistic } from '../service/statisticApi';
 import { loginUser } from '../service/userApi';
 
+export function hideStatNav(): void {
+  const el1 = document.querySelector('div[data-page="statistics"]') as HTMLElement;
+  const el2 = document.querySelector('button[data-page="statistics"]') as HTMLElement;
+  el1.classList.add('inactive');
+  el2.classList.add('inactive');
+}
+export function showStatNav(): void {
+  const el1 = document.querySelector('div[data-page="statistics"]') as HTMLElement;
+  const el2 = document.querySelector('button[data-page="statistics"]') as HTMLElement;
+  el1.classList.remove('inactive');
+  el2.classList.remove('inactive');
+}
 export function authorizationShowHide(el:HTMLElement): void {
   el.classList.toggle('authorization-hide');
   el.classList.toggle('authorization-show');
@@ -30,6 +43,7 @@ function renderLoggedUser(user:{ name: string, email: string }) {
   `;
   userContainer.append(userImage, logOutBtn);
   (<HTMLElement>document.querySelector('header')).append(userContainer);
+  showStatNav();
 }
 export function renderAuthorizationBtn(): void {
   const authorization = document.getElementById('authorization-container') as HTMLElement;
@@ -58,9 +72,11 @@ export function logOutUser(): void {
   localStorage.removeItem('user');
   (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
   renderAuthorizationBtn();
+  hideStatNav();
 }
 
 export function loadUser(): void {
+  console.log(getStatistic());
   const isLog = isUserLoggedIn();
   if (isLog) {
     (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
@@ -71,5 +87,6 @@ export function loadUser(): void {
     });
   } else {
     renderAuthorizationBtn();
+    hideStatNav();
   }
 }

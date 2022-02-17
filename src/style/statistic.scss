@@ -14,20 +14,6 @@
     h2{
         border-bottom: solid 2px rgb(199, 199, 75);
     }
-    #total-learn-words-container{
-        width: 60%;
-        background: white;
-        border-radius: 10px;
-        font-weight: bold;
-        #total-learn-words{
-            font-size: 42px;
-        }
-        h2::after, h2::before{
-            font-family: "Material Icons";
-            color: rgb(199, 199, 75);
-            content: '\e65f';   
-        }
-    }
     #statistic-for-this-day, #statistic-for-all-time{
         width: 60%;
         background: white;
@@ -41,6 +27,11 @@
             p{
                 padding: 0 10px;
             }
+        }
+        h2::after, h2::before{
+            font-family: "Material Icons";
+            color: rgb(199, 199, 75);
+            content: '\e65f';   
         }
     }
 }
@@ -92,4 +83,10 @@
 }
 #sprint-stat-container, #audio-challenge-stat-container, #words-stat-container{
     box-shadow: 0 0 10px 5px rgba(221, 221, 221, 1);
+}
+.inactive{
+    display: none;
+}
+.active{
+    display: block;
 }

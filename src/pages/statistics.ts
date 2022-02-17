@@ -28,30 +28,49 @@ class Statistics extends Page {
     const { audioChallenge } = stat.optional.day;
     const { sprint } = stat.optional.day;
 
-    (<HTMLElement>document.getElementById('total-learn-words')).innerHTML = `${stat.learnedWords}`;
-
     (<HTMLElement>document.getElementById('day-new-words'))
       .innerHTML = `${audioChallenge.countNewWords + sprint.countNewWords} `;
-    (<HTMLElement>document.getElementById('day-correct-answers'))
-      .innerHTML = `${
-        (((audioChallenge.correctAnswersCount + sprint.correctAnswersCount)
+
+    if (Number.isNaN((((audioChallenge.correctAnswersCount + sprint.correctAnswersCount)
+      / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
+      + audioChallenge.correctAnswersCount + sprint.correctAnswersCount))
+      * 100))) {
+      (<HTMLElement>document.getElementById('day-correct-answers')).innerHTML = 'not calculated yet';
+    } else {
+      (<HTMLElement>document.getElementById('day-correct-answers'))
+        .innerHTML = `${
+          (((audioChallenge.correctAnswersCount + sprint.correctAnswersCount)
         / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
         + audioChallenge.correctAnswersCount + sprint.correctAnswersCount))
         * 100).toFixed(1)
-      }`;
+        }`;
+    }
+
     (<HTMLElement>document.getElementById('day-learned-words'))
       .innerHTML = `${stat.optional.day.words.countLearnedWords}`;
 
     (<HTMLElement>document.getElementById('audio-challenge-new-words')).innerHTML = `${audioChallenge.countNewWords}`;
-    (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = `
+    if (Object.is(((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
+      + audioChallenge.correctAnswersCount)) * 100), NaN)) {
+      (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = 'not calculated yet';
+    } else {
+      (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = `
       ${((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
-      + audioChallenge.correctAnswersCount)) * 100).toFixed(1)}`;
+      + audioChallenge.correctAnswersCount)) * 100).toFixed(1)} %`;
+    }
     (<HTMLElement>document.getElementById('audio-challenge-streak'))
       .innerHTML = `${audioChallenge.correctAnswersSeriesLength}`;
 
     (<HTMLElement>document.getElementById('sprint-new-words')).innerHTML = `${sprint.countNewWords}`;
-    (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = `${((sprint.correctAnswersCount
-      / (sprint.incorrectAnswersCount + sprint.correctAnswersCount)) * 100).toFixed(1)}`;
+    if (Object.is(((sprint.correctAnswersCount / (sprint.incorrectAnswersCount
+      + sprint.correctAnswersCount)) * 100), NaN)) {
+      (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = 'not calculated yet';
+    } else {
+      (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = `
+      ${((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
+      + audioChallenge.correctAnswersCount)) * 100).toFixed(1)} %`;
+    }
+
     (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}`;
 
     let newWordsPerDay: number[] = [];
