@@ -1,5 +1,5 @@
 import navigationFunc from '../components/navigation';
-import About from '../pages/about';
+import Team from '../pages/team';
 import Authorisation from '../pages/authorisation';
 import Games from '../pages/games';
 import Main from '../pages/main';
@@ -10,20 +10,20 @@ import { loadUser } from '../utils/loginUtils';
 
 type Routes = {
   main: Main;
-  about: About;
+  team: Team;
   textBook: TextBook;
   statistics: Statistics;
   games: Games;
 };
 
-type Pages = 'main' | 'textBook' | 'statistics' | 'about';
+type Pages = 'main' | 'textBook' | 'statistics' | 'team';
 
 class Router {
   routes: Routes;
 
   currentPage: Pages;
   authorization: Authorisation;
-  constructor(routes: { main: Main; about: About; textBook: TextBook; statistics: Statistics;
+  constructor(routes: { main: Main; team: Team; textBook: TextBook; statistics: Statistics;
     games: Games; }) {
     this.routes = routes;
     this.currentPage = 'main';

@@ -69,7 +69,7 @@ class TextBook extends Page {
 
     </div>
   `;
-    (this.appContainer as HTMLElement).innerHTML = pageHtml;
+    this.appContainer.innerHTML = pageHtml;
   }
 
   async renderPageContent(): Promise<void> {

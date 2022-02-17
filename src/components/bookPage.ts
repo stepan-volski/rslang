@@ -66,9 +66,9 @@ class BookPage {
             <div class="subSentence">${word.textMeaningTranslate}</div>
           </div>
 
-          <div class="cardIndicators" ${isHidden}>
+          <div class="cardIndicators ${isHidden}">
             <span>${wordGameScore}</span>
-            <span class="material-icons learntIcon">done</span>
+            <span class="material-icons learntIcon" >done</span>
             <span class="material-icons difficultIcon">psychology</span>
           </div>
 

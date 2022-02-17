@@ -5,5 +5,17 @@ header{
     #logged-user-container{
         display: flex;
         border: none;
+        right: 0;
+    }
+    #page-title{
+        position: relative;
+        font-size: 32px;
+        text-transform: uppercase;
+        line-height: 80px;
+        color: black;
+        margin-left: 20px;
+    }
+    #log-out-btn{
+        cursor: pointer;
     }
 }

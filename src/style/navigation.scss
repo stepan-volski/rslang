@@ -35,7 +35,7 @@
         background: none;
         &[data-page="main"] {
                 &:after{
-                    content: '\e9b0';   
+                    content: '\e9b0';
                 }
         }
         &[data-page="statistics"] {
@@ -53,7 +53,7 @@
                     content: '\ea28';
                 }
         }
-        &[data-page="about"] {
+        &[data-page="team"] {
                 &:after{
                     content: '\e55a';
                 }
