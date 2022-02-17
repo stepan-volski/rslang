@@ -14,6 +14,7 @@ class AuthorizationWindow {
   renderAuthorizationContainer(): HTMLElement {
     const container = document.createElement('div');
     container.id = 'authorization-container';
+    container.classList.add('authorization-hide');
     container.append(this.formLog.formContainer, this.formReg.formContainer);
     return container;
   }

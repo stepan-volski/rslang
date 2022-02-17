@@ -1,14 +1,75 @@
+#statistic-container{
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    margin: 0 auto;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 22px;
+    text-align: center;
+    h3, h2{
+        flex: 100%;
+        margin: 10px 0;
+    }
+    h2{
+        border-bottom: solid 2px rgb(199, 199, 75);
+    }
+    #total-learn-words-container{
+        width: 60%;
+        background: white;
+        border-radius: 10px;
+        font-weight: bold;
+        #total-learn-words{
+            font-size: 42px;
+        }
+        h2::after, h2::before{
+            font-family: "Material Icons";
+            color: rgb(199, 199, 75);
+            content: '\e65f';   
+        }
+    }
+    #statistic-for-this-day, #statistic-for-all-time{
+        width: 60%;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        #words-statistic, #game-statistic{
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            p{
+                padding: 0 10px;
+            }
+        }
+    }
+}
+
+#statistic-for-this-day{
+    h2{
+        flex: 1 0 100%;
+    }
+    #words-statistic, #game-statistic{
+        display: flex;
+    }
+}
 .stat-schedule{
     display: flex;
     align-items: flex-end;
+    padding: 20px;
 }
 .all-time-stat-column{
-    width: 20px;
+    width: 30px;
     background: rgb(28, 194, 245);
     border: 1px solid blue;
     align-items: baseline;
 }
-
+#day-stat-container{
+    box-shadow: 0 0 10px 5px rgba(221, 221, 221, 1);
+    display: flex;
+    flex-direction: column;
+    column-gap: 30px;
+}
 #shedules-container{
     display: flex;
     column-gap: 50px;
@@ -19,11 +80,16 @@
 }
 #game-stat-container, #schedule-stat-container{
     display: flex;
-    justify-content: space-between;
-    
+    column-gap: 50px;
+    justify-content: center;
 }
 #new-words-per-day, #total-learned-words-per-day{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background: white;
+    border-radius: 10px;
+}
+#sprint-stat-container, #audio-challenge-stat-container, #words-stat-container{
+    box-shadow: 0 0 10px 5px rgba(221, 221, 221, 1);
 }

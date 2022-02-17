@@ -1,5 +1,6 @@
 import statisticLayout from '../components/statisticLayout';
 import { getStatistic } from '../service/statisticApi';
+import { addPageTitle } from '../utils/addPageTitle';
 import Page from './abstract/page';
 
 class Statistics extends Page {
@@ -11,11 +12,14 @@ class Statistics extends Page {
 
   openPage(): void {
     const appContainer = document.getElementById('app') as HTMLElement;
+    appContainer.innerHTML = '';
     appContainer.append(this.renderLayout());
     Statistics.updateStatistic();
+    addPageTitle(this.name);
   }
   renderLayout(): HTMLElement {
     const layout = document.createElement('div');
+    layout.id = 'statistic-container';
     layout.innerHTML = this.layout;
     return layout;
   }
@@ -50,10 +54,24 @@ class Statistics extends Page {
       / (sprint.incorrectAnswersCount + sprint.correctAnswersCount)) * 100).toFixed(1)}`;
     (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}`;
 
+    let newWordsPerDay: number[] = [];
+    let totalLearnedWordsPerDay: number[] = [];
+
+    if (stat.optional.all.newWordsPerDay.length <= 2) {
+      newWordsPerDay = [3, 4, 3, 9, 5, 6, 7, 6, 3, 12, 22];
+    } else {
+      newWordsPerDay = stat.optional.all.newWordsPerDay;
+    }
+    if (stat.optional.all.totalLearnedWordsPerDay.length <= 2) {
+      totalLearnedWordsPerDay = [3, 4, 7, 11, 13, 19, 22, 33, 44, 55];
+    } else {
+      totalLearnedWordsPerDay = stat.optional.all.totalLearnedWordsPerDay;
+    }
+
     (<HTMLElement>document.getElementById('new-words-per-day'))
-      .append(this.renderStatSchedule(stat.optional.all.newWordsPerDay));
+      .append(this.renderStatSchedule(newWordsPerDay));
     (<HTMLElement>document.getElementById('total-learned-words-per-day'))
-      .append(this.renderStatSchedule(stat.optional.all.totalLearnedWordsPerDay));
+      .append(this.renderStatSchedule(totalLearnedWordsPerDay));
   }
   static renderStatSchedule(arrStat: number[]): HTMLElement {
     const container = document.createElement('div');
