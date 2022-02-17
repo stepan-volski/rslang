@@ -15,6 +15,7 @@ export function showStatNav(): void {
   el1.classList.remove('inactive');
   el2.classList.remove('inactive');
 }
+
 export function authorizationShowHide(el:HTMLElement): void {
   el.classList.toggle('authorization-hide');
   el.classList.toggle('authorization-show');
