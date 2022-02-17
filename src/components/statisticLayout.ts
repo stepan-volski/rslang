@@ -8,7 +8,7 @@ const statisticLayout = `
         <div id="words-stat-container">
             <p>new words:<span id="day-new-words"></span></p>
 
-            <p>correct answers:<span id="day-correct-answers"></span> </p>
+            <p>correct answers:<span id="day-correct-answers"></span></p>
 
             <p>learned words:<span id="day-learned-words"></span></p>
         </div>

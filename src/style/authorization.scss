@@ -9,8 +9,8 @@
     top: -1000px;
     background: rgba(0, 0, 0, 0.651);
     border: none;
-
 }
+
 #logged-user-container{
     margin: 10px;
     padding: 5px;
@@ -25,11 +25,10 @@
         text-transform: uppercase;
         line-height: 30px;
         width: 100px;
-        
         text-align: left;
         &:after{
             position: absolute;
-            content: '\e853';  
+            content: '\e853';
             font-family: "Material Icons";
             font-size: 32px;
         }
@@ -59,7 +58,6 @@
             background-color: white;
             color: #77afaf;
             border: 2px solid #77afaf;
-
             cursor:pointer;
             &:hover{
                 border: 2px solid white;
@@ -83,15 +81,14 @@
     display: flex;
 }
 #authorization-btn{
-        background: white;
-        border: 3px solid rgb(70, 70, 70);
-        border-radius: 10px;
-        text-transform: uppercase;
-        line-height: 30px;
-        width: 100px;
-        text-align: left;
-        cursor: pointer;
-
+    background: white;
+    border: 3px solid rgb(70, 70, 70);
+    border-radius: 10px;
+    text-transform: uppercase;
+    line-height: 30px;
+    width: 100px;
+    text-align: left;
+    cursor: pointer;
 }
 
 .authorization-show{

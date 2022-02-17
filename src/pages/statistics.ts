@@ -43,7 +43,7 @@ class Statistics extends Page {
         / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
         + audioChallenge.correctAnswersCount + sprint.correctAnswersCount))
         * 100).toFixed(1)
-        }`;
+        } %`;
     }
 
     (<HTMLElement>document.getElementById('day-learned-words'))
