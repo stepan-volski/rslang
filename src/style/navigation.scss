@@ -21,6 +21,7 @@
         line-height: 50px;
         font-style: 32px;
         text-transform: uppercase;
+        cursor:pointer;
     }
     button {
         box-sizing: border-box;
@@ -33,6 +34,7 @@
         font-family: "Material Icons";
         font-size: 52px;
         background: none;
+        cursor:pointer;
         &[data-page="main"] {
                 &:after{
                     content: '\e9b0';   

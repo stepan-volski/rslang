@@ -46,6 +46,7 @@
     align-items: center;
     #close-modal{
         margin-left: auto;
+        cursor:pointer;
     }
     form{
         display: flex;
@@ -58,6 +59,8 @@
             background-color: white;
             color: #77afaf;
             border: 2px solid #77afaf;
+
+            cursor:pointer;
             &:hover{
                 border: 2px solid white;
                 background: #77afaf;
@@ -87,6 +90,8 @@
         line-height: 30px;
         width: 100px;
         text-align: left;
+        cursor: pointer;
+
 }
 
 .authorization-show{
