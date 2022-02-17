@@ -1,12 +1,14 @@
 import AuthorizationWindow from '../authorization/authorizationWindow';
 import LoginForm from '../authorization/loginForm';
 import RegistrationForm from '../authorization/registrationForm';
+import { authorizationShowHide } from '../utils/loginUtils';
 
 class Authorisation {
   auth: AuthorizationWindow;
   constructor() {
     this.initHandlers();
     this.auth = new AuthorizationWindow();
+    this.openPage();
   }
   initHandlers(): void {
     document.addEventListener('click', (event: Event) => {
@@ -14,13 +16,12 @@ class Authorisation {
       event.preventDefault();
 
       if (target.id === 'authorization-btn') {
-        this.openPage();
         this.auth.formLog.initElems();
         this.auth.formReg.initElems();
       }
 
       if (target.id === 'close-modal') {
-        document.getElementById('authorization-container')?.remove();
+        authorizationShowHide(document.getElementById('authorization-container') as HTMLElement);
       }
 
       if (target.id === 'login-form-btn') {

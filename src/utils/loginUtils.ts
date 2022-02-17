@@ -2,6 +2,10 @@
 import { ILoggedUser, IUser } from '../service/interfaces';
 import { loginUser } from '../service/userApi';
 
+export function authorizationShowHide(el:HTMLElement): void {
+  el.classList.toggle('authorization-hide');
+  el.classList.toggle('authorization-show');
+}
 export function getCurrentUser(): ILoggedUser {
   return JSON.parse(localStorage.getItem('user') || '');
 }
@@ -9,8 +13,7 @@ export function isUserLoggedIn(): boolean {
   return (!!localStorage.getItem('user'));
 }
 function renderLoggedUser(user:{ name: string, email: string }) {
-  const userContainer = document.createElement('div');
-  userContainer.id = 'logged-user-container';
+  const userContainer = document.getElementById('logged-user-container') as HTMLElement;
 
   const userImage = new Image(50, 50);
   userImage.src = '../assets/userLogo.png';
@@ -29,29 +32,38 @@ function renderLoggedUser(user:{ name: string, email: string }) {
   (<HTMLElement>document.querySelector('header')).append(userContainer);
 }
 export function renderAuthorizationBtn(): void {
+  const authorization = document.getElementById('authorization-container') as HTMLElement;
   const loginBtn = document.createElement('button');
   loginBtn.id = 'authorization-btn';
   loginBtn.innerHTML = 'login';
-  (<HTMLElement>document.querySelector('header')).innerHTML = '';
-  (<HTMLElement>document.querySelector('header')).append(loginBtn);
+  (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
+  ((<HTMLElement>document.getElementById('logged-user-container'))).append(loginBtn);
+
+  document.addEventListener('click', (event: Event) => {
+    const target = event.target as HTMLElement;
+
+    if (target === loginBtn) {
+      authorizationShowHide(authorization);
+    }
+  });
 }
 export async function logInUser(user: IUser): Promise<void> {
   const loggedUser = await loginUser(user);
   localStorage.setItem('user', JSON.stringify(loggedUser));
   renderLoggedUser({ name: user.name ?? '', email: user.email });
-  document.getElementById('authorization-container')?.remove();
+  authorizationShowHide(document.getElementById('authorization-container') as HTMLElement);
 }
 
 export function logOutUser(): void {
   localStorage.removeItem('user');
-  (<HTMLElement>document.getElementById('logged-user-container')).remove();
+  (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
   renderAuthorizationBtn();
 }
 
 export function loadUser(): void {
   const isLog = isUserLoggedIn();
   if (isLog) {
-    (<HTMLElement>document.querySelector('header')).innerHTML = '';
+    (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
     const user = getCurrentUser();
     renderLoggedUser({
       name: user.name,

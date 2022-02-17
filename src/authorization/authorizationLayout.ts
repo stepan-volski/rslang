@@ -4,10 +4,10 @@ export const loginLayout = `
 <h2>Login</h2>
 
     <label for="psw"><b>Password</b></label>
-    <input id="login-password" type="password" placeholder="Введите пароль" name="psw" required>
+    <input id="login-password" type="password" placeholder="Введите пароль" name="psw" required minlength="8">
 
     <label for="email"><b>Email</b></label>
-    <input id="login-email" type="text" placeholder="Введите вашу почту" name="email" required>
+    <input id="login-email" type="email" placeholder="Введите вашу почту" name="email" required>
 
     <button type="submit" id="login-btn">Войти</button>
     <p>Don't have an account?<button id="registration-form-btn">sign in</button></p>
@@ -23,10 +23,11 @@ export const registrationLayout = `
     <input id="registration-user-name" type="text" placeholder="name" name="user-name" required>
 
     <label for="psw"><b>Password</b></label>
-    <input id="registration-password" type="password" placeholder="password" name="psw" required>
+    <input id="registration-password" type="password" placeholder="password" name="psw" required minlength="8">
 
     <label for="email"><b>Email</b></label>
-    <input id="registration-email" type="text" placeholder="email" name="email" required>
+    <input id="registration-email" type="email" placeholder="email"
+     name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" title="wadaw">
 
     <button type="submit" id="signup-btn">Sign up</button>
     <p>Already have an account?<button id="login-form-btn">login</button></p>
