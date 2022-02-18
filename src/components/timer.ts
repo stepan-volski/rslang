@@ -75,14 +75,14 @@ export function sprintTimer(): void {
   }
   function startTimer() {
     timerInterval = setInterval(() => {
-      timePassed += 1;
-      timeLeft = TIME_LIMIT - timePassed;
-      (<HTMLElement>document.getElementById('base-timer-label')).innerHTML = `${timeLeft}`;
-      setCircleDasharray();
-      setRemainingPathColor();
-
-      if (timeLeft === 0) {
+      if (timeLeft === 0 || document.getElementById('base-timer-label') === null) {
         onTimesUp();
+      } else {
+        timePassed += 1;
+        timeLeft = TIME_LIMIT - timePassed;
+        (<HTMLElement>document.getElementById('base-timer-label')).innerHTML = `${timeLeft}`;
+        setCircleDasharray();
+        setRemainingPathColor();
       }
     }, 1000);
   }

@@ -82,7 +82,7 @@ class Sprint extends Game {
     <div id="gameContainer" class="gameContainer">
     <span class="material-icons" id="closeIcon">close</span>
       <div id="game-sprint">
-        <div>score:<span id="total-score">${this.totalScore}</span></div>
+        <div id="total-score-container">score:<span id="total-score">${this.totalScore}</span></div>
         <div id="score-increase-light"><span></span><span></span><span></span></div>
         <div id="score-increase"> +10 points per answer</div>
         <div id="questionNumber">0</div>
@@ -127,7 +127,7 @@ class Sprint extends Game {
     counter.innerText = `${this.currentQuestion}`;
   }
 
-  answer(event: Event | KeyboardEvent): void {
+  answer(event: Event): void {
     const element = event.target as HTMLElement;
     if ((element.id === 'correct-answer-sprint-btn' && this.correctness === true)
     || (element.id === 'incorrect-answer-sprint-btn' && this.correctness === false)) {
@@ -160,6 +160,7 @@ class Sprint extends Game {
     this.currentQuestion++;
     this.generateQuestion();
   }
+
   initHandlers(): void {
     const btnContainer = document.getElementById('answerButtons') as HTMLElement;
     Array.from((btnContainer.children)).forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
@@ -172,6 +173,7 @@ class Sprint extends Game {
         this.incorrectAnswer();
       }
     });
+    document.getElementById('closeIcon')?.addEventListener('click', Sprint.goToGames.bind(this));
   }
 
   async registerCorrectAnswer(): Promise<void> {
@@ -188,6 +190,7 @@ class Sprint extends Game {
     if (this.currentWord.userWord?.optional.learned) {
       await increaseWordLearnProgress(this.currentWord._id as string);
     }
+    this.correctAnsweredWords.push(this.currentWord);
   }
 
   async registerIncorrectAnswer(): Promise<void> {
@@ -206,15 +209,19 @@ class Sprint extends Game {
     if (this.currentWord.userWord?.optional.learned) {
       await unmarkWordAsLearned(this.currentWord._id as string);
     }
+    this.incorrectAnsweredWords.push(this.currentWord);
   }
   private runTimer(): void {
     sprintTimer();
     const timer = setInterval(() => {
+      if (!document.getElementById('game-sprint')) clearInterval(timer);
       this.gameTime -= 1;
     }, 1000);
     setTimeout(() => {
-      clearInterval(timer);
-      this.showResults();
+      if (document.getElementById('base-timer-label')) {
+        clearInterval(timer);
+        this.showResults();
+      }
     }, this.gameTime * 1000);
   }
   private updateScore(streak: number): void {
@@ -238,7 +245,7 @@ class Sprint extends Game {
     const appContainer = document.getElementById('app');
     const resultsHtml = `
     <div id="resultsContainer" class="gameContainer">
-      <h3>Your score is ${this.correctAnswers}/${this.questions.length}</h3>
+      <h3>Your score is ${this.totalScore}</h3>
       <div class="resultsTable">
         <div class="resultsRow">
           <div>
