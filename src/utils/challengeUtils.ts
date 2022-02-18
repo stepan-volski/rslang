@@ -27,11 +27,15 @@ export function generateQuestions(gameData: Word[]): ChallengeQuestion[] {
 
   words.forEach((word: Word) => {
     let answers: string[] = [];
+    let answerNumber = 4;
+    if (words.length < 4) {
+      answerNumber = words.length;
+    }
     const question = new ChallengeQuestion();
     question.questionWord = word;
     answers.push(word.wordTranslate);
 
-    while (answers.length < 4) {
+    while (answers.length < answerNumber) {
       const answerWord = words[getRandomNumber(0, words.length)].wordTranslate;
       if (!answers.includes(answerWord)) {
         answers.push(answerWord);
@@ -110,14 +114,15 @@ async function getWordsForSprint(page: number, group: number, isUserLogged: bool
 export async function launchGameFromGames(group: number, gameType: string): Promise<void> {
   const page = getRandomNumber(0, 29);
   const isUserLogged = isUserLoggedIn();
+  const currentPage = window.location.pathname;
 
-  if (gameType === 'challenge') {
+  if (gameType === 'challenge' && currentPage === '/games') {
     const words = (isUserLogged) ? await getAggregatedWords(group, page) : await getWords(group, page);
     const game = new AudioChallenge(words);
     game.startGame();
   }
 
-  if (gameType === 'sprint') {
+  if (gameType === 'sprint' && currentPage === '/games') {
     const words = await getWordsForSprint(page, group, isUserLogged);
     const game = new Sprint(words);
     game.startGame(words);

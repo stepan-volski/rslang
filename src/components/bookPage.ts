@@ -25,14 +25,23 @@ class BookPage {
   async render(isOnlyDifficultWords = false): Promise<void> {
     const container = document.getElementById('content') as HTMLDivElement;
     const words = isOnlyDifficultWords ? await getDifficultWords() : await this.getWords();
-    const wordsHtml = words.map((word: Word) => this.createWordCard(word)).join('');
+    let wordsHtml = words.map((word: Word) => this.createWordCard(word)).join('');
+
+    if (isOnlyDifficultWords && words.length === 0) {
+      wordsHtml = `
+      <div class="difficultPlaceholder">
+        There are no words marked as Difficult.</br>
+        Click <span class="material-icons">psychology</span> icon on a word card to add it to this section.
+      </div>
+      `;
+    }
     container.innerHTML = wordsHtml;
   }
 
   createWordCard(word: Word): string {
     let isDifficult = '';
     let isLearnt = '';
-    let wordGameScore = '0/0';
+    let wordGameScore = '0 / 0';
 
     if (word.userWord) {
       if (word.userWord.difficulty === 'difficult') {
@@ -41,7 +50,7 @@ class BookPage {
       if (word.userWord.optional.learned) {
         isLearnt = 'learnt';
       }
-      wordGameScore = `${word.userWord.optional.correctAnswerCounter}/${word.userWord.optional.incorrectAnswerCounter}`;
+      wordGameScore = `${word.userWord.optional.correctAnswerCounter} / ${word.userWord.optional.incorrectAnswerCounter}`;
     }
     const isHidden = (this.isUserLoggedIn) ? '' : 'hidden';
     return `

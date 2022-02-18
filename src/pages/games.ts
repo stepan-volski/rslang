@@ -7,16 +7,20 @@ import Page from './abstract/page';
 
 class Games extends Page {
   selectedGame: string;
+  isHandlersInited: boolean;
 
   constructor() {
     super('Games');
     this.selectedGame = '';
+    this.isHandlersInited = false;
   }
 
   openPage(): void {
     this.renderPageElements();
-    this.initHandlers();
     addPageTitle(this.name);
+    if (!this.isHandlersInited) {
+      this.initHandlers();
+    }
   }
 
   renderPageElements(): void {
@@ -51,6 +55,7 @@ class Games extends Page {
   initHandlers(): void {
     document.addEventListener('click', this.startGame.bind(this));
     document.addEventListener('click', this.launchGame.bind(this));
+    this.isHandlersInited = true;
   }
 
   async startGame(event: Event): Promise<void> {
