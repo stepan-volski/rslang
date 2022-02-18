@@ -45,9 +45,22 @@
   font-family: "Material Icons";
   font-size: 32px;
   &:after{
-      content: '\e5c4 \e5c8';
-      letter-spacing: 250px;
+      content: '\e5c4 \t \e5c8';
       text-align: center;
+  }
+}
+#total-score-container{
+  font-size: 32px;
+  position: relative;
+  &::after, &::before{
+    font-family: "Material Icons";
+    content: '\e65f';
+    position: absolute;
+    top: 3px;
+    color: rgb(179, 179, 6);
+  }
+  &::before{
+    left: -35px;
   }
 }
 .base-timer {

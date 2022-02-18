@@ -77,7 +77,6 @@ export function logOutUser(): void {
 }
 
 export function loadUser(): void {
-  console.log(getStatistic());
   const isLog = isUserLoggedIn();
   if (isLog) {
     (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
