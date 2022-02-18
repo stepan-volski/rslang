@@ -24,16 +24,24 @@ class Games extends Page {
     const pageHtml = `
 
       <div class="gamesPageContainer">
-        <div class="gameBtn">
-          <img class="gameLogo" src="../assets/game_sprint.png"></img>
-          <div>Sprint</div>
-          <button data-game="sprint">play</button>
+        <div class="gameCard">
+          <img src="../assets/game_sprint.png"></img>
+          <div><b>Sprint</b></div>
+          <div class="gameDescription">
+            You have one minute to guess as many words as you can!
+          </div>
+          <div data-gameType="sprint" class="gameBackBtn">Play</div>
         </div>
-        <div class="gameBtn" data-gameType="challenge">
-          <img class="gameLogo" src="../assets/game_challenge.png"></img>
-          <div>Audio Challenge</div>
-          <button data-gameType="challenge">play</button>
+
+        <div class="gameCard">
+          <img src="../assets/game_challenge.png"></img>
+          <div><b>Audio Challenge</b></div>
+          <div class="gameDescription">
+            Listen to words and choose their translation!
+          </div>
+          <div data-gameType="challenge" class="gameBackBtn">Play</div>
         </div>
+
       </div>
 
   `;
@@ -62,17 +70,17 @@ class Games extends Page {
 
       const appContainer = document.getElementById('app') as HTMLElement;
       const pageHtml = `
-      <div class="gamesPageContainer">
-        <h2>Select the level:</h2>
-        <div class="levelSelector">
-          <div class="groupCircle" data-group="0">1</div>
-          <div class="groupCircle" data-group="1">2</div>
-          <div class="groupCircle" data-group="2">3</div>
-          <div class="groupCircle" data-group="3">4</div>
-          <div class="groupCircle" data-group="4">5</div>
-          <div class="groupCircle" data-group="5">6</div>
+        <div class="levelSelectorContainer">
+          <h2>Select the level:</h2>
+          <div class="levelSelector">
+            <div class="groupCircle" data-group="0">1</div>
+            <div class="groupCircle" data-group="1">2</div>
+            <div class="groupCircle" data-group="2">3</div>
+            <div class="groupCircle" data-group="3">4</div>
+            <div class="groupCircle" data-group="4">5</div>
+            <div class="groupCircle" data-group="5">6</div>
+          </div>
         </div>
-      </div>
 
     `;
       (appContainer as HTMLElement).innerHTML = pageHtml;

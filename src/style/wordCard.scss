@@ -2,9 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin: 30px;
-
   width: 40vw;
   height: 25vh;
   border-radius: 10px;
@@ -96,4 +94,8 @@
   &:hover {
     color: red;
   }
+}
+
+.hidden{
+  display: none;
 }
