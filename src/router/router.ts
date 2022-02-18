@@ -1,9 +1,10 @@
+/* eslint-disable import/no-cycle */
 import navigationFunc from '../components/navigation';
-import Team from '../pages/team';
 import Authorisation from '../pages/authorisation';
 import Games from '../pages/games';
 import Main from '../pages/main';
 import Statistics from '../pages/statistics';
+import Team from '../pages/team';
 import TextBook from '../pages/textBook';
 import { savingStatOnChangingDay } from '../service/statisticApi';
 import { loadUser } from '../utils/loginUtils';
@@ -16,7 +17,7 @@ type Routes = {
   games: Games;
 };
 
-type Pages = 'main' | 'textBook' | 'statistics' | 'team';
+type Pages = 'main' | 'textBook' | 'statistics' | 'team' | 'games';
 
 class Router {
   routes: Routes;
@@ -49,6 +50,13 @@ class Router {
       this.routes[selectedPage].openPage();
       this.currentPage = selectedPage;
     }
+  }
+
+  // todo need to check if string belongs to Pages
+  openSelectedPage(page: string): void {
+    window.history.pushState('', '', `/${page}`);
+    this.routes[page as Pages].openPage();
+    this.currentPage = page as Pages;
   }
 }
 

@@ -12,7 +12,7 @@ import {
   isWordNew, resetWordLearnProgress, unmarkWordAsLearned,
 } from '../service/usersWordsApi';
 import { isUserLoggedIn } from '../utils/loginUtils';
-import Games from '../pages/games';
+import { router } from '..';
 
 class AudioChallenge extends Game {
   currentQuestionNumber: number;
@@ -74,7 +74,7 @@ class AudioChallenge extends Game {
     const buttons = Array.from(document.getElementsByClassName('answerBtn')) as HTMLElement[];
 
     for (let i = 0; i < 4; i++) {
-      buttons[i].innerText = this.currentQuestion.answers[i];
+      buttons[i].innerText = this.currentQuestion.answers[i] || '';
     }
 
     const counter = document.getElementById('questionNumber') as HTMLElement;
@@ -102,7 +102,7 @@ class AudioChallenge extends Game {
     Array.from(document.getElementsByClassName('answerBtn'))
       .forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
     document.getElementById('audioQuestion')?.addEventListener('click', this.playCurrentQuestionAudio.bind(this));
-    document.getElementById('closeIcon')?.addEventListener('click', AudioChallenge.goToGames.bind(this));
+    document.getElementById('closeIcon')?.addEventListener('click', AudioChallenge.closeGame);
   }
 
   private showResults(): void {
@@ -129,15 +129,16 @@ class AudioChallenge extends Game {
         </div>
 
       </div>
-      <div class="gameBackBtn" id="backBtn">Back to Games</div>
+      <div class="gameBackBtn" id="backBtn">Back</div>
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = resultsHtml;
-    document.getElementById('backBtn')?.addEventListener('click', AudioChallenge.goToGames.bind(this));
+    document.getElementById('backBtn')?.addEventListener('click', AudioChallenge.closeGame);
     this.updateWinningStreak();
   }
 
   private async registerCorrectAnswer(): Promise<void> {
+    console.log('register correct answer!');
     new Audio('../assets/sound/correct.mp3').play();
     this.correctAnswers++;
     const counter = document.getElementById('correctCounter') as HTMLElement;
@@ -208,8 +209,9 @@ class AudioChallenge extends Game {
     </div>`;
   }
 
-  private static goToGames(): void {
-    new Games().openPage(); // todo - use router??
+  private static closeGame(): void {
+    const currentPage = window.location.pathname.substring(1);
+    router.openSelectedPage(currentPage);
   }
 }
 

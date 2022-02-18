@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-return-assign */
 import BookPage from '../components/bookPage';
 import { baseUrl } from '../service/api';
@@ -14,6 +15,7 @@ class TextBook extends Page {
   currentGroup: number;
   isDifficultSectionOpened: boolean;
   isPageCompleted: boolean;
+  isHandlersInited: boolean;
 
   constructor() {
     super('Textbook');
@@ -21,13 +23,16 @@ class TextBook extends Page {
     this.currentGroup = 0;
     this.isDifficultSectionOpened = false;
     this.isPageCompleted = false;
+    this.isHandlersInited = false;
   }
 
   openPage(): void {
     this.renderPageElements();
     this.renderPageContent();
-    this.initHandlers();
     addPageTitle(this.name);
+    if (!this.isHandlersInited) {
+      this.initHandlers();
+    }
   }
 
   renderPageElements(): void {
@@ -90,9 +95,10 @@ class TextBook extends Page {
     document.addEventListener('click', this.openSelectedGroup.bind(this));
     document.addEventListener('click', this.markUnmarkWordAsDifficult.bind(this));
     document.addEventListener('click', this.markUnmarkWordAsLearnt.bind(this));
-    document.getElementById('difficultWords')?.addEventListener('click', this.toggleDifficultWordsSection.bind(this));
+    document.addEventListener('click', this.toggleDifficultWordsSection.bind(this));
     document.addEventListener('click', this.launchGame.bind(this));
     document.addEventListener('click', TextBook.playCardSound);
+    this.isHandlersInited = true;
   }
 
   scrollPage(event: Event): void {
@@ -155,21 +161,24 @@ class TextBook extends Page {
     }
   }
 
-  toggleDifficultWordsSection(): void {
-    if (this.isDifficultSectionOpened) {
-      this.isDifficultSectionOpened = false;
-      (document.querySelector('.groupSelector') as HTMLElement).classList.remove('disabled');
-      (document.querySelector('.pageSelector') as HTMLElement).classList.remove('disabled');
-      (document.querySelector('.gamesContainer') as HTMLElement).classList.remove('disabled');
-      (document.getElementById('difficultWords') as HTMLElement).style.color = 'black';
-      this.renderPageContent();
-    } else {
-      this.isDifficultSectionOpened = true;
-      (document.querySelector('.groupSelector') as HTMLElement).classList.add('disabled');
-      (document.querySelector('.pageSelector') as HTMLElement).classList.add('disabled');
-      (document.querySelector('.gamesContainer') as HTMLElement).classList.add('disabled');
-      (document.getElementById('difficultWords') as HTMLElement).style.color = 'red';
-      new BookPage(0, 0).render(true);
+  toggleDifficultWordsSection(event: Event): void {
+    const element = event.target as HTMLElement;
+    if (element.id === 'difficultWords') {
+      if (this.isDifficultSectionOpened) {
+        this.isDifficultSectionOpened = false;
+        (document.querySelector('.groupSelector') as HTMLElement).classList.remove('disabled');
+        (document.querySelector('.pageSelector') as HTMLElement).classList.remove('disabled');
+        (document.querySelector('.gamesContainer') as HTMLElement).classList.remove('disabled');
+        (document.getElementById('difficultWords') as HTMLElement).style.color = 'black';
+        this.renderPageContent();
+      } else {
+        this.isDifficultSectionOpened = true;
+        (document.querySelector('.groupSelector') as HTMLElement).classList.add('disabled');
+        (document.querySelector('.pageSelector') as HTMLElement).classList.add('disabled');
+        (document.querySelector('.gamesContainer') as HTMLElement).classList.add('disabled');
+        (document.getElementById('difficultWords') as HTMLElement).style.color = 'red';
+        new BookPage(0, 0).render(true);
+      }
     }
   }
 

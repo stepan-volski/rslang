@@ -6,7 +6,7 @@ import Router from './router/router';
 import './index.scss';
 import Team from './pages/team';
 
-const router = new Router({
+export const router = new Router({
   main: new Main(),
   team: new Team(),
   textBook: new TextBook(),
