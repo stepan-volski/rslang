@@ -35,7 +35,7 @@ class Statistics extends Page {
       / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
       + audioChallenge.correctAnswersCount + sprint.correctAnswersCount))
       * 100))) {
-      (<HTMLElement>document.getElementById('day-correct-answers')).innerHTML = 'not calculated yet';
+      (<HTMLElement>document.getElementById('day-correct-answers')).innerHTML = '0';
     } else {
       (<HTMLElement>document.getElementById('day-correct-answers'))
         .innerHTML = `${
@@ -52,7 +52,7 @@ class Statistics extends Page {
     (<HTMLElement>document.getElementById('audio-challenge-new-words')).innerHTML = `${audioChallenge.countNewWords}`;
     if (Object.is(((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
       + audioChallenge.correctAnswersCount)) * 100), NaN)) {
-      (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = 'not calculated yet';
+      (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = '0';
     } else {
       (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = `
       ${((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
@@ -64,11 +64,11 @@ class Statistics extends Page {
     (<HTMLElement>document.getElementById('sprint-new-words')).innerHTML = `${sprint.countNewWords}`;
     if (Object.is(((sprint.correctAnswersCount / (sprint.incorrectAnswersCount
       + sprint.correctAnswersCount)) * 100), NaN)) {
-      (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = 'not calculated yet';
+      (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = '0';
     } else {
       (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = `
-      ${((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
-      + audioChallenge.correctAnswersCount)) * 100).toFixed(1)} %`;
+      ${((sprint.correctAnswersCount / (sprint.incorrectAnswersCount
+      + sprint.correctAnswersCount)) * 100).toFixed(1)} %`;
     }
 
     (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}`;

@@ -16,7 +16,6 @@
     }
 
     #statistic-for-this-day, #statistic-for-all-time{
-        width: 60%;
         background: white;
         border-radius: 10px;
         display: flex;
@@ -34,7 +33,9 @@
             color: rgb(199, 199, 75);
             content: '\e65f';   
         }
-
+    }
+    #statistic-for-all-time{
+        margin-bottom: 10px;
     }
 }
 

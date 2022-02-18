@@ -1,0 +1,104 @@
+#answerButtons{
+  margin-top: 20px;
+  display: flex;
+}
+#sprint-question-container{
+    width: 300px;
+    background: white;
+    display: flex;
+    border-radius: 10px;
+    font-size: 32px;
+    justify-content: space-between;
+    padding: 10px;
+    height: 150px;
+    flex-direction: column;
+    row-gap: 30px;
+}
+#score-increase-light{
+  display: flex;
+  column-gap: 15px;
+  span{
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: rgb(73, 65, 65);
+    border-radius: 100%;
+  }
+}
+#total-score{
+  font-size: 32px;
+}
+#game-sprint{
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+#correct-answer-sprint-btn, #incorrect-answer-sprint-btn{
+    margin-top: 0;
+}
+#keydown-sprint{
+  width: 300px;
+  font-family: "Material Icons";
+  font-size: 32px;
+  &:after{
+      content: '\e5c4 \e5c8';
+      letter-spacing: 250px;
+      text-align: center;
+  }
+}
+.base-timer {
+    position: relative;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .base-timer__svg {
+    transform: scaleX(-1);
+  }
+  
+  .base-timer__circle {
+    fill: none;
+    stroke: none;
+  }
+  
+  .base-timer__path-elapsed {
+    stroke-width: 7px;
+    stroke: grey;
+  }
+  
+  .base-timer__path-remaining {
+    stroke-width: 7px;
+    stroke-linecap: round;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: 1s linear all;
+    fill-rule: nonzero;
+    stroke: currentColor;
+  }
+  
+  .base-timer__path-remaining.green {
+    color: rgb(65, 184, 131);
+  }
+  
+  .base-timer__path-remaining.orange {
+    color: orange;
+  }
+  
+  .base-timer__path-remaining.red {
+    color: red;
+  }
+  
+  .base-timer__label {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+  }
