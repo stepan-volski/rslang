@@ -118,8 +118,8 @@ export async function launchGameFromGames(group: number, gameType: string): Prom
   }
 
   if (gameType === 'sprint') {
-    const game = new Sprint();
     const words = await getWordsForSprint(page, group, isUserLogged);
+    const game = new Sprint(words);
     game.startGame(words);
   }
 }
