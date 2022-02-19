@@ -1,9 +1,11 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-underscore-dangle */
+import { router } from '..';
 import { sprintTimer } from '../components/timer';
-import Games from '../pages/games';
 import { Word } from '../service/interfaces';
-import { increaseAnswersCount, increaseСountNewWords, setWinningStreak } from '../service/statisticApi';
+import {
+  getStatistic, increaseAnswersCount, increaseСountNewWords, setWinningStreak,
+} from '../service/statisticApi';
 import {
   increaseWordLearnProgress,
   incrementCorrectAnswerCounter,
@@ -33,6 +35,7 @@ class Sprint extends Game {
   correctAnsweredWords: Word[];
   incorrectAnsweredWords: Word[];
   questions: ChallengeQuestion[];
+  timer: ReturnType <typeof setInterval> | null;
   constructor(gameData: Word[]) {
     super('Sprint');
     this.currentQuestion = 0;
@@ -66,6 +69,7 @@ class Sprint extends Game {
     this.correctAnsweredWords = [];
     this.incorrectAnsweredWords = [];
     this.questions = generateQuestions(gameData);
+    this.timer = null;
   }
 
   startGame(gameData: Word[]): void {
@@ -74,9 +78,9 @@ class Sprint extends Game {
     this.initHandlers();
     this.generateQuestion();
     this.runTimer();
+    this.getLongestStreak();
   }
-
-  render(): void {
+  private render(): void {
     const appContainer = document.getElementById('app');
     const gameHtml = `
     <div id="gameContainer" class="gameContainer">
@@ -107,8 +111,11 @@ class Sprint extends Game {
   `;
     (appContainer as HTMLElement).innerHTML = gameHtml;
   }
-
-  generateQuestion(): void {
+  private async getLongestStreak(): Promise<void> {
+    const stat = await getStatistic();
+    this.longestWinningStreak = stat.optional.day.sprint.correctAnswersSeriesLength;
+  }
+  private generateQuestion(): void {
     const question = document.getElementById('sprint-question') as HTMLDivElement;
     const translateQuestion = document.getElementById('sprint-question-translate') as HTMLDivElement;
 
@@ -127,7 +134,7 @@ class Sprint extends Game {
     counter.innerText = `${this.currentQuestion}`;
   }
 
-  answer(event: Event): void {
+  private answer(event: Event): void {
     const element = event.target as HTMLElement;
     if ((element.id === 'correct-answer-sprint-btn' && this.correctness === true)
     || (element.id === 'incorrect-answer-sprint-btn' && this.correctness === false)) {
@@ -138,6 +145,7 @@ class Sprint extends Game {
   }
 
   private incorrectAnswer(): void {
+    console.log(false);
     this.temporaryWinningStreak = 0;
     this.correctStreak = 0;
     Sprint.changeLights(this.correctStreak);
@@ -148,6 +156,7 @@ class Sprint extends Game {
   }
 
   private correctAnswer(): void {
+    console.log(true);
     if (this.correctStreak < 3) this.correctStreak += 1;
     Sprint.changeLights(this.correctStreak);
     this.temporaryWinningStreak += 1;
@@ -161,7 +170,7 @@ class Sprint extends Game {
     this.generateQuestion();
   }
 
-  initHandlers(): void {
+  private initHandlers(): void {
     const btnContainer = document.getElementById('answerButtons') as HTMLElement;
     Array.from((btnContainer.children)).forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -172,11 +181,12 @@ class Sprint extends Game {
       } else {
         this.incorrectAnswer();
       }
+      e.stopImmediatePropagation();
     });
-    document.getElementById('closeIcon')?.addEventListener('click', Sprint.goToGames.bind(this));
+    document.getElementById('closeIcon')?.addEventListener('click', this.closeGame.bind(this));
   }
 
-  async registerCorrectAnswer(): Promise<void> {
+  private async registerCorrectAnswer(): Promise<void> {
     new Audio('../assets/sound/correct.mp3').play();
     const counter = document.getElementById('correctCounter') as HTMLElement;
     this.correctAnswers++;
@@ -193,7 +203,7 @@ class Sprint extends Game {
     this.correctAnsweredWords.push(this.currentWord);
   }
 
-  async registerIncorrectAnswer(): Promise<void> {
+  private async registerIncorrectAnswer(): Promise<void> {
     new Audio('../assets/sound/wrong.mp3').play();
     const counter = document.getElementById('incorrectCounter') as HTMLElement;
     this.incorrectAnswers++;
@@ -211,19 +221,21 @@ class Sprint extends Game {
     }
     this.incorrectAnsweredWords.push(this.currentWord);
   }
+
   private runTimer(): void {
     sprintTimer();
-    const timer = setInterval(() => {
-      if (!document.getElementById('game-sprint')) clearInterval(timer);
-      this.gameTime -= 1;
-    }, 1000);
-    setTimeout(() => {
-      if (document.getElementById('base-timer-label')) {
-        clearInterval(timer);
+    this.timer = setInterval(() => {
+      if (document.getElementById('base-timer-label') === null) {
+        clearInterval(Number(this.timer));
+      }
+      if (this.gameTime === 0) {
+        clearInterval(Number(this.timer));
         this.showResults();
       }
-    }, this.gameTime * 1000);
+      this.gameTime -= 1;
+    }, 1000);
   }
+
   private updateScore(streak: number): void {
     const score = document.getElementById('total-score') as HTMLElement;
     const scoreIncrease = document.getElementById('score-increase') as HTMLElement;
@@ -237,9 +249,11 @@ class Sprint extends Game {
     }
     score.innerHTML = String(this.totalScore);
   }
+
   private setGameData(words: Word[]): void {
     this.gameData = words;
   }
+
   private showResults(): void {
     new Audio('../assets/sound/end-of-round.mp3').play();
     const appContainer = document.getElementById('app');
@@ -268,8 +282,9 @@ class Sprint extends Game {
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = resultsHtml;
-    document.getElementById('backBtn')?.addEventListener('click', Sprint.goToGames.bind(this));
+    document.getElementById('backBtn')?.addEventListener('click', this.closeGame);
   }
+
   private static generateResults(word: Word): string {
     return `
     <div>
@@ -279,9 +294,12 @@ class Sprint extends Game {
     </div>`;
   }
 
-  private static goToGames(): void {
-    new Games().openPage(); // todo - use router??
+  private closeGame(): void {
+    const currentPage = window.location.pathname.substring(1);
+    router.openSelectedPage(currentPage);
+    clearInterval(Number(this.timer));
   }
+
   private static changeLights(n = 0) {
     const lights = (<HTMLElement>document.getElementById('score-increase-light')).childNodes as NodeList;
     if (n === 0) {

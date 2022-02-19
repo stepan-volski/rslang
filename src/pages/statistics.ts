@@ -17,19 +17,21 @@ class Statistics extends Page {
     Statistics.updateStatistic();
     addPageTitle(this.name);
   }
+
   renderLayout(): HTMLElement {
     const layout = document.createElement('div');
     layout.id = 'statistic-container';
     layout.innerHTML = this.layout;
     return layout;
   }
+
   static async updateStatistic(): Promise<void> {
     const stat = await getStatistic();
     const { audioChallenge } = stat.optional.day;
     const { sprint } = stat.optional.day;
 
     (<HTMLElement>document.getElementById('day-new-words'))
-      .innerHTML = `${audioChallenge.countNewWords + sprint.countNewWords} `;
+      .innerHTML = `${audioChallenge.countNewWords + sprint.countNewWords} ` ?? '0';
 
     if (Number.isNaN((((audioChallenge.correctAnswersCount + sprint.correctAnswersCount)
       / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
@@ -43,13 +45,13 @@ class Statistics extends Page {
         / (audioChallenge.incorrectAnswersCount + sprint.incorrectAnswersCount
         + audioChallenge.correctAnswersCount + sprint.correctAnswersCount))
         * 100).toFixed(1)
-        } %`;
+        } %` ?? '0';
     }
 
     (<HTMLElement>document.getElementById('day-learned-words'))
-      .innerHTML = `${stat.optional.day.words.countLearnedWords}`;
+      .innerHTML = `${stat.optional.day.words.countLearnedWords}` ?? '0';
 
-    (<HTMLElement>document.getElementById('audio-challenge-new-words')).innerHTML = `${audioChallenge.countNewWords}`;
+    (<HTMLElement>document.getElementById('audio-challenge-new-words')).innerHTML = `${audioChallenge.countNewWords}` ?? '0';
     if (Object.is(((audioChallenge.correctAnswersCount / (audioChallenge.incorrectAnswersCount
       + audioChallenge.correctAnswersCount)) * 100), NaN)) {
       (<HTMLElement>document.getElementById('audio-challenge-correct-answers')).innerHTML = '0';
@@ -62,8 +64,8 @@ class Statistics extends Page {
       .innerHTML = `${audioChallenge.correctAnswersSeriesLength}`;
 
     (<HTMLElement>document.getElementById('sprint-new-words')).innerHTML = `${sprint.countNewWords}`;
-    if (Object.is(((sprint.correctAnswersCount / (sprint.incorrectAnswersCount
-      + sprint.correctAnswersCount)) * 100), NaN)) {
+    if (Number.isNaN(((sprint.correctAnswersCount / (sprint.incorrectAnswersCount
+      + sprint.correctAnswersCount)) * 100))) {
       (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = '0';
     } else {
       (<HTMLElement>document.getElementById('sprint-correct-answers')).innerHTML = `
@@ -71,41 +73,36 @@ class Statistics extends Page {
       + sprint.correctAnswersCount)) * 100).toFixed(1)} %`;
     }
 
-    (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}`;
-
-    let newWordsPerDay: number[] = [];
-    let totalLearnedWordsPerDay: number[] = [];
-
-    if (stat.optional.all.newWordsPerDay.length <= 2) {
-      newWordsPerDay = [3, 4, 3, 9, 5, 6, 7, 6, 3, 12, 22];
-    } else {
-      newWordsPerDay = stat.optional.all.newWordsPerDay;
-    }
-    if (stat.optional.all.totalLearnedWordsPerDay.length <= 2) {
-      totalLearnedWordsPerDay = [3, 4, 7, 11, 13, 19, 22, 33, 44, 55];
-    } else {
-      totalLearnedWordsPerDay = stat.optional.all.totalLearnedWordsPerDay;
-    }
+    (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}` ?? '0';
 
     (<HTMLElement>document.getElementById('new-words-per-day'))
-      .append(this.renderStatSchedule(newWordsPerDay));
+      .append(this.renderStatSchedule(stat.optional.all.newWordsPerDay, 10));
     (<HTMLElement>document.getElementById('total-learned-words-per-day'))
-      .append(this.renderStatSchedule(totalLearnedWordsPerDay));
+      .append(this.renderStatSchedule(stat.optional.all.totalLearnedWordsPerDay, 20));
   }
-  static renderStatSchedule(arrStat: number[]): HTMLElement {
+
+  static renderStatSchedule(arrStat: number[], size: number): HTMLElement {
     const container = document.createElement('div');
     container.classList.add('stat-schedule');
-    arrStat.forEach((e) => {
-      container.append(Statistics.createScheduleColumn(e));
+    arrStat.forEach((e, index) => {
+      if (index === (arrStat.length - 1)) {
+        container.append(Statistics.createScheduleColumn(e, 1, size));
+      } else {
+        container.append(Statistics.createScheduleColumn(e, 0, size));
+      }
     });
     return container;
   }
 
-  static createScheduleColumn(e: number): HTMLElement {
+  static createScheduleColumn(e: number, index = 0, size: number): HTMLElement {
     const el = document.createElement('div');
-    el.style.height = `${10 * e}px`;
+    el.style.height = `${size * e}px`;
     el.classList.add('all-time-stat-column');
-    el.innerHTML = `${e}`;
+    if (index !== 0) {
+      el.innerHTML = `&#10026; ${e}`;
+    } else {
+      el.innerHTML = `${e}`;
+    }
     return el;
   }
 }
