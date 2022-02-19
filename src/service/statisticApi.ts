@@ -81,18 +81,38 @@ export async function increaseСountNewWords(statName:string): Promise<void> {
     case 'Words': stat.optional.day.words.countNewWords += 1; break;
     default: break;
   }
-
+  const { newWordsPerDay } = stat.optional.all;
+  if (newWordsPerDay[newWordsPerDay.length - 1]
+    < Math.max(stat.optional.day.sprint.countNewWords, stat.optional.day.audioChallenge.countNewWords)) {
+    newWordsPerDay.pop();
+    newWordsPerDay.push(Math.max(stat.optional.day.sprint.countNewWords, stat.optional.day.audioChallenge.countNewWords));
+  }
   updateStatistic(stat);
 }
 export async function increaseCountLearnedWords(): Promise<void> {
   const stat = await getStatistic();
   stat.optional.day.words.countLearnedWords += 1;
+  stat.learnedWords += 1;
+  const { totalLearnedWordsPerDay } = stat.optional.all;
+  if (totalLearnedWordsPerDay[totalLearnedWordsPerDay.length - 1]
+    < stat.optional.day.words.countLearnedWords) {
+    totalLearnedWordsPerDay.pop();
+    totalLearnedWordsPerDay.push(stat.learnedWords);
+  }
   updateStatistic(stat);
 }
 
 export async function decreaseCountLearnedWords(): Promise<void> {
   const stat = await getStatistic();
   stat.optional.day.words.countLearnedWords -= 1;
+  stat.learnedWords -= 1;
+  const { countLearnedWords } = stat.optional.day.words;
+  const { totalLearnedWordsPerDay } = stat.optional.all;
+  if (totalLearnedWordsPerDay[totalLearnedWordsPerDay.length - 1]
+    < countLearnedWords) {
+    totalLearnedWordsPerDay.pop();
+    totalLearnedWordsPerDay.push(countLearnedWords);
+  }
   updateStatistic(stat);
 }
 
@@ -113,10 +133,9 @@ export async function savingStatOnChangingDay(): Promise<void> {
   const currentDay = new Date().getDay(); // will be getDay(), minutes for example, save stat every min
 
   if (previousDay !== currentDay) {
-    const arr = stat.optional.all.totalLearnedWordsPerDay;
+    const arr = stat.optional.all;
 
-    stat.optional.all.newWordsPerDay.push(stat.learnedWords);
-    arr.push(arr[arr.length - 1] + stat.learnedWords);
+    arr.totalLearnedWordsPerDay.push(stat.learnedWords);
 
     stat = {
       learnedWords: 0,
