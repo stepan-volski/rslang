@@ -67,8 +67,10 @@ class TextBook extends Page {
           <div class="groupCircle" data-group="5">6</div>
         </div>
 
-        <div class="onlyDifficultToggle" ${isHidden}>
-          <div class="difIcon"><span class="material-icons" id="difficultWords">psychology</span></div>
+        <div class="onlyDifficultToggle ${isHidden}">
+          <div class="difIcon">
+            <span class="material-icons" id="difficultWords">psychology</span>
+          </div>
           <div>Difficult Words Section</div>
         </div>
       </div>
