@@ -78,7 +78,9 @@ class Sprint extends Game {
     this.initHandlers();
     this.generateQuestion();
     this.runTimer();
-    this.getLongestStreak();
+    if (this.isUserLoggedIn) {
+      this.getLongestStreak();
+    }
   }
   private render(): void {
     const appContainer = document.getElementById('app');
@@ -122,8 +124,8 @@ class Sprint extends Game {
     question.innerText = this.gameData[this.currentQuestion].word;
     this.currentWord = this.gameData[this.currentQuestion];
 
-    if (getRandom(100) > 50) {
-      translateQuestion.innerText = this.gameData[getRandom(100)].wordTranslate;
+    if (getRandom(this.gameData.length) > this.gameData.length / 2) {
+      translateQuestion.innerText = this.gameData[getRandom(this.gameData.length)].wordTranslate;
       this.correctness = false;
     } else {
       translateQuestion.innerText = this.gameData[this.currentQuestion].wordTranslate;
@@ -145,29 +147,37 @@ class Sprint extends Game {
   }
 
   private incorrectAnswer(): void {
-    console.log(false);
     this.temporaryWinningStreak = 0;
     this.correctStreak = 0;
     Sprint.changeLights(this.correctStreak);
     this.updateScore(-1);
-    this.registerIncorrectAnswer();
     this.currentQuestion++;
-    this.generateQuestion();
+    if (this.currentQuestion < this.gameData.length) {
+      this.generateQuestion();
+    }
+    if (this.isUserLoggedIn) {
+      this.registerIncorrectAnswer();
+    }
   }
 
   private correctAnswer(): void {
-    console.log(true);
     if (this.correctStreak < 3) this.correctStreak += 1;
     Sprint.changeLights(this.correctStreak);
     this.temporaryWinningStreak += 1;
     if (this.temporaryWinningStreak > this.longestWinningStreak) {
       this.longestWinningStreak += 1;
-      setWinningStreak(this.name, this.longestWinningStreak);
+      if (this.isUserLoggedIn) {
+        setWinningStreak(this.name, this.longestWinningStreak);
+      }
     }
-    this.registerCorrectAnswer();
+    if (this.isUserLoggedIn) {
+      this.registerCorrectAnswer();
+    }
     this.updateScore(this.correctStreak);
     this.currentQuestion++;
-    this.generateQuestion();
+    if (this.currentQuestion < this.gameData.length) {
+      this.generateQuestion();
+    }
   }
 
   private initHandlers(): void {
@@ -228,9 +238,9 @@ class Sprint extends Game {
       if (document.getElementById('base-timer-label') === null) {
         clearInterval(Number(this.timer));
       }
-      if (this.gameTime === 0) {
+      if (this.gameTime === 0 || this.currentQuestion + 1 > this.gameData.length) {
         clearInterval(Number(this.timer));
-        this.showResults();
+        this.showResults(true);
       }
       this.gameTime -= 1;
     }, 1000);
@@ -254,12 +264,16 @@ class Sprint extends Game {
     this.gameData = words;
   }
 
-  private showResults(): void {
+  private showResults(bookPage = false): void {
+    let messege = '';
+    if (bookPage) {
+      messege = 'Sorry! The words are over.. ';
+    }
     new Audio('../assets/sound/end-of-round.mp3').play();
     const appContainer = document.getElementById('app');
     const resultsHtml = `
     <div id="resultsContainer" class="gameContainer">
-      <h3>Your score is ${this.totalScore}</h3>
+      <h3>${messege}Your score is ${this.totalScore}</h3>
       <div class="resultsTable">
         <div class="resultsRow">
           <div>

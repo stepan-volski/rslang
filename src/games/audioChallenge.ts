@@ -134,7 +134,9 @@ class AudioChallenge extends Game {
   `;
     (appContainer as HTMLElement).innerHTML = resultsHtml;
     document.getElementById('backBtn')?.addEventListener('click', AudioChallenge.closeGame);
-    this.updateWinningStreak();
+    if (this.isUserLoggedIn) {
+      this.updateWinningStreak();
+    }
   }
 
   private async registerCorrectAnswer(): Promise<void> {
