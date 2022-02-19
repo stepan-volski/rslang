@@ -138,7 +138,6 @@ class AudioChallenge extends Game {
   }
 
   private async registerCorrectAnswer(): Promise<void> {
-    console.log('register correct answer!');
     new Audio('../assets/sound/correct.mp3').play();
     this.correctAnswers++;
     const counter = document.getElementById('correctCounter') as HTMLElement;
