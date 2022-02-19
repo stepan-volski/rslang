@@ -1,5 +1,3 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable no-return-assign */
 import BookPage from '../components/bookPage';
 import { baseUrl } from '../service/api';
 import {
@@ -69,8 +67,11 @@ class TextBook extends Page {
           <div class="groupCircle" data-group="5">6</div>
         </div>
 
-        <div class="onlyDifficultToggle" ${isHidden}>
-          <span class="material-icons" id="difficultWords">psychology</span>
+        <div class="onlyDifficultToggle ${isHidden}">
+          <div class="difIcon">
+            <span class="material-icons" id="difficultWords">psychology</span>
+          </div>
+          <div>Difficult Words Section</div>
         </div>
       </div>
 
@@ -120,7 +121,7 @@ class TextBook extends Page {
     const element = event.target as HTMLElement;
     const groupId = element.dataset.group;
 
-    if (groupId) {
+    if (groupId && element.parentElement?.className === 'groupSelector') {
       this.currentGroup = Number(groupId);
       this.currentPage = 0;
       this.renderPageContent();
@@ -187,9 +188,11 @@ class TextBook extends Page {
     const gameType = element.dataset.game;
     if (gameType === 'sprint') {
       launchGameFromBook(this.currentGroup, this.currentPage, gameType);
+      event.stopImmediatePropagation();
     }
     if (gameType === 'challenge') {
       launchGameFromBook(this.currentGroup, this.currentPage, gameType);
+      event.stopImmediatePropagation();
     }
   }
 
@@ -217,8 +220,8 @@ class TextBook extends Page {
   setPageBackground(): void {
     const container = document.querySelector('.textbookContainer') as HTMLElement;
     switch (this.currentGroup) {
-      case 0: container.style.backgroundColor = '#77afaf'; break;
-      case 1: container.style.backgroundColor = '#301be9'; break;
+      case 0: container.style.backgroundColor = '#ffccd7'; break;
+      case 1: container.style.backgroundColor = '#a59ded'; break;
       case 2: container.style.backgroundColor = '#f5aa48'; break;
       case 3: container.style.backgroundColor = '#5d54a8'; break;
       case 4: container.style.backgroundColor = '#61e08b'; break;

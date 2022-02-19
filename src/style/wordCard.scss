@@ -66,7 +66,7 @@
 
 .difficult {
   border: 2px solid red;
-
+  box-shadow: 0 0 30px rgba(230, 23, 23, 0.952);
   .difficultIcon{
     color: red;
   }
@@ -74,6 +74,7 @@
 
 .learnt {
   border: 3px solid green;
+  box-shadow: 0 0 30px green;
 
   .learntIcon{
     color: green;

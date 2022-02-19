@@ -4,12 +4,12 @@ export const loginLayout = `
 <h2>Login</h2>
 
     <label for="psw"><b>Password</b></label>
-    <input id="login-password" type="password" placeholder="Введите пароль" name="psw" required minlength="8">
+    <input id="login-password" type="password" placeholder="Enter password" name="psw" required minlength="8">
 
     <label for="email"><b>Email</b></label>
-    <input id="login-email" type="email" placeholder="Введите вашу почту" name="email" required>
+    <input id="login-email" type="email" placeholder="Enter email" name="email" required>
 
-    <button type="submit" id="login-btn">Войти</button>
+    <button type="submit" id="login-btn">Log In</button>
     <p>Don't have an account?<button id="registration-form-btn">sign in</button></p>
 </form>
 
@@ -18,7 +18,7 @@ export const registrationLayout = `
 <button id="close-modal">&#10060;</button>
 <form action='https://rs-lang-application.herokuapp.com/users'>
 <h2>Registration</h2>
-    
+
     <label for="user-name"><b>Name</b></label>
     <input id="registration-user-name" type="text" placeholder="name" name="user-name" required>
 

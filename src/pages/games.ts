@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable import/no-cycle */    // TODO REMOVE!!!
-/* eslint-disable class-methods-use-this */   // TODO REMOVE!!!
+/* eslint-disable import/no-cycle */
+/* eslint-disable class-methods-use-this */
 import { addPageTitle } from '../utils/addPageTitle';
 import { launchGameFromGames } from '../utils/challengeUtils';
 import Page from './abstract/page';
@@ -64,6 +64,7 @@ class Games extends Page {
 
     if (group) {
       launchGameFromGames(Number(group), this.selectedGame);
+      event.stopImmediatePropagation();
     }
   }
 

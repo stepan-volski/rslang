@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
+import { router } from '..';
 import { ILoggedUser, IUser } from '../service/interfaces';
-import { getStatistic } from '../service/statisticApi';
 import { loginUser } from '../service/userApi';
 
 export function hideStatNav(): void {
@@ -38,7 +38,7 @@ function renderLoggedUser(user:{ name: string, email: string }) {
 
   userContainer.innerHTML = `
     <div>
-      <div id="logged-user-name">${getCurrentUser().name}</div>
+      <div id="logged-user-name" align="center">${getCurrentUser().name}</div>
       <div id="logged-user-email">${user.email}</div>
     </div>
   `;
@@ -67,6 +67,7 @@ export async function logInUser(user: IUser): Promise<void> {
   localStorage.setItem('user', JSON.stringify(loggedUser));
   renderLoggedUser({ name: user.name ?? '', email: user.email });
   authorizationShowHide(document.getElementById('authorization-container') as HTMLElement);
+  router.refreshCurrentPage();
 }
 
 export function logOutUser(): void {
@@ -74,6 +75,7 @@ export function logOutUser(): void {
   (<HTMLElement>document.getElementById('logged-user-container')).innerHTML = '';
   renderAuthorizationBtn();
   hideStatNav();
+  router.refreshCurrentPage();
 }
 
 export function loadUser(): void {
