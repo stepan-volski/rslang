@@ -47,7 +47,7 @@ class AudioChallenge extends Game {
   private render(): void {
     const appContainer = document.getElementById('app');
     const gameHtml = `
-    <div id="gameContainer" class="gameContainer">
+      <div id="gameContainer" class="gameContainer">
         <span class="material-icons" id="closeIcon">close</span>
         <div id="questionNumber">1</div>
         <div class="score">
@@ -58,12 +58,19 @@ class AudioChallenge extends Game {
 
         <img id="audioQuestion" src="../assets/audio_q.png" class="audioQuestion"></img>
         <div class="answerButtons">
-          <div class="answerBtn"></div>
-          <div class="answerBtn"></div>
-          <div class="answerBtn"></div>
-          <div class="answerBtn"></div>
+          <div class="answerBtn" data-key="KeyA"></div>
+          <div class="answerBtn" data-key="KeyS"></div>
+          <div class="answerBtn" data-key="KeyD"></div>
+          <div class="answerBtn" data-key="KeyF"></div>
         </div>
-    </div>
+
+        <div class="keysContainer">
+          <div class="keyBtn">A</div>
+          <div class="keyBtn">S</div>
+          <div class="keyBtn">D</div>
+          <div class="keyBtn">F</div>
+        </div>
+      </div>
   `;
     (appContainer as HTMLElement).innerHTML = gameHtml;
   }
@@ -81,10 +88,29 @@ class AudioChallenge extends Game {
     counter.innerText = `${this.currentQuestionNumber + 1}/${this.questions.length}`;
   }
 
-  private async answer(event: Event): Promise<void> {
+  private answerByClick(event: Event): void {
+    const element = event.target as HTMLElement;
+    if (element.className === 'answerBtn') {
+      const answer = element.innerText;
+      this.answer(answer);
+    }
+  }
+
+  private answerByKey(event: KeyboardEvent): void {
+    const key = event.code;
+    const gameIndicator = document.getElementById('audioQuestion');
+    if (gameIndicator) {
+      if (key === 'KeyA' || key === 'KeyS' || key === 'KeyD' || key === 'KeyF') {
+        const button = document.querySelector(`[data-key='${key}']`) as HTMLElement;
+        const answer = button.innerText;
+        this.answer(answer);
+      }
+    }
+  }
+
+  private async answer(answer: string): Promise<void> {
     const questionsAmount = this.questions.length;
-    const button = event.target as HTMLElement;
-    if (button.innerText === this.currentQuestion.questionWord?.wordTranslate) {
+    if (answer === this.currentQuestion.questionWord?.wordTranslate) {
       await this.registerCorrectAnswer();
     } else {
       await this.registerIncorrectAnswer();
@@ -100,9 +126,10 @@ class AudioChallenge extends Game {
 
   private initHandlers(): void {
     Array.from(document.getElementsByClassName('answerBtn'))
-      .forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
+      .forEach((btn) => btn.addEventListener('click', this.answerByClick.bind(this)));
     document.getElementById('audioQuestion')?.addEventListener('click', this.playCurrentQuestionAudio.bind(this));
     document.getElementById('closeIcon')?.addEventListener('click', AudioChallenge.closeGame);
+    document.addEventListener('keydown', this.answerByKey.bind(this));
   }
 
   private showResults(): void {
