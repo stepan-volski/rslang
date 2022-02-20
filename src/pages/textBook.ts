@@ -39,8 +39,8 @@ class TextBook extends Page {
     <div class="textbookContainer">
       <div class="gamesContainer">
         <div class="gameBtn" data-game="sprint">
-          <img class="gameLogo" src="../assets/game_sprint.png"></img>
-          <div>Sprint</div>
+          <img class="gameLogo" src="../assets/game_sprint.png" data-game="sprint"></img>
+          <div data-game="sprint">Sprint</div>
         </div>
         <div class="gameBtn" data-game="challenge">
           <img class="gameLogo" src="../assets/game_challenge.png" data-game="challenge"></img>

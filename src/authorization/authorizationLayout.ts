@@ -9,7 +9,7 @@ export const loginLayout = `
     <label for="email"><b>Email</b></label>
     <input id="login-email" type="email" placeholder="Enter email" name="email" required>
 
-    <button type="submit" id="login-btn">Войти</button>
+    <button type="submit" id="login-btn">Log in</button>
     <p>Don't have an account? <button id="registration-form-btn">sign in</button></p>
 
 </form>

@@ -1,5 +1,4 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable import/no-cycle */
 /* eslint-disable class-methods-use-this */
 import { addPageTitle } from '../utils/addPageTitle';
 import { launchGameFromGames } from '../utils/challengeUtils';
@@ -62,7 +61,7 @@ class Games extends Page {
     const element = event.target as HTMLElement;
     const group = element.dataset.group;
 
-    if (group) {
+    if (group && element.parentElement?.className === 'levelSelector') {
       launchGameFromGames(Number(group), this.selectedGame);
       event.stopImmediatePropagation();
     }

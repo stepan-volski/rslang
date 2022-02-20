@@ -237,7 +237,6 @@ export async function incrementIncorrectAnswerCounter(userWord: string): Promise
 export async function increaseWordLearnProgress(wordId: string): Promise<void> {
   const word = await getUserWordById(wordId);
   word.optional.learningProgress += 1;
-
   if ((word.difficulty === 'difficult' && word.optional.learningProgress === 5)
     || ((word.difficulty === 'notDifficult') && word.optional.learningProgress === 3)
   ) {

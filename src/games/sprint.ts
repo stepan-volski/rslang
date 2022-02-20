@@ -99,7 +99,7 @@ class Sprint extends Game {
           <div id="sprint-question"></div>
           <div id="sprint-question-translate"></div>
         </div>
-        
+
         <div id="answerButtons">
           <button id="correct-answer-sprint-btn" class="answerBtn">correct</button>
           <button id="incorrect-answer-sprint-btn" class="answerBtn">incorrect</button>
@@ -270,9 +270,9 @@ class Sprint extends Game {
   }
 
   private showResults(bookPage = false): void {
-    let messege = 'Sorry! The time is over.. ';
+    let messege = 'Sorry! The time is over. ';
     if (bookPage) {
-      messege = 'Sorry! The words are over.. ';
+      messege = 'Sorry! The words are over. ';
     }
     new Audio('../assets/sound/end-of-round.mp3').play();
     const appContainer = document.getElementById('app');
@@ -297,7 +297,7 @@ class Sprint extends Game {
         </div>
 
       </div>
-      <div class="gameBackBtn" id="backBtn">Back to Games</div>
+      <div class="gameBackBtn" id="backBtn">Back</div>
     </div>
   `;
     (appContainer as HTMLElement).innerHTML = resultsHtml;

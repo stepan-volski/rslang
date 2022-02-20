@@ -70,8 +70,6 @@ async function collectWordsForGame(group: number, page: number): Promise<Word[]>
   return gameData;
 }
 
-
-// todo - unite into single method?
 async function getWordsForSprint(page: number, group: number, isUserLogged: boolean, bookPage = false) {
   const arr:Promise<Word[]>[] = [];
   if (bookPage) {
@@ -119,13 +117,11 @@ async function getWordsForSprint(page: number, group: number, isUserLogged: bool
     || !word.userWord?.optional.learned) : words;
 }
 
-
 export async function launchGameFromBook(currentGroup: number, currentPage: number, gameType: string): Promise<void> {
   if (gameType === 'sprint') {
     const isUserLogged = isUserLoggedIn();
     const words = await getWordsForSprint(currentPage, currentGroup, isUserLogged, true);
     const game = new Sprint(words);
-    console.log(words);
     game.startGame(words);
   }
 
