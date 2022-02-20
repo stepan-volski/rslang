@@ -9,8 +9,9 @@ export const loginLayout = `
     <label for="email"><b>Email</b></label>
     <input id="login-email" type="email" placeholder="Enter email" name="email" required>
 
-    <button type="submit" id="login-btn">Log In</button>
-    <p>Don't have an account?<button id="registration-form-btn">sign in</button></p>
+    <button type="submit" id="login-btn">Войти</button>
+    <p>Don't have an account? <button id="registration-form-btn">sign in</button></p>
+
 </form>
 
 `;
@@ -30,7 +31,7 @@ export const registrationLayout = `
      name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" title="wadaw">
 
     <button type="submit" id="signup-btn">Sign up</button>
-    <p>Already have an account?<button id="login-form-btn">login</button></p>
+    <p>Already have an account? <button id="login-form-btn">login</button></p>
 </form>
 
 `;

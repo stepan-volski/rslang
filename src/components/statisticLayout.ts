@@ -47,9 +47,11 @@ const statisticLayout = `
     <div id="schedule-stat-container">
         <div id="new-words-per-day">
             <h3>new words per day</h3>
+            <canvas width="500" height="500" id="canvas1"></canvas>
         </div>
         <div id="total-learned-words-per-day">
             <h3>total learned words per day</h3>
+            <canvas width="500" height="500" id="canvas2"></canvas>
         </div>    
     </div>
 </div>

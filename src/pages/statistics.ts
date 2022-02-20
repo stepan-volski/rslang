@@ -75,35 +75,52 @@ class Statistics extends Page {
 
     (<HTMLElement>document.getElementById('sprint-streak')).innerHTML = `${sprint.correctAnswersSeriesLength}` ?? '0';
 
-    (<HTMLElement>document.getElementById('new-words-per-day'))
-      .append(this.renderStatSchedule(stat.optional.all.newWordsPerDay, 10));
-    (<HTMLElement>document.getElementById('total-learned-words-per-day'))
-      .append(this.renderStatSchedule(stat.optional.all.totalLearnedWordsPerDay, 20));
+    this.renderStatSchedule(stat.optional.all.newWordsPerDay, stat.optional.all.totalLearnedWordsPerDay);
   }
 
-  static renderStatSchedule(arrStat: number[], size: number): HTMLElement {
-    const container = document.createElement('div');
-    container.classList.add('stat-schedule');
-    arrStat.forEach((e, index) => {
-      if (index === (arrStat.length - 1)) {
-        container.append(Statistics.createScheduleColumn(e, 1, size));
-      } else {
-        container.append(Statistics.createScheduleColumn(e, 0, size));
+  static renderStatSchedule(arrStat1: number[], arrStat2: number[]): void {
+    const canvas1 = document.getElementById('canvas1') as HTMLCanvasElement;
+    const canvas2 = document.getElementById('canvas2') as HTMLCanvasElement;
+
+    const ctx1 = canvas1.getContext('2d') as CanvasRenderingContext2D;
+    const ctx2 = canvas2.getContext('2d') as CanvasRenderingContext2D;
+
+    function renderCanvas(ctx: CanvasRenderingContext2D, data: number[]) {
+      ctx.fillStyle = 'black'; // Задаём чёрный цвет для линий
+      ctx.lineWidth = 2.0; // Ширина линии
+      ctx.beginPath(); // Запускает путь
+      ctx.moveTo(30, 10); // Указываем начальный путь
+      ctx.lineTo(30, 460); // Перемешаем указатель
+      ctx.lineTo(500, 460); // Ещё раз перемешаем указатель
+      ctx.stroke();
+      ctx.fillStyle = 'black';
+      ctx.font = '22px serif';
+      ctx.fillText('Words', 40, 40);
+      ctx.fillText('Days', 440, 440);
+      ctx.font = '12px Arial Narrow';
+      for (let i = 0; i < 15; i++) {
+        ctx.fillText(`${(15 - i) * 8}`, 4, i * 31);
+        ctx.beginPath();
+        ctx.moveTo(25, i * 31);
+        ctx.lineTo(30, i * 31);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(i * 31, 455);
+        ctx.lineTo(i * 31, 460);
+        ctx.stroke();
       }
-    });
-    return container;
-  }
+      for (let i = 0; i < 20; i++) {
+        ctx.fillText(String(i), 30 + i * 32, 475);
+      }
 
-  static createScheduleColumn(e: number, index = 0, size: number): HTMLElement {
-    const el = document.createElement('div');
-    el.style.height = `${size * e}px`;
-    el.classList.add('all-time-stat-column');
-    if (index !== 0) {
-      el.innerHTML = `&#10026; ${e}`;
-    } else {
-      el.innerHTML = `${e}`;
+      ctx.fillStyle = 'blue';
+      for (let i = 0; i < data.length; i++) {
+        const dp = data[i];
+        ctx.fillRect(43 + i * 30, 460 - dp * 4, 20, dp * 4);
+      }
     }
-    return el;
+    renderCanvas(ctx1, arrStat1);
+    renderCanvas(ctx2, arrStat2);
   }
 }
 

@@ -36,7 +36,7 @@
     }
     #statistic-for-all-time{
         margin-bottom: 50px;
-    }
+        flex-direction: column;    }
 }
 
 #statistic-for-this-day{
@@ -45,12 +45,12 @@
     }
     #words-statistic, #game-statistic{
         display: flex;
+        flex-wrap: wrap;
     }
 }
 .stat-schedule{
     display: flex;
     align-items: flex-end;
-    padding: 20px;
 }
 .all-time-stat-column{
     width: 30px;
@@ -77,6 +77,7 @@
     column-gap: 50px;
     justify-content: center;
 }
+
 #new-words-per-day, #total-learned-words-per-day{
     display: flex;
     flex-direction: column;
@@ -92,4 +93,7 @@
 }
 .active{
     display: block;
+}
+#canvas1, #canvas2 {
+    border: 1px solid black;
 }

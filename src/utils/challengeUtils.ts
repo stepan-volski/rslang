@@ -70,9 +70,63 @@ async function collectWordsForGame(group: number, page: number): Promise<Word[]>
   return gameData;
 }
 
+
+// todo - unite into single method?
+async function getWordsForSprint(page: number, group: number, isUserLogged: boolean, bookPage = false) {
+  const arr:Promise<Word[]>[] = [];
+  if (bookPage) {
+    switch (isUserLogged) {
+      case true:
+        for (let i = page; i >= 0; i--) {
+          arr.push(getAggregatedWords(group, i));
+        }
+        break;
+
+      default:
+        for (let i = 0; i < 5; i++) {
+          if ((page + i) < 29) {
+            arr.push(getWords(group, (page + i)));
+          } else {
+            arr.push(getWords(group, (page - i)));
+          }
+        }
+    }
+  } else {
+    switch (isUserLogged) {
+      case true:
+        for (let i = 0; i < 5; i++) {
+          if ((page + i) < 29) {
+            arr.push(getAggregatedWords(group, (page + i)));
+          } else {
+            arr.push(getAggregatedWords(group, (page - i)));
+          }
+        }
+        break;
+
+      default:
+        for (let i = 0; i < 5; i++) {
+          if ((page + i) < 29) {
+            arr.push(getWords(group, (page + i)));
+          } else {
+            arr.push(getWords(group, (page - i)));
+          }
+        }
+    }
+  }
+
+  const words = (await Promise.all(arr)).flat();
+  return bookPage ? words.filter((word: Word) => !word.userWord
+    || !word.userWord?.optional.learned) : words;
+}
+
+
 export async function launchGameFromBook(currentGroup: number, currentPage: number, gameType: string): Promise<void> {
   if (gameType === 'sprint') {
-    console.log('sprint started');
+    const isUserLogged = isUserLoggedIn();
+    const words = await getWordsForSprint(currentPage, currentGroup, isUserLogged, true);
+    const game = new Sprint(words);
+    console.log(words);
+    game.startGame(words);
   }
 
   if (gameType === 'challenge') {
@@ -80,33 +134,6 @@ export async function launchGameFromBook(currentGroup: number, currentPage: numb
     const game = new AudioChallenge(words);
     game.startGame();
   }
-}
-async function getWordsForSprint(page: number, group: number, isUserLogged: boolean) {
-  const arr:Promise<Word[]>[] = [];
-
-  switch (isUserLogged) {
-    case true:
-      for (let i = 0; i < 5; i++) {
-        if ((page + i) < 29) {
-          arr.push(getAggregatedWords(group, (page + i)));
-        } else {
-          arr.push(getAggregatedWords(group, (page - i)));
-        }
-      }
-      break;
-
-    default:
-      for (let i = 0; i < 5; i++) {
-        if ((page + i) < 29) {
-          arr.push(getWords(group, (page + i)));
-        } else {
-          arr.push(getWords(group, (page - i)));
-        }
-      }
-  }
-
-  const words = (await Promise.all(arr)).flat();
-  return words;
 }
 
 export async function launchGameFromGames(group: number, gameType: string): Promise<void> {
