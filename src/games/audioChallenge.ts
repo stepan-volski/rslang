@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 /* eslint-disable no-underscore-dangle */
 import { Word } from '../service/interfaces';
 import {
@@ -65,10 +64,10 @@ class AudioChallenge extends Game {
         </div>
 
         <div class="keysContainer">
-          <div class="keyBtn">A</div>
-          <div class="keyBtn">S</div>
-          <div class="keyBtn">D</div>
-          <div class="keyBtn">F</div>
+          <div class="keyBtn" id="KeyA">A</div>
+          <div class="keyBtn" id="KeyS">S</div>
+          <div class="keyBtn" id="KeyD">D</div>
+          <div class="keyBtn" id="KeyF">F</div>
         </div>
       </div>
   `;
@@ -93,6 +92,7 @@ class AudioChallenge extends Game {
     if (element.className === 'answerBtn') {
       const answer = element.innerText;
       this.answer(answer);
+      event.stopImmediatePropagation();
     }
   }
 
@@ -104,6 +104,9 @@ class AudioChallenge extends Game {
         const button = document.querySelector(`[data-key='${key}']`) as HTMLElement;
         const answer = button.innerText;
         this.answer(answer);
+        document.getElementById(key)?.classList.add('animated');
+        setTimeout(() => document.getElementById(key)?.classList.remove('animated'), 700);
+        event.stopImmediatePropagation();
       }
     }
   }
@@ -127,9 +130,10 @@ class AudioChallenge extends Game {
   private initHandlers(): void {
     Array.from(document.getElementsByClassName('answerBtn'))
       .forEach((btn) => btn.addEventListener('click', this.answerByClick.bind(this)));
+
     document.getElementById('audioQuestion')?.addEventListener('click', this.playCurrentQuestionAudio.bind(this));
     document.getElementById('closeIcon')?.addEventListener('click', AudioChallenge.closeGame);
-    document.addEventListener('keydown', this.answerByKey.bind(this));
+    document.onkeydown = this.answerByKey.bind(this);
   }
 
   private showResults(): void {

@@ -41,9 +41,9 @@
   align-items: center;
   justify-content: center;
   color: white;
-
+  text-align: center;
   height: 60px;
-  width: 150px;
+  width: 180px;
   border-radius: 10px;
   cursor: pointer;
   background-color: cornflowerblue;
@@ -66,12 +66,13 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  transition: all 0.07s;
 }
 
-// .animated{
-//   transition: all .1s ease-in-out;
-//   transform: scale(1.1);
-// }
+.animated{
+  transform: scale(1.1);
+  border: 1px solid yellow;
+}
 
 .audioQuestion{
   display: block;
