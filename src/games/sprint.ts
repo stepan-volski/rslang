@@ -179,20 +179,20 @@ class Sprint extends Game {
       this.generateQuestion();
     }
   }
-
+  private keydownAnswer(e: KeyboardEvent): void {
+    if (
+      ((e.code === 'ArrowLeft' || e.code === 'Digit1') && this.correctness === true)
+      || ((e.code === 'ArrowRight' || e.code === 'Digit2') && this.correctness === false)) {
+      this.correctAnswer();
+    } else {
+      this.incorrectAnswer();
+    }
+    e.stopImmediatePropagation();
+  }
   private initHandlers(): void {
     const btnContainer = document.getElementById('answerButtons') as HTMLElement;
     Array.from((btnContainer.children)).forEach((btn) => btn.addEventListener('click', this.answer.bind(this)));
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (
-        ((e.code === 'ArrowLeft' || e.code === 'Digit1') && this.correctness === true)
-        || ((e.code === 'ArrowRight' || e.code === 'Digit2') && this.correctness === false)) {
-        this.correctAnswer();
-      } else {
-        this.incorrectAnswer();
-      }
-      e.stopImmediatePropagation();
-    });
+    document.onkeydown = this.keydownAnswer.bind(this);
     document.getElementById('closeIcon')?.addEventListener('click', this.closeGame.bind(this));
   }
 
