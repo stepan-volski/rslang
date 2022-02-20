@@ -1,0 +1,160 @@
+.textbookContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 40px;
+}
+
+.contentContainer{
+  display: flex;
+  position: relative;
+}
+
+.gameLogo {
+  width: 40px;
+  height: 40px;
+}
+
+.gamesContainer{
+  width: 400px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+
+.gameBtn{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  background-color: rgb(250, 252, 254);
+  border-radius: 10px;
+  width: 150px;
+}
+
+.pageSelector{
+  width: 100px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  color: rgb(250, 252, 254);
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.groupSelector{
+  margin: 30px 30px 0 0;
+  position: sticky;
+  top: 30px;
+  background-color: rgb(250, 252, 254);
+  border-radius: 10px;
+  width: 50px;
+  height: 300px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+}
+
+.groupCircle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition: all .1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.selectedGroup{
+  border: 2px solid rgb(240, 199, 67)
+}
+
+.disabled{
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.completedIcon{
+  position: absolute;
+  top: 0px;
+  right: -120px;
+  height: 65px;
+  width: 65px;
+  display: none;
+}
+
+.onlyDifficultToggle{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  position: absolute;
+  top: -100px;
+  left: 50px;
+
+  span{
+    font-size: 44px;
+    &:hover {
+      color: red;
+    }
+  }
+
+  cursor: pointer;
+}
+
+.difficultPlaceholder{
+  width: 800px;
+  padding-top: 50px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 22px;
+}
+
+.difIcon{
+  display: flex;
+  justify-content: center;
+}
+
+
+[data-group="0"] {
+  background-color: rgb(255, 204, 215);
+}
+
+[data-group="1"] {
+  background-color: rgba(165, 157, 237);
+}
+
+[data-group="2"] {
+  background-color: rgb(245, 170, 72);
+}
+
+[data-group="3"] {
+  background-color: rgb(93, 84, 168);
+}
+
+[data-group="4"] {
+  background-color: rgb(97, 224, 139);
+}
+
+[data-group="5"] {
+  background-color: rgb(163, 172, 84);
+}
+

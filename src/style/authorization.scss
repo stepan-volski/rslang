@@ -1,0 +1,118 @@
+#authorization-container{
+    transition: 1s;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    width: 100%;
+    height: 500px;
+    top: -1000px;
+    background: rgba(0, 0, 0, 0.651);
+    border: none;
+}
+
+#logged-user-container{
+    margin: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    background: white;
+    text-transform: uppercase;
+    column-gap: 20px;
+    button{
+        background: none;
+        border: 3px solid rgb(70, 70, 70);
+        border-radius: 10px;
+        text-transform: uppercase;
+        line-height: 30px;
+        width: 100px;
+        text-align: left;
+        &:after{
+            position: absolute;
+            content: '\e853';
+            font-family: "Material Icons";
+            font-size: 32px;
+        }
+    }
+}
+#login-form-container, #registration-form-container{
+    width: 30%;
+    margin: 0 auto;
+    display: none;
+    flex-direction: column;
+    background: white;
+    color: #000;
+    padding: 40px 20px;
+    align-items: center;
+    border-radius: 10px;
+    #close-modal{
+        margin-left: auto;
+        cursor:pointer;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        width: 300px;
+        align-items: center;
+        h2{
+            margin: 0;
+        }
+        button{
+            font-size: 14px;
+            text-transform: uppercase;
+            background-color: white;
+            color: #77afaf;
+            border: 2px solid #77afaf;
+            cursor:pointer;
+            &:hover{
+                border: 2px solid white;
+                background: #77afaf;
+                color: white;
+            }
+        }
+        #signup-btn, #login-btn{
+            margin: 10px 0;
+            width: 260px;
+            height: 33px;
+        }
+    }
+    input{
+        width: 250px;
+        height: 30px;
+        // border-radius: 10px;
+    }
+}
+#registration-form-container{
+    display: flex;
+}
+#authorization-btn{
+    background: white;
+    border: 3px solid rgb(70, 70, 70);
+    border-radius: 10px;
+    text-transform: uppercase;
+    line-height: 30px;
+    width: 100px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.authorization-show{
+    animation: form-show 1s forwards;
+            @keyframes form-show {
+                from {top: -1000}
+                to {top: 0}
+             }
+}
+.authorization-show{
+    animation: form-show 1s forwards;
+            @keyframes form-hide {
+                from {top: 0}
+                to {top: -1000}
+             }
+}
+input:required:invalid {
+    position: relative;
+    border: 2px solid red;
+}
+input:required:valid {
+    border: 2px solid green;
+}

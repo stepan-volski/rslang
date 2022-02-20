@@ -1,0 +1,140 @@
+.gameContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  margin: 30px;
+
+  width: 50vw;
+  height: 70vh;
+  border-radius: 10px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 0px 10px;
+  padding: 20px;
+  background-color: rgba(173, 231, 241, 0.55);
+
+  #correctCounter{
+    color: green;
+  }
+
+  #incorrectCounter{
+    color: red;
+  }
+
+}
+
+.answerButtons{
+  width: 800px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.keysContainer{
+  width: 800px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.answerBtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  height: 40px;
+  width: 155px;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: cornflowerblue;
+  margin-top: 150px;
+
+  transition: all .1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.keyBtn{
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  background-color: cornflowerblue;
+  color: white;
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: all 0.07s;
+}
+
+.animated{
+  transform: scale(1.1);
+  border: 1px solid yellow;
+}
+
+.audioQuestion{
+  display: block;
+  height: 50px;
+  width: 50px;
+
+  transition: all .1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+#questionNumber{
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 3px solid rgb(11, 144, 233);
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
+
+.score{
+  width: 80px;
+  position: absolute;
+  right: 80px;
+  top: 50px;
+  font-size: 24px;
+}
+
+.resultsTable{
+  display: flex;
+
+  .resultsRow{
+    margin: 0 30px 0 30px;
+  }
+}
+
+.gameBackBtn{
+  width: 140px;
+  height: 35px;
+  margin-top: 30px;
+  background-color: coral;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all .1s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+#closeIcon{
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}

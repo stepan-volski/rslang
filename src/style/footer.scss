@@ -1,0 +1,9 @@
+footer{
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 -6px 4px -4px rgba(0, 0, 0, .2);
+    height: 50px;
+    a, div{
+        padding: 20px;
+    }
+}
