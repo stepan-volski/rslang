@@ -86,8 +86,6 @@ class Statistics extends Page {
     const ctx2 = canvas2.getContext('2d') as CanvasRenderingContext2D;
 
     function renderCanvas(ctx: CanvasRenderingContext2D, data: number[]) {
-      const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
       ctx.fillStyle = 'black'; // Задаём чёрный цвет для линий
       ctx.lineWidth = 2.0; // Ширина линии
       ctx.beginPath(); // Запускает путь
@@ -99,23 +97,25 @@ class Statistics extends Page {
       ctx.font = '22px serif';
       ctx.fillText('Words', 40, 40);
       ctx.fillText('Days', 440, 440);
-      ctx.font = '14px serif';
+      ctx.font = '12px Arial Narrow';
       for (let i = 0; i < 15; i++) {
         ctx.fillText(`${(15 - i) * 8}`, 4, i * 31);
         ctx.beginPath();
         ctx.moveTo(25, i * 31);
         ctx.lineTo(30, i * 31);
         ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(i * 31, 455);
+        ctx.lineTo(i * 31, 460);
+        ctx.stroke();
       }
-      for (let i = 0; i < 15; i++) {
-        ctx.fillText(String(labels[i]), 50 + i * 30, 475);
+      for (let i = 0; i < 20; i++) {
+        ctx.fillText(String(i), 30 + i * 32, 475);
       }
-      const data1 = arrStat1;
-      const data2 = arrStat2;
+
       ctx.fillStyle = 'blue';
-      for (let i = 0; i < data1.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         const dp = data[i];
-        console.log(data);
         ctx.fillRect(43 + i * 30, 460 - dp * 4, 20, dp * 4);
       }
     }

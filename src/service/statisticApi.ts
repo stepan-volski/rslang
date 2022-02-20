@@ -136,7 +136,6 @@ export async function savingStatOnChangingDay(): Promise<void> {
     const arr = stat.optional.all;
 
     arr.totalLearnedWordsPerDay.push(stat.learnedWords);
-    console.log(stat);
     stat = {
       learnedWords: 0,
       optional: {

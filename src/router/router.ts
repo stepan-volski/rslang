@@ -7,7 +7,7 @@ import Statistics from '../pages/statistics';
 import Team from '../pages/team';
 import TextBook from '../pages/textBook';
 import { savingStatOnChangingDay } from '../service/statisticApi';
-import { loadUser } from '../utils/loginUtils';
+import { isUserLoggedIn, loadUser } from '../utils/loginUtils';
 
 type Routes = {
   main: Main;
@@ -35,9 +35,11 @@ class Router {
   init(): void {
     document.addEventListener('click', this.openPage.bind(this));
     loadUser();
-    setInterval(() => {
-      savingStatOnChangingDay();
-    }, 60000);
+    if (isUserLoggedIn()) {
+      setInterval(() => {
+        savingStatOnChangingDay();
+      }, 60000);
+    }
     navigationFunc();
   }
 
