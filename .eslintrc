@@ -21,6 +21,7 @@
     "no-plusplus": "off",
     "no-debugger": "off",
     "no-console": "off",
+    "import/no-cycle": "off",
     "no-multi-spaces": "off",
     "max-len": ["warn", { "code": 125 }],
     "indent": ["warn", 2, {

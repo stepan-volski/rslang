@@ -60,6 +60,10 @@ class Router {
     this.routes[page as Pages].openPage();
     this.currentPage = page as Pages;
   }
+
+  refreshCurrentPage(): void {
+    this.routes[this.currentPage].openPage();
+  }
 }
 
 export default Router;
