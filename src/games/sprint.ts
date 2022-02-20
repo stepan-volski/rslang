@@ -238,7 +238,11 @@ class Sprint extends Game {
       if (document.getElementById('base-timer-label') === null) {
         clearInterval(Number(this.timer));
       }
-      if (this.gameTime === 0 || this.currentQuestion + 1 > this.gameData.length) {
+      if (this.gameTime === 0) {
+        clearInterval(Number(this.timer));
+        this.showResults();
+      }
+      if (this.currentQuestion + 1 > this.gameData.length) {
         clearInterval(Number(this.timer));
         this.showResults(true);
       }
@@ -265,7 +269,7 @@ class Sprint extends Game {
   }
 
   private showResults(bookPage = false): void {
-    let messege = '';
+    let messege = 'Sorry! The time is over.. ';
     if (bookPage) {
       messege = 'Sorry! The words are over.. ';
     }
