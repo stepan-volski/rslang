@@ -155,9 +155,7 @@ class Sprint extends Game {
     if (this.currentQuestion < this.gameData.length) {
       this.generateQuestion();
     }
-    if (this.isUserLoggedIn) {
-      this.registerIncorrectAnswer();
-    }
+    this.registerIncorrectAnswer();
   }
 
   private correctAnswer(): void {
@@ -170,9 +168,7 @@ class Sprint extends Game {
         setWinningStreak(this.name, this.longestWinningStreak);
       }
     }
-    if (this.isUserLoggedIn) {
-      this.registerCorrectAnswer();
-    }
+    this.registerCorrectAnswer();
     this.updateScore(this.correctStreak);
     this.currentQuestion++;
     if (this.currentQuestion < this.gameData.length) {
@@ -202,14 +198,17 @@ class Sprint extends Game {
     this.correctAnswers++;
     counter.innerText = `Correct Answers: ${this.correctAnswers}`;
     // + send statistics
-    await increaseAnswersCount(this.name, 'correct');
-    await incrementCorrectAnswerCounter(this.currentWord._id as string);
-    if (isWordNew(this.currentWord)) {
-      await increaseСountNewWords(this.name);
+    if (this.isUserLoggedIn) {
+      await increaseAnswersCount(this.name, 'correct');
+      await incrementCorrectAnswerCounter(this.currentWord._id as string);
+      if (isWordNew(this.currentWord)) {
+        await increaseСountNewWords(this.name);
+      }
+      if (this.currentWord.userWord?.optional.learned) {
+        await increaseWordLearnProgress(this.currentWord._id as string);
+      }
     }
-    if (this.currentWord.userWord?.optional.learned) {
-      await increaseWordLearnProgress(this.currentWord._id as string);
-    }
+
     this.correctAnsweredWords.push(this.currentWord);
   }
 
@@ -219,15 +218,17 @@ class Sprint extends Game {
     this.incorrectAnswers++;
     counter.innerText = `Incorrect Answers: ${this.incorrectAnswers}`;
     // + send statistics
-    await increaseAnswersCount(this.name, 'incorrect');
-    await incrementIncorrectAnswerCounter(this.currentWord._id as string);
-    await resetWordLearnProgress(this.currentWord._id as string);
+    if (this.isUserLoggedIn) {
+      await increaseAnswersCount(this.name, 'incorrect');
+      await incrementIncorrectAnswerCounter(this.currentWord._id as string);
+      await resetWordLearnProgress(this.currentWord._id as string);
 
-    if (isWordNew(this.currentWord)) {
-      await increaseСountNewWords(this.name);
-    }
-    if (this.currentWord.userWord?.optional.learned) {
-      await unmarkWordAsLearned(this.currentWord._id as string);
+      if (isWordNew(this.currentWord)) {
+        await increaseСountNewWords(this.name);
+      }
+      if (this.currentWord.userWord?.optional.learned) {
+        await unmarkWordAsLearned(this.currentWord._id as string);
+      }
     }
     this.incorrectAnsweredWords.push(this.currentWord);
   }
@@ -238,7 +239,11 @@ class Sprint extends Game {
       if (document.getElementById('base-timer-label') === null) {
         clearInterval(Number(this.timer));
       }
-      if (this.gameTime === 0 || this.currentQuestion + 1 > this.gameData.length) {
+      if (this.gameTime === 0) {
+        clearInterval(Number(this.timer));
+        this.showResults();
+      }
+      if (this.currentQuestion + 1 > this.gameData.length) {
         clearInterval(Number(this.timer));
         this.showResults(true);
       }
@@ -265,7 +270,7 @@ class Sprint extends Game {
   }
 
   private showResults(bookPage = false): void {
-    let messege = '';
+    let messege = 'Sorry! The time is over.. ';
     if (bookPage) {
       messege = 'Sorry! The words are over.. ';
     }
