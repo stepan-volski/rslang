@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <title>RSLang</title>
+</head>
+
+<body>
+  <div class="container">
+    <nav id="main-navigation" class="navigation-hide">
+      <div class="nav-item-wrapper" id="control-btn-wrapper">
+      <button id="control-btn-nav" class="material-icons-outlined close-menu" ></button>
+      <div class="nav-item-text"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="main"></button>
+        <div class="nav-item-text" data-page="main"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="statistics"></button>
+        <div class="nav-item-text" data-page="statistics"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="textBook"></button>
+        <div class="nav-item-text" data-page="textBook"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="games"></button>
+        <div class="nav-item-text" data-page="games"></div>
+      </div>
+      <div class="nav-item-wrapper">
+        <button data-page="team"></button>
+        <div class="nav-item-text" data-page="team"></div>
+      </div>
+    </nav>
+
+    <div class="content-container">
+      <header>
+        <div id="page-title"></div>
+        <div id="logged-user-container"></div>
+      </header>
+      <div id="app">App content will be here</div>
+      <footer>
+        <div class="year">&#169; 2022</div>
+        <a class="link-github" href="https://github.com/andreypotkas">Andrey Potkas</a>
+        <a class="link-github" href="https://github.com/stepan-volski">Stepan Volski</a>
+        <a class="link-school" href="https://rs.school/js/">RS school</a>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>
